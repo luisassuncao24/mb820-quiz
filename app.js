@@ -100,7 +100,7 @@
 
     QUESTION_SETS.forEach(function (set) {
       const saved = loadProgress(set);
-      const hasSaved = saved && saved.current > 0 && saved.current < saved.shuffled.length;
+      const hasSaved = saved && Array.isArray(saved.results) && saved.results.length > 0 && saved.results.length < saved.shuffled.length;
       html +=
         '<div class="set-card" data-key="' + set.key + '">' +
           '<div class="set-card-header">' +
@@ -109,7 +109,7 @@
           '</div>' +
           '<p class="set-card-desc">' + set.description + '</p>' +
           (hasSaved
-            ? '<p class="set-card-resume">⏸ Saved progress: question ' + (saved.current + 1) + ' of ' + saved.shuffled.length + ' (' + saved.score + ' correct)</p>'
+            ? '<p class="set-card-resume">⏸ Saved progress: question ' + (saved.results.length + 1) + ' of ' + saved.shuffled.length + ' (' + saved.score + ' correct)</p>'
             : '') +
           '<div class="set-card-actions">' +
             (hasSaved
@@ -156,8 +156,15 @@
         current  = saved.current;
         score    = saved.score;
         results  = saved.results;
-        renderQuestion();
-        return;
+        // Advance past any already-answered question (user closed after answering but before clicking Next)
+        if (current < results.length) {
+          current = results.length;
+        }
+        if (current < shuffled.length) {
+          renderQuestion();
+          return;
+        }
+        // All questions already answered — fall through to a fresh start
       }
     }
 
@@ -172,10 +179,11 @@
 
   // ── Resume prompt ─────────────────────────────────────────────────────────
   function showResumePrompt(saved) {
+    const nextQuestion = saved.results.length + 1;
     questionEl.innerHTML =
       '<div class="resume-prompt">' +
         '<h2>Resume Quiz?</h2>' +
-        '<p>You were on question <strong>' + (saved.current + 1) + ' of ' + saved.shuffled.length + '</strong> ' +
+        '<p>You were on question <strong>' + nextQuestion + ' of ' + saved.shuffled.length + '</strong> ' +
         'with <strong>' + saved.score + ' correct</strong> so far.</p>' +
         '<div class="resume-buttons">' +
           '<button class="resume-btn" id="resume-btn">Resume</button>' +
@@ -474,7 +482,7 @@
     // Find sets that have saved in-progress state
     const setsWithProgress = QUESTION_SETS.filter(function (set) {
       const saved = loadProgress(set);
-      return saved && saved.current > 0 && saved.current < saved.shuffled.length;
+      return saved && Array.isArray(saved.results) && saved.results.length > 0 && saved.results.length < saved.shuffled.length;
     });
 
     if (setsWithProgress.length === 1) {
