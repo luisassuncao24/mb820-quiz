@@ -34,6 +34,10 @@
   const TIMER_WARNING_MINS   = 30;       // yellow threshold
   const TIMER_CRITICAL_MINS  = 10;       // red threshold
 
+  // MB-820 scoring thresholds (percentage, 0-100)
+  const PASS_PCT     = 70; // 700/1000 points — minimum passing score for MB-820
+  const MARGINAL_PCT = 60; // "close but not there" band
+
   // ── State ────────────────────────────────────────────────────────────────
   let activeSet     = null; // one of QUESTION_SETS entries
   let current       = 0;
@@ -199,7 +203,7 @@
           '<p class="set-card-desc">' + set.description + '</p>' +
           (hasSaved
             ? '<p class="set-card-resume">\u23F8 Saved: question ' + (saved.results.length + 1) + ' of ' + saved.shuffled.length +
-              ' \u2014 ' + saved.score + ' correct' +
+              ' \u2014 ' + Math.round((saved.score / saved.shuffled.length) * 100) + '% score' +
               (savedTimer !== null ? ' \u2014 \u23F1 ' + formatTime(savedTimer) + ' left' : '') + '</p>'
             : '') +
           '<div class="set-card-actions">' +
@@ -282,7 +286,7 @@
       '<div class="resume-prompt">' +
         '<h2>Resume Quiz?</h2>' +
         '<p>You were on question <strong>' + nextQuestion + ' of ' + saved.shuffled.length + '</strong> ' +
-        'with <strong>' + saved.score + ' correct</strong>' + timerInfo + '.</p>' +
+        'with a score of <strong>' + Math.round((saved.score / saved.shuffled.length) * 100) + '%</strong>' + timerInfo + '.</p>' +
         '<div class="resume-buttons">' +
           '<button class="resume-btn" id="resume-btn">Resume</button>' +
           '<button class="new-quiz-btn" id="new-quiz-btn">New Quiz</button>' +
@@ -346,7 +350,9 @@
           });
           input.checked = true;
           item.classList.add("selected");
-          submitAnswer(q, [parseInt(input.value, 10)]);
+          // Enable the submit button once an option is selected
+          const submitBtn = choicesEl.querySelector(".submit-btn");
+          if (submitBtn) submitBtn.disabled = false;
         });
       } else {
         // For multiple choice the browser toggles input.checked on click/change.
@@ -366,18 +372,35 @@
       choicesEl.appendChild(item);
     });
 
-    if (q.type === "multiple") {
-      const submitBtn = document.createElement("button");
-      submitBtn.className   = "submit-btn";
-      submitBtn.textContent = "Submit Answer";
+    // Both single and multiple choice require an explicit Submit button
+    const submitBtn = document.createElement("button");
+    submitBtn.className   = "submit-btn";
+    submitBtn.textContent = "Submit Answer";
+    if (q.type === "single") {
+      // Disabled until the user selects an option
+      submitBtn.disabled = true;
+      submitBtn.addEventListener("click", function () {
+        onSubmitSingle(q);
+      });
+    } else {
       submitBtn.addEventListener("click", function () {
         onSubmitMultiple(q);
       });
-      choicesEl.appendChild(submitBtn);
     }
+    choicesEl.appendChild(submitBtn);
   }
 
   // ── Interaction ──────────────────────────────────────────────────────────
+  function onSubmitSingle(q) {
+    if (answered) return;
+    const checkedInput = choicesEl.querySelector("input[type=radio]:checked");
+    if (!checkedInput) {
+      showInlineFeedback("Please select an answer.");
+      return;
+    }
+    submitAnswer(q, [parseInt(checkedInput.value, 10)]);
+  }
+
   function onSubmitMultiple(q) {
     if (answered) return;
     const selected = Array.from(
@@ -394,14 +417,22 @@
   function submitAnswer(q, selected) {
     answered = true;
 
-    const isCorrect = arraysEqual(
-      selected.slice().sort(function (a, b) { return a - b; }),
-      q.correct.slice().sort(function (a, b) { return a - b; })
-    );
-    if (isCorrect) score++;
+    const sortedSelected = selected.slice().sort(function (a, b) { return a - b; });
+    const sortedCorrect  = q.correct.slice().sort(function (a, b) { return a - b; });
+    const isCorrect = arraysEqual(sortedSelected, sortedCorrect);
+
+    // Partial credit for multiple-choice: count how many selected answers are correct
+    let questionScore = 0;
+    if (isCorrect) {
+      questionScore = 1;
+    } else if (q.type === "multiple" && q.correct.length > 1) {
+      const correctlySelected = selected.filter(function (s) { return q.correct.includes(s); }).length;
+      questionScore = correctlySelected / q.correct.length;
+    }
+    score += questionScore;
 
     // Record result for summary
-    results.push({ questionId: q.id, isCorrect: isCorrect, selected: selected, correct: q.correct });
+    results.push({ questionId: q.id, isCorrect: isCorrect, partialScore: questionScore, selected: selected, correct: q.correct });
 
     // Disable & colour choices
     choicesEl.querySelectorAll(".choice-item").forEach(function (item) {
@@ -416,16 +447,25 @@
       }
     });
 
-    // Disable submit button for multiple-choice
+    // Disable submit button
     const submitBtn = choicesEl.querySelector(".submit-btn");
     if (submitBtn) submitBtn.disabled = true;
 
-    // Explanation
+    // Explanation — show partial credit info when applicable
     const exp = document.createElement("div");
-    exp.className = "explanation " + (isCorrect ? "correct-exp" : "incorrect-exp");
-    exp.innerHTML =
-      "<strong>" + (isCorrect ? "\u2713 Correct!" : "\u2717 Incorrect") + "</strong><br>" +
-      q.explanation;
+    let feedbackLabel;
+    if (isCorrect) {
+      feedbackLabel = "\u2713 Correct!";
+      exp.className = "explanation correct-exp";
+    } else if (questionScore > 0) {
+      const pctPartial = Math.round(questionScore * 100);
+      feedbackLabel = "\u25D1 Partially correct (" + pctPartial + "% credit)";
+      exp.className = "explanation partial-exp";
+    } else {
+      feedbackLabel = "\u2717 Incorrect";
+      exp.className = "explanation incorrect-exp";
+    }
+    exp.innerHTML = "<strong>" + feedbackLabel + "</strong><br>" + q.explanation;
     choicesEl.appendChild(exp);
 
     nextBtn.style.display  = "inline-block";
@@ -467,16 +507,20 @@
     nextBtn.style.display = "none";
     document.getElementById("quiz-container").classList.add("finished");
 
-    const total     = shuffled.length;
-    const correct   = score;
-    const incorrect = total - correct;
-    const pct       = Math.round((correct / total) * 100);
-    const badge     = pct >= 70 ? "pass" : (pct >= 50 ? "marginal" : "fail");
-    const verdict   = pct >= 70
-      ? "Great work \u2014 you\u2019re ready for MB-820! \uD83C\uDF89"
-      : pct >= 50
-        ? "Almost there \u2014 review the explanations and try again!"
-        : "Keep studying \u2014 review the explanations and try again.";
+    const total          = shuffled.length;
+    const rawScore       = score; // float with partial credit
+    const pct            = Math.round((rawScore / total) * 100);
+    const mb820Points    = Math.round(pct * 10); // equivalent out of 1000
+    const fullyCorrect   = results.filter(function (r) { return r.isCorrect; }).length;
+    const partialResults = results.filter(function (r) { return !r.isCorrect && r.partialScore > 0; });
+    const wrongCount     = results.filter(function (r) { return r.partialScore === 0; }).length;
+
+    const badge   = pct >= PASS_PCT ? "pass" : (pct >= MARGINAL_PCT ? "marginal" : "fail");
+    const verdict = pct >= PASS_PCT
+      ? "Great work \u2014 you scored " + mb820Points + "/1000 and passed the MB-820 threshold! \uD83C\uDF89"
+      : pct >= MARGINAL_PCT
+        ? "Almost there \u2014 you need " + (PASS_PCT * 10) + "/1000 to pass MB-820. Review the explanations and try again!"
+        : "Keep studying \u2014 you need " + (PASS_PCT * 10) + "/1000 to pass MB-820. Review the explanations and try again.";
 
     const timeTaken   = TIMER_DURATION - timerSeconds;
     const timeExpired = timerSeconds === 0;
@@ -486,10 +530,10 @@
 
     // Performance label
     let perfLabel = "";
-    if (pct >= 90)      perfLabel = "\uD83C\uDFC6 Excellent";
-    else if (pct >= 70) perfLabel = "\u2705 Pass";
-    else if (pct >= 50) perfLabel = "\u26A0\uFE0F Marginal";
-    else                perfLabel = "\u274C Needs Work";
+    if (pct >= 90)             perfLabel = "\uD83C\uDFC6 Excellent";
+    else if (pct >= PASS_PCT)  perfLabel = "\u2705 Pass";
+    else if (pct >= MARGINAL_PCT) perfLabel = "\u26A0\uFE0F Marginal";
+    else                       perfLabel = "\u274C Needs Work";
 
     // Difficulty info
     const difficultyMeta = {
@@ -503,17 +547,17 @@
     const qMap = {};
     activeSet.data.forEach(function (q) { qMap[q.id] = q; });
 
-    // Separate correct and incorrect results
-    const incorrectResults = results.filter(function (r) { return !r.isCorrect; });
+    // Separate fully correct, partial, and wrong results
+    const notFullyCorrect = results.filter(function (r) { return !r.isCorrect; });
 
     // ── Questions to Review section ──────────────────────────────────────
     let reviewHtml = "";
-    if (incorrectResults.length > 0) {
+    if (notFullyCorrect.length > 0) {
       reviewHtml = '<div class="breakdown">' +
-        '<h3 class="breakdown-title">\u26A0\uFE0F Questions to Review (' + incorrectResults.length + ')</h3>' +
+        '<h3 class="breakdown-title">\u26A0\uFE0F Questions to Review (' + notFullyCorrect.length + ')</h3>' +
         '<ol class="breakdown-list">';
 
-      incorrectResults.forEach(function (r) {
+      notFullyCorrect.forEach(function (r) {
         const q = qMap[r.questionId];
         if (!q) return;
         const originalPos = results.findIndex(function (res) { return res.questionId === r.questionId; }) + 1;
@@ -523,9 +567,12 @@
         const selectedLabels = r.selected.map(function (ci) {
           return ci >= 0 && ci < q.choices.length ? q.choices[ci] : "?";
         }).join("; ");
+        const isPartial = r.partialScore > 0;
+        const itemIcon  = isPartial ? "\u25D1" : "\u2717";
+        const itemCls   = isPartial ? "bd-partial" : "bd-incorrect";
         reviewHtml +=
-          '<li class="bd-item bd-incorrect">' +
-            '<span class="bd-icon">\u2717</span>' +
+          '<li class="bd-item ' + itemCls + '">' +
+            '<span class="bd-icon">' + itemIcon + '</span>' +
             '<div class="bd-content">' +
               '<p class="bd-question">Q' + originalPos + '. ' + q.text + '</p>' +
               '<p class="bd-answer bd-your-answer">Your answer: <em class="answer-wrong">' + selectedLabels + '</em></p>' +
@@ -544,18 +591,25 @@
     let breakdownHtml = '<div class="breakdown">' +
       '<h3 class="breakdown-title">Full Question Breakdown</h3>' +
       '<div class="breakdown-stats">' +
-        '<span class="bd-stat correct-stat">\u2713 Correct: ' + correct + '</span>' +
-        '<span class="bd-stat incorrect-stat">\u2717 Incorrect: ' + incorrect + '</span>' +
+        '<span class="bd-stat correct-stat">\u2713 Correct: ' + fullyCorrect + '</span>' +
+        (partialResults.length > 0 ? '<span class="bd-stat partial-stat">\u25D1 Partial: ' + partialResults.length + '</span>' : '') +
+        '<span class="bd-stat incorrect-stat">\u2717 Wrong: ' + wrongCount + '</span>' +
         '<span class="bd-stat total-stat">Total: ' + total + '</span>' +
-        '<span class="bd-stat pct-stat">' + pct + '%</span>' +
+        '<span class="bd-stat pct-stat">' + pct + '% &asymp; ' + mb820Points + '/1000</span>' +
       '</div>' +
       '<ol class="breakdown-list">';
 
     results.forEach(function (r, idx) {
       const q = qMap[r.questionId];
       if (!q) return;
-      const icon = r.isCorrect ? "\u2713" : "\u2717";
-      const cls  = r.isCorrect ? "bd-correct" : "bd-incorrect";
+      let icon, cls;
+      if (r.isCorrect) {
+        icon = "\u2713"; cls = "bd-correct";
+      } else if (r.partialScore > 0) {
+        icon = "\u25D1"; cls = "bd-partial";
+      } else {
+        icon = "\u2717"; cls = "bd-incorrect";
+      }
       const correctLabels  = r.correct.map(function (ci) {
         return ci >= 0 && ci < q.choices.length ? q.choices[ci] : "?";
       }).join("; ");
@@ -579,13 +633,14 @@
         '</p>' +
         '<div class="score-circle">' +
           '<span class="score-number">' + pct + '%</span>' +
-          '<span class="score-label">' + correct + ' / ' + total + ' correct</span>' +
+          '<span class="score-label">' + mb820Points + ' / 1000 MB-820 pts</span>' +
         '</div>' +
         '<p class="score-verdict">' + verdict + '</p>' +
         '<div class="summary-meta">' +
           '<span class="meta-item">\u23F1 ' + timeStr + '</span>' +
-          '<span class="meta-item">\u2713 ' + correct + ' correct</span>' +
-          '<span class="meta-item">\u2717 ' + incorrect + ' incorrect</span>' +
+          '<span class="meta-item">\u2713 ' + fullyCorrect + ' correct</span>' +
+          (partialResults.length > 0 ? '<span class="meta-item">\u25D1 ' + partialResults.length + ' partial</span>' : '') +
+          '<span class="meta-item">\u2717 ' + wrongCount + ' wrong</span>' +
         '</div>' +
         '<div class="summary-actions">' +
           '<button class="restart-btn" id="restart-btn">Restart Quiz</button>' +

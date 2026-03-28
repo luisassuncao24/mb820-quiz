@@ -170,6 +170,11 @@ body {
   border-left: 4px solid #22c55e;
   color: #bbf7d0;
 }
+.explanation.partial-exp {
+  background: #1c1a04;
+  border-left: 4px solid #eab308;
+  color: #fef08a;
+}
 .explanation.incorrect-exp {
   background: #450a0a;
   border-left: 4px solid #ef4444;
@@ -499,6 +504,7 @@ body {
 }
 
 .correct-stat  { background: #052e16; color: #86efac; border: 1px solid #22c55e; }
+.partial-stat  { background: #1c1a04; color: #fef08a; border: 1px solid #eab308; }
 .incorrect-stat { background: #450a0a; color: #fca5a5; border: 1px solid #ef4444; }
 .total-stat    { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
 
@@ -527,6 +533,7 @@ body {
 }
 
 .bd-correct   { background: #052e16; border-color: #22c55e; }
+.bd-partial   { background: #1c1a04; border-color: #eab308; }
 .bd-incorrect { background: #1c0404; border-color: #ef4444; }
 
 .bd-icon {
@@ -537,6 +544,7 @@ body {
 }
 
 .bd-correct   .bd-icon { color: #22c55e; }
+.bd-partial   .bd-icon { color: #eab308; }
 .bd-incorrect .bd-icon { color: #ef4444; }
 
 .bd-content { flex: 1; min-width: 0; }

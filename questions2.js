@@ -238,7 +238,7 @@ const questionsSet2 = [
   },
   {
     id: 219,
-    text: "Which table triggers are mentioned in the notes? (Select ALL that apply)",
+    text: "Which of the following are standard table triggers in Business Central AL? (Select ALL that apply)",
     type: "multiple",
     choices: [
       "OnInsert",
@@ -680,7 +680,7 @@ const questionsSet2 = [
   },
   {
     id: 253,
-    text: "Which SaaS monitoring tool is explicitly mentioned in the notes?",
+    text: "Which SaaS monitoring tool is integrated with Business Central to collect telemetry and application insights?",
     type: "single",
     choices: [
       "Azure DevOps Boards",
@@ -693,7 +693,7 @@ const questionsSet2 = [
   },
   {
     id: 254,
-    text: "Which integration options are named in the notes? (Select ALL that apply)",
+    text: "Which integration options does Business Central support for connecting with external systems? (Select ALL that apply)",
     type: "multiple",
     choices: [
       "APIs",
@@ -797,7 +797,7 @@ const questionsSet2 = [
   },
   {
     id: 262,
-    text: "Which app.json properties are mentioned in the notes? (Select ALL that apply)",
+    text: "Which of the following are required or commonly used properties in an AL extension's app.json file? (Select ALL that apply)",
     type: "multiple",
     choices: [
       "name",
@@ -927,7 +927,7 @@ const questionsSet2 = [
   },
   {
     id: 272,
-    text: "Which statements about table keys are correct according to the notes? (Select ALL that apply)",
+    text: "Which of the following statements about table keys in Business Central are correct? (Select ALL that apply)",
     type: "multiple",
     choices: [
       "Primary keys exist",
@@ -953,7 +953,7 @@ const questionsSet2 = [
   },
   {
     id: 274,
-    text: "Which statements about reports are supported by the notes? (Select ALL that apply)",
+    text: "Which of the following statements about Business Central report layouts are correct? (Select ALL that apply)",
     type: "multiple",
     choices: [
       "RDLC is client-side",
