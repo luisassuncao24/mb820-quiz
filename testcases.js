@@ -196,10 +196,204 @@ const TEST_CASES = [
     ]
   },
   {
-    key: "case2",
-    label: "Case Study 2",
-    description: "Coming soon — this case study has not yet been added.",
-    questions: []
+    key: "contoso",
+    label: "Contoso Case Study",
+    description: "12 scenario-based questions from the Contoso Manufacturing case study, covering extension lifecycle, telemetry, REST APIs, AL development patterns, debugging, and upgrade codeunits in Business Central.",
+    questions: [
+      {
+        id: 401,
+        text: "You need to handle removal of the Description field and the Clone procedure without breaking other extensions. Which three actions should be performed? (Select THREE)",
+        type: "multiple",
+        choices: [
+          "Set the Clone procedure as ObsoleteState = Pending and ObsoleteReason = 'Not in use' in version 2.0.0.0.",
+          "Set the Description field as ObsoleteState = Pending and ObsoleteReason = 'Not in use' in version 2.0.0.0.",
+          "Set the Description field as ObsoleteState = Removed; in version 2.0.0.1.",
+          "Remove the Description field in version 2.0.0.0.",
+          "Set the Clone procedure as ObsoleteState = Removed; in version 2.0.0.1.",
+          "Remove the Clone procedure in version 2.0.0.0.",
+          "Remove the Description field from the Issue table in version 2.0.0.1.",
+          "Add the [Obsolete('')] attribute to the Clone procedure in version 2.0.0.0."
+        ],
+        correct: [1, 2, 7],
+        explanation: "The correct sequence is: (1) Set the Description field as ObsoleteState = Pending with a reason in v2.0.0.0 to warn dependent extensions. (2) Add the [Obsolete('')] attribute to the Clone procedure in v2.0.0.0 — procedures use the Obsolete attribute rather than ObsoleteState directly. (3) Set the Description field as ObsoleteState = Removed in v2.0.0.1 to finalize the removal after the pending period."
+      },
+      {
+        id: 402,
+        text: "You need to determine why the extension does not appear in the tenant after a major Business Central upgrade. What are two possible reasons? (Select TWO)",
+        type: "multiple",
+        choices: [
+          "A. The extension was published as a DEV extension.",
+          "B. The extension was not compatible with the new version within 60 days of the first notification.",
+          "C. The extension was published as PTE, and the Platform parameter was not updated in the app.json file.",
+          "D. The extension was published as PTE, and the Platform and Runtime parameters were not updated in the app.json file.",
+          "E. The extension was not compatible with the new version within 90 days of the first notification."
+        ],
+        correct: [0, 4],
+        explanation: "DEV extensions are not preserved across major upgrades — they are removed automatically. PTEs that are not made compatible within 90 days of the first notification email are also automatically uninstalled after the upgrade. 60 days (option B) is incorrect; the grace period is 90 days."
+      },
+      {
+        id: 403,
+        text: "You need to create an API page that allows the mobile app to use the production environment during working hours and supports only GET operations. Which two property settings correctly complete the code segment? (Select TWO)",
+        type: "multiple",
+        choices: [
+          "InsertAllowed = false",
+          "DelayedInsert = true",
+          "DataAccessIntent = ReadOnly",
+          "ModifyAllowed = false",
+          "Editable = false",
+          "UsageCategory = Lists"
+        ],
+        correct: [2, 4],
+        explanation: "DataAccessIntent = ReadOnly routes queries to a read-only replica and makes the page read-only for API consumers. Editable = false prevents modifications through the API, restricting it to GET operations only. These two together fulfill the requirement of a read-only API that uses the production replica."
+      },
+      {
+        id: 404,
+        text: "You need to write the code to call the subcontractor's REST API secured with basic authentication. Which four code segment completions are correct? (Select FOUR)",
+        type: "multiple",
+        choices: [
+          "Header name: 'Authentication'",
+          "Header name: 'Authorization'",
+          "Header name: 'Authoriation'",
+          "Header name: 'Authenticacion'",
+          "Basic auth value: Base64Convert.FromBase64(Username + ':' + Password)",
+          "Basic auth value: Base64Convert.ToBase64(Username + ':' + Password)",
+          "Basic auth value: Base64Convert.ToBase64(Username) + Base64Convert.ToBase64(Password)",
+          "Basic auth value: Username + ':' + Password",
+          "Write request body: httpContent := Body",
+          "Write request body: httpContent.Clear()",
+          "Write request body: httpContent.WriteFrom(Body)",
+          "HTTP call: httpClient.Post(Url, HttpContent)",
+          "HTTP call: httpClient.Post(Url, HttpContent, Response)",
+          "HTTP call: httpClient.Post(Url, HttpContent, ResponseMessage)",
+          "HTTP call: httpClient.Send(Url, HttpContent, ResponseMessage)"
+        ],
+        correct: [1, 5, 10, 13],
+        explanation: "Basic authentication uses the 'Authorization' header (standard HTTP header name). The value must be Base64-encoded as 'username:password' using Base64Convert.ToBase64(Username + ':' + Password). The request body is written using httpContent.WriteFrom(Body). The HTTP POST call returns the response in a variable via httpClient.Post(Url, HttpContent, ResponseMessage)."
+      },
+      {
+        id: 405,
+        text: "You need to determine if there are unwanted incoming SOAP web service calls in your tenant during the last seven days. Which two KQL queries should you use? (Select TWO)",
+        type: "multiple",
+        choices: [
+          "A. traces | where timestamp > ago(7d) | where customDimensions has 'RT0008' | where customDimensions.category !in ('ODataV4', 'ODataV3', 'Api')",
+          "B. traces | where timestamp > ago(7d) | where customDimensions has 'RT0008' | where customDimensions.category == 'SOAP'",
+          "C. traces | where timestamp > ago(7d) | where customDimensions == 'RT0008' | where customDimensions.category == 'SOAP'",
+          "D. traces | where timestamp > ago(7d) | where customDimensions has 'RT0008' | where customDimensions.category != 'ODataV4'",
+          "E. traces | where timestamp > ago(7d) | where customDimensions has 'RT0008' | where customDimensions.category !in ('ODataV4', 'Api')"
+        ],
+        correct: [0, 1],
+        explanation: "RT0008 is the telemetry event ID for incoming web service requests. Option B is the most specific SOAP filter. Option A is also valid because excluding ODataV4, ODataV3, and Api effectively isolates SOAP calls. Option C incorrectly uses == instead of 'has' for customDimensions. Option D is too broad (excludes only ODataV4). Option E misses ODataV3."
+      },
+      {
+        id: 406,
+        text: "You need to determine why snapshot debugging does not start correctly with the given configuration (breakOnNext: 'WebClient', userId: 'YOURUSERNAME'). What is the cause of the problem?",
+        type: "single",
+        choices: [
+          "A. The 'userId' parameter must have the GUID of the user specified, not the username.",
+          "B. The 'breakOnNext' parameter is not set to 'WebServiceClient'.",
+          "C. The 'userId' parameter is specified, and the next user session that is specified in the 'breakOnNext' parameter is snapshot debugged.",
+          "D. The 'executionContext' parameter is not set to 'Debug'."
+        ],
+        correct: [0],
+        explanation: "The 'userId' parameter in snapshot debugging requires the GUID of the user, not the username string. Providing the username ('YOURUSERNAME') instead of the user's GUID prevents the debugger from correctly identifying and attaching to the target user's session."
+      },
+      {
+        id: 407,
+        text: "You need to call the Issue API action (Copy) from the mobile application. Which action endpoint should you use?",
+        type: "single",
+        choices: [
+          "A. POST /issues(88122e0e-5796-ec11-bb87-000d3a392eb5)/Microsoft.NAV.copy",
+          "B. PATCH /issues(88122e0e-5796-ec11-bb87-000d3a392eb5)/Microsoft.NAV.Copy",
+          "C. POST /issues(88122e0e-5796-ec11-bb87-000d3a392eb5)/Copy",
+          "D. GET /issues(88122e0e-5796-ec11-bb87-000d3a392eb5)/Microsoft.NAV.Copy",
+          "E. POST /issues(88122e0e-5796-ec11-bb87-000d3a392eb5)/Microsoft.NAV.Copy"
+        ],
+        correct: [4],
+        explanation: "Business Central API actions decorated with [ServiceEnabled] are called using POST. The action name is prefixed with 'Microsoft.NAV.' and the casing must match exactly — 'Copy' with a capital C. Option A uses lowercase 'copy'. Option B uses PATCH. Option C omits the required 'Microsoft.NAV.' prefix. Therefore E is the only correct endpoint."
+      },
+      {
+        id: 408,
+        text: "You need to configure telemetry for the SaaS tenant and test whether the ingested signals are displayed. Which three actions are required? (Select THREE)",
+        type: "multiple",
+        choices: [
+          "Select the Application Insights, select Log and then inspect the traces.",
+          "Select the environment in the Admin Center and place the connection string in the Application Insights Connection String field.",
+          "Create an Azure Application Insights instance by using the Azure Portal in the partner's subscription.",
+          "Create an Azure Application Insights instance by using the Azure Portal in Contoso's subscription.",
+          "Select the Application Insights instance, select Events, and then inspect the traces.",
+          "Select the Sessions menu and then select Restart Environment."
+        ],
+        correct: [0, 1, 3],
+        explanation: "The correct sequence is: (1) Create an Azure Application Insights instance in Contoso's own Azure subscription (not the partner's, since Contoso wants its own telemetry). (2) In the Business Central Admin Center, select the environment and enter the Application Insights connection string. (3) Open the Application Insights instance, select Logs, and query the traces table to verify the signals appear. The 'Events' blade (option 4) and Restart Environment (option 5) are not part of this flow."
+      },
+      {
+        id: 409,
+        text: "You need to implement the Issue Management module following Business Central design patterns and expose the PostIssue method. Which four actions are required? (Select FOUR)",
+        type: "multiple",
+        choices: [
+          "Create a PostIssue procedure in the 'Issue Management' codeunit, and in it call the PostIssue method defined in the 'Issue Management Impl' codeunit.",
+          "Create a codeunit named 'Issue Management Impl', and set the value of Access property to Public.",
+          "Create a local procedure named PostIssueImpl in the 'Issue Management' codeunit.",
+          "Create a codeunit named 'Issue Management', and set the value of Access property to Public.",
+          "Create a codeunit named 'Issue Management Impl', and set the value of Access property to Internal.",
+          "Create a PostIssue procedure in the 'Issue Management' codeunit, and in it call the PostIssueImpl method.",
+          "Create a PostIssue procedure in the 'Issue Management Impl' codeunit and add the needed code to the procedure."
+        ],
+        correct: [0, 3, 4, 6],
+        explanation: "The Business Central facade pattern requires: (1) A public 'Issue Management' codeunit as the façade (Access = Public). (2) An internal 'Issue Management Impl' codeunit containing the actual implementation (Access = Internal, so ISSUE EXT cannot call it directly). (3) The implementation procedure in 'Issue Management Impl'. (4) A matching public procedure in 'Issue Management' that delegates to the implementation codeunit. This separates the public API from the internal implementation."
+      },
+      {
+        id: 410,
+        text: "You need to create the correct access modifier for the IssueTotal variable in the Issue table so that the ISSUE EXT tableextension can access it. Which variable declaration should you use?",
+        type: "single",
+        choices: [
+          "A. Internal var IssueTotal: Decimal",
+          "B. Var IssueTotal: Decimal",
+          "C. Public var IssueTotal: Decimal",
+          "D. Local var IssueTotal: Decimal",
+          "E. Protected var IssueTotal: Decimal"
+        ],
+        correct: [4],
+        explanation: "Protected access allows a variable to be accessed from tableextensions of the same table, which is exactly what ISSUE EXT needs. Public would expose it to all extensions. Internal would limit access to within the same extension (ISSUE BASE only). Local would limit access to within the same procedure. The Protected modifier is the correct choice for a variable that must be accessible to extensions of the table."
+      },
+      {
+        id: 411,
+        text: "You need to write an Upgrade codeunit and use the DataTransfer object to move data row by row from the obsolete Issue Category table to the new Issue Type table. Which two selections are correct? (Select TWO)",
+        type: "multiple",
+        choices: [
+          "Upgrade codeunit trigger: OnValidateUpgradePerCompany",
+          "Upgrade codeunit trigger: OnValidateUpgradePerDatabase",
+          "Upgrade codeunit trigger: OnUpgradePerDatabase",
+          "Upgrade codeunit trigger: OnUpgradePerCompany",
+          "DataTransfer method: CopyFields",
+          "DataTransfer method: CopyRows",
+          "DataTransfer method: SetTables",
+          "DataTransfer method: TransferFields"
+        ],
+        correct: [3, 5],
+        explanation: "OnUpgradePerCompany runs once per company and is the correct trigger when data is company-specific (as most business data in Business Central is). OnUpgradePerDatabase runs once for the entire database and is used for database-level objects. CopyRows copies entire rows from the source table to the destination table, which is required when moving data row by row. CopyFields copies individual field values between two tables that share the same row structure."
+      },
+      {
+        id: 412,
+        text: "You need to log an error in telemetry when the business process in the custom application for Contoso fails. The signal must only be visible in the partner's telemetry. Which three settings correctly complete the code segment? (Select THREE)",
+        type: "multiple",
+        choices: [
+          "Verbosity: Critical",
+          "Verbosity: Normal",
+          "Verbosity: Verbose",
+          "Verbosity: Warning",
+          "DataClassification: AccountData",
+          "DataClassification: CustomerContent",
+          "DataClassification: OrganizationIdentifiableInformation",
+          "DataClassification: SystemMetadata",
+          "TelemetryScope: All",
+          "TelemetryScope: CustomerContent",
+          "TelemetryScope: ExtensionPublisher"
+        ],
+        correct: [0, 7, 10],
+        explanation: "Verbosity = Critical is used for error-level events that require immediate attention. DataClassification = SystemMetadata is the correct classification for telemetry signals that describe system behavior (not personal/customer data). TelemetryScope = ExtensionPublisher ensures the custom telemetry signal is sent only to the partner's Application Insights instance (the extension publisher's telemetry), not to Contoso's tenant telemetry — which is exactly the requirement."
+      }
+    ]
   },
   {
     key: "case3",
