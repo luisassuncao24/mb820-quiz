@@ -1,25 +1,45 @@
 (function () {
   "use strict";
 
+  // ── Question sets ────────────────────────────────────────────────────────
+  const QUESTION_SETS = [
+    {
+      key: "set1",
+      label: "Advanced Practice Questions",
+      description: "100 challenging scenario-based questions covering all MB-820 exam topics.",
+      data: questions
+    },
+    {
+      key: "set2",
+      label: "Foundation Practice Questions",
+      description: "100 concept-focused questions covering Business Central fundamentals and developer topics.",
+      data: questionsSet2
+    }
+  ];
+
   // ── State ────────────────────────────────────────────────────────────────
-  let current  = 0;
-  let score    = 0;
-  let answered = false;
-  let shuffled = [];
-  let results  = []; // {questionId, isCorrect, selected, correct}
+  let activeSet  = null; // one of QUESTION_SETS entries
+  let current    = 0;
+  let score      = 0;
+  let answered   = false;
+  let shuffled   = [];
+  let results    = []; // {questionId, isCorrect, selected, correct}
 
   // ── DOM refs ─────────────────────────────────────────────────────────────
-  const questionEl = document.getElementById("question");
-  const choicesEl  = document.getElementById("choices");
-  const nextBtn    = document.getElementById("next-button");
-  const summaryEl  = document.getElementById("score-summary");
+  const setSelectionEl = document.getElementById("set-selection");
+  const questionEl     = document.getElementById("question");
+  const choicesEl      = document.getElementById("choices");
+  const nextBtn        = document.getElementById("next-button");
+  const summaryEl      = document.getElementById("score-summary");
 
   // ── Persistence ──────────────────────────────────────────────────────────
-  const SAVE_KEY = "mb820_quiz_progress";
+  function saveKey() {
+    return "mb820_quiz_progress_" + activeSet.key;
+  }
 
   function saveProgress() {
     try {
-      localStorage.setItem(SAVE_KEY, JSON.stringify({
+      localStorage.setItem(saveKey(), JSON.stringify({
         shuffledIds: shuffled.map(function (q) { return q.id; }),
         current: current,
         score: score,
@@ -28,14 +48,14 @@
     } catch (e) { /* storage unavailable */ }
   }
 
-  function loadProgress() {
+  function loadProgress(set) {
     try {
-      const raw = localStorage.getItem(SAVE_KEY);
+      const raw = localStorage.getItem("mb820_quiz_progress_" + set.key);
       if (!raw) return null;
       const saved = JSON.parse(raw);
       if (!saved || !Array.isArray(saved.shuffledIds) || saved.shuffledIds.length === 0) return null;
       const qMap = {};
-      questions.forEach(function (q) { qMap[q.id] = q; });
+      set.data.forEach(function (q) { qMap[q.id] = q; });
       const restored = saved.shuffledIds.map(function (id) { return qMap[id]; });
       if (restored.some(function (q) { return !q; })) return null;
       return {
@@ -48,7 +68,7 @@
   }
 
   function clearProgress() {
-    try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ }
+    try { localStorage.removeItem(saveKey()); } catch (e) { /* ignore */ }
   }
 
   // ── Helpers ──────────────────────────────────────────────────────────────
@@ -65,14 +85,72 @@
     return a.length === b.length && a.every((v, i) => v === b[i]);
   }
 
+  // ── Set selection screen ─────────────────────────────────────────────────
+  function showSetSelection() {
+    setSelectionEl.style.display = "block";
+    questionEl.innerHTML         = "";
+    choicesEl.innerHTML          = "";
+    nextBtn.style.display        = "none";
+    summaryEl.style.display      = "none";
+    document.getElementById("quiz-container").classList.remove("finished");
+
+    let html = '<div class="set-selection-wrapper">' +
+      '<h2 class="set-selection-title">Choose a Question Set</h2>' +
+      '<div class="set-cards">';
+
+    QUESTION_SETS.forEach(function (set) {
+      const saved = loadProgress(set);
+      const hasSaved = saved && saved.current > 0 && saved.current < saved.shuffled.length;
+      html +=
+        '<div class="set-card" data-key="' + set.key + '">' +
+          '<div class="set-card-header">' +
+            '<span class="set-card-title">' + set.label + '</span>' +
+            '<span class="set-card-count">' + set.data.length + ' questions</span>' +
+          '</div>' +
+          '<p class="set-card-desc">' + set.description + '</p>' +
+          (hasSaved
+            ? '<p class="set-card-resume">⏸ Saved progress: question ' + (saved.current + 1) + ' of ' + saved.shuffled.length + ' (' + saved.score + ' correct)</p>'
+            : '') +
+          '<div class="set-card-actions">' +
+            (hasSaved
+              ? '<button class="set-btn resume-set-btn" data-key="' + set.key + '">Resume</button>'
+              : '') +
+            '<button class="set-btn start-set-btn" data-key="' + set.key + '">' +
+              (hasSaved ? 'New Quiz' : 'Start Quiz') +
+            '</button>' +
+          '</div>' +
+        '</div>';
+    });
+
+    html += '</div></div>';
+    setSelectionEl.innerHTML = html;
+
+    setSelectionEl.querySelectorAll(".resume-set-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const key = btn.dataset.key;
+        activeSet = QUESTION_SETS.find(function (s) { return s.key === key; });
+        init(true);
+      });
+    });
+
+    setSelectionEl.querySelectorAll(".start-set-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const key = btn.dataset.key;
+        activeSet = QUESTION_SETS.find(function (s) { return s.key === key; });
+        init(false);
+      });
+    });
+  }
+
   // ── Init ─────────────────────────────────────────────────────────────────
   function init(resume) {
-    summaryEl.style.display = "none";
+    setSelectionEl.style.display = "none";
+    summaryEl.style.display      = "none";
     document.getElementById("quiz-container").classList.remove("finished");
-    nextBtn.style.display = "none";
+    nextBtn.style.display        = "none";
 
     if (resume) {
-      const saved = loadProgress();
+      const saved = loadProgress(activeSet);
       if (saved && saved.current < saved.shuffled.length) {
         shuffled = saved.shuffled;
         current  = saved.current;
@@ -85,7 +163,7 @@
 
     // Fresh start
     clearProgress();
-    shuffled = shuffle(questions);
+    shuffled = shuffle(activeSet.data);
     current  = 0;
     score    = 0;
     results  = [];
@@ -102,9 +180,10 @@
         '<div class="resume-buttons">' +
           '<button class="resume-btn" id="resume-btn">Resume</button>' +
           '<button class="new-quiz-btn" id="new-quiz-btn">New Quiz</button>' +
+          '<button class="new-quiz-btn" id="change-set-btn">Change Set</button>' +
         '</div>' +
       '</div>';
-    choicesEl.innerHTML = "";
+    choicesEl.innerHTML   = "";
     nextBtn.style.display = "none";
 
     document.getElementById("resume-btn").addEventListener("click", function () {
@@ -112,6 +191,9 @@
     });
     document.getElementById("new-quiz-btn").addEventListener("click", function () {
       init(false);
+    });
+    document.getElementById("change-set-btn").addEventListener("click", function () {
+      showSetSelection();
     });
   }
 
@@ -278,18 +360,46 @@
     nextBtn.style.display = "none";
     document.getElementById("quiz-container").classList.add("finished");
 
-    const total   = shuffled.length;
-    const correct = score;
+    const total     = shuffled.length;
+    const correct   = score;
     const incorrect = total - correct;
-    const pct   = Math.round((correct / total) * 100);
-    const badge = pct >= 70 ? "pass" : (pct >= 50 ? "marginal" : "fail");
+    const pct    = Math.round((correct / total) * 100);
+    const badge  = pct >= 70 ? "pass" : (pct >= 50 ? "marginal" : "fail");
     const verdict = pct >= 70
       ? "Great work \u2014 you\u2019re ready for MB-820! \uD83C\uDF89"
       : "Keep studying \u2014 review the explanations and try again.";
 
     // Build per-question breakdown
     const qMap = {};
-    questions.forEach(function (q) { qMap[q.id] = q; });
+    activeSet.data.forEach(function (q) { qMap[q.id] = q; });
+
+    // Separate correct and incorrect results
+    const incorrectResults = results.filter(function (r) { return !r.isCorrect; });
+
+    let incorrectHtml = "";
+    if (incorrectResults.length > 0) {
+      incorrectHtml = '<div class="breakdown">' +
+        '<h3 class="breakdown-title">\u2717 Questions to Review (' + incorrectResults.length + ')</h3>' +
+        '<ol class="breakdown-list">';
+
+      incorrectResults.forEach(function (r) {
+        const q = qMap[r.questionId];
+        if (!q) return;
+        // Find the original 1-based position of this result in the full results array
+        const originalPos = results.findIndex(function (res) { return res.questionId === r.questionId; }) + 1;
+        const correctLabels = r.correct.map(function (ci) { return q.choices[ci]; }).join(", ");
+        incorrectHtml +=
+          '<li class="bd-item bd-incorrect">' +
+            '<span class="bd-icon">\u2717</span>' +
+            '<div class="bd-content">' +
+              '<p class="bd-question">Q' + originalPos + '. ' + q.text + '</p>' +
+              '<p class="bd-answer">Correct answer: <em>' + correctLabels + '</em></p>' +
+            '</div>' +
+          '</li>';
+      });
+
+      incorrectHtml += '</ol></div>';
+    }
 
     let breakdownHtml = '<div class="breakdown">' +
       '<h3 class="breakdown-title">Question Breakdown</h3>' +
@@ -321,13 +431,18 @@
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
         '<h2>Quiz Complete!</h2>' +
+        '<p class="summary-set-label">' + activeSet.label + '</p>' +
         '<div class="score-circle">' +
           '<span class="score-number">' + pct + '%</span>' +
           '<span class="score-label">' + correct + ' / ' + total + ' correct</span>' +
         '</div>' +
         '<p class="score-verdict">' + verdict + '</p>' +
-        '<button class="restart-btn" id="restart-btn">Restart Quiz</button>' +
+        '<div class="summary-actions">' +
+          '<button class="restart-btn" id="restart-btn">Restart Quiz</button>' +
+          '<button class="change-set-btn" id="change-set-btn-summary">Change Set</button>' +
+        '</div>' +
       '</div>' +
+      incorrectHtml +
       breakdownHtml;
 
     summaryEl.style.display = "block";
@@ -335,13 +450,41 @@
     document.getElementById("restart-btn").addEventListener("click", function () {
       init(false);
     });
+    document.getElementById("change-set-btn-summary").addEventListener("click", function () {
+      showSetSelection();
+    });
   }
 
   // ── Boot ─────────────────────────────────────────────────────────────────
-  const saved = loadProgress();
-  if (saved && saved.current > 0 && saved.current < saved.shuffled.length) {
-    showResumePrompt(saved);
-  } else {
-    init(false);
-  }
+  // Check for saved progress in any set; if found in exactly one set, prompt resume there.
+  // Otherwise show the set selection screen.
+  (function boot() {
+    // Detect if there's a legacy save key (old format, before sets were introduced)
+    // and migrate it to set1 (only if set1 key doesn't already exist)
+    try {
+      const legacyRaw = localStorage.getItem("mb820_quiz_progress");
+      if (legacyRaw && !localStorage.getItem("mb820_quiz_progress_set1")) {
+        localStorage.setItem("mb820_quiz_progress_set1", legacyRaw);
+      }
+      if (legacyRaw) {
+        localStorage.removeItem("mb820_quiz_progress");
+      }
+    } catch (e) { /* ignore */ }
+
+    // Find sets that have saved in-progress state
+    const setsWithProgress = QUESTION_SETS.filter(function (set) {
+      const saved = loadProgress(set);
+      return saved && saved.current > 0 && saved.current < saved.shuffled.length;
+    });
+
+    if (setsWithProgress.length === 1) {
+      // Only one set has progress — go straight to that set's resume prompt
+      activeSet = setsWithProgress[0];
+      const saved = loadProgress(activeSet);
+      showResumePrompt(saved);
+    } else {
+      // No progress or multiple sets have progress — show set selection
+      showSetSelection();
+    }
+  })();
 })();
