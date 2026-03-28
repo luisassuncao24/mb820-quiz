@@ -430,11 +430,29 @@ body {
 
 /* ── Summary set label ────────────────────────────────────────────────── */
 .summary-set-label {
-  font-size: 0.82rem;
+  font-size: 0.87rem;
   color: #94a3b8;
   margin-bottom: 1rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+}
+
+/* ── Summary meta row ─────────────────────────────────────────────────── */
+.summary-meta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.meta-item {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #94a3b8;
+  background: #1e293b;
+  border: 1px solid #334155;
+  padding: 3px 12px;
+  border-radius: 999px;
 }
 
 /* ── Summary actions row ──────────────────────────────────────────────── */
@@ -541,3 +559,107 @@ body {
 }
 
 .bd-incorrect .bd-answer em { color: #fca5a5; }
+
+/* ── Timer display ────────────────────────────────────────────────────── */
+#timer-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  padding: 0.4rem 0.6rem;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.timer-icon {
+  font-size: 1rem;
+}
+
+.timer-value {
+  font-size: 1.15rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.timer-green  { color: #22c55e; }
+.timer-yellow { color: #f59e0b; }
+.timer-red    { color: #ef4444; }
+
+.timer-label {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timer-expired {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #ef4444;
+}
+
+/* ── Difficulty badges ────────────────────────────────────────────────── */
+.difficulty-badge {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  padding: 2px 10px;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+.diff-beginner {
+  background: #052e16;
+  color: #86efac;
+  border: 1px solid #22c55e;
+}
+
+.diff-intermediate {
+  background: #1c1204;
+  color: #fde68a;
+  border: 1px solid #f59e0b;
+}
+
+.diff-proficient {
+  background: #450a0a;
+  color: #fca5a5;
+  border: 1px solid #ef4444;
+}
+
+/* ── Set-selection subtitle ───────────────────────────────────────────── */
+.set-selection-sub {
+  font-size: 0.82rem;
+  color: #64748b;
+  text-align: center;
+  margin-top: -0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+/* ── Review explanation in summary ───────────────────────────────────── */
+.bd-explanation {
+  font-size: 0.76rem;
+  color: #64748b;
+  line-height: 1.55;
+  margin-top: 0.3rem;
+  font-style: italic;
+}
+
+.bd-your-answer em.answer-wrong {
+  color: #fca5a5;
+}
+
+/* ── All-correct notice ───────────────────────────────────────────────── */
+.all-correct {
+  font-size: 0.95rem;
+  color: #86efac;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+/* ── Percentage stat ──────────────────────────────────────────────────── */
+.pct-stat { background: #1e293b; color: #38bdf8; border: 1px solid #0369a1; }
