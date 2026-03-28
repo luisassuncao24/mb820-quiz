@@ -671,3 +671,140 @@ body {
 
 /* ── Percentage stat ──────────────────────────────────────────────────── */
 .pct-stat { background: #1e293b; color: #38bdf8; border: 1px solid #0369a1; }
+
+/* ── Section divider ──────────────────────────────────────────────────── */
+.section-divider {
+  margin: 2rem 0 0.5rem;
+  border: none;
+  border-top: 1px solid #334155;
+}
+
+/* ── Case study badge ─────────────────────────────────────────────────── */
+.diff-case {
+  background: #1e1a3b;
+  color: #c4b5fd;
+  border: 1px solid #7c3aed;
+}
+
+/* ── Disabled case card ───────────────────────────────────────────────── */
+.case-card-disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.coming-soon-label {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-style: italic;
+}
+
+/* ── Case selector on quiz card ───────────────────────────────────────── */
+.case-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.case-selector-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.case-select {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  color: #e2e8f0;
+  font-size: 0.82rem;
+  padding: 4px 8px;
+  cursor: pointer;
+  flex: 1;
+  min-width: 0;
+}
+
+.case-select:focus {
+  outline: none;
+  border-color: #38bdf8;
+}
+
+/* ── Phase banner (shown during combined/standalone case) ─────────────── */
+.phase-banner {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 12px;
+  border-radius: 999px;
+  margin-bottom: 0.75rem;
+}
+
+.phase-quiz {
+  background: #1d4ed8;
+  color: #bfdbfe;
+}
+
+.phase-case {
+  background: #1e1a3b;
+  color: #c4b5fd;
+  border: 1px solid #7c3aed;
+}
+
+/* ── Combined score breakdown table ──────────────────────────────────── */
+.combined-score-breakdown {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin: 1rem auto 1.25rem;
+  max-width: 420px;
+  text-align: left;
+}
+
+.combined-score-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0;
+  border-bottom: 1px solid #1e293b;
+  flex-wrap: wrap;
+}
+
+.combined-score-total-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0 0;
+  flex-wrap: wrap;
+}
+
+.combined-score-label {
+  flex: 1;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.combined-score-pct {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+.combined-score-contrib {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #38bdf8;
+  min-width: 42px;
+  text-align: right;
+}
+
+.combined-total {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #38bdf8;
+}
