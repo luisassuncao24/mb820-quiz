@@ -468,7 +468,7 @@
           current = results.length;
         }
         if (current < shuffled.length) {
-          startTimer();
+          hideTimer();
           renderQuestion();
           return;
         }
@@ -503,7 +503,6 @@
     nextBtn.style.display = "none";
 
     document.getElementById("case-intro-start-btn").addEventListener("click", function () {
-      startTimer();
       renderQuestion();
     });
     document.getElementById("case-intro-back-btn").addEventListener("click", function () {
@@ -732,8 +731,9 @@
     if (isCorrect) {
       questionScore = 1;
     } else if (q.type === "multiple" && q.correct.length > 1) {
-      const correctlySelected = selected.filter(function (s) { return q.correct.includes(s); }).length;
-      questionScore = correctlySelected / q.correct.length;
+      const correctlySelected   = selected.filter(function (s) { return q.correct.includes(s); }).length;
+      const incorrectlySelected = selected.filter(function (s) { return !q.correct.includes(s); }).length;
+      questionScore = Math.max(0, (correctlySelected - incorrectlySelected) / q.correct.length);
     }
     score += questionScore;
 
