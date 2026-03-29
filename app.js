@@ -179,6 +179,27 @@
     return String(m).padStart(2, "0") + "m " + String(s).padStart(2, "0") + "s";
   }
 
+  // ── Confirmation modal ────────────────────────────────────────────────────
+  function showConfirm(title, message, onConfirm) {
+    document.getElementById("confirm-title").textContent = title;
+    document.getElementById("confirm-message").textContent = message;
+    document.getElementById("confirm-overlay").style.display = "flex";
+
+    const yesBtn = document.getElementById("confirm-yes-btn");
+    const noBtn  = document.getElementById("confirm-no-btn");
+
+    function cleanup() {
+      document.getElementById("confirm-overlay").style.display = "none";
+      yesBtn.removeEventListener("click", onYes);
+      noBtn.removeEventListener("click", onNo);
+    }
+    function onYes() { cleanup(); onConfirm(); }
+    function onNo()  { cleanup(); }
+
+    yesBtn.addEventListener("click", onYes);
+    noBtn.addEventListener("click", onNo);
+  }
+
   // ── Idle / auto-pause ────────────────────────────────────────────────────
   // Throttle timestamp — avoid re-setting the idle timer on every pixel of
   // mousemove (which fires dozens of times per second).
@@ -359,6 +380,25 @@
       localStorage.removeItem("mb820_quiz_progress_" + activeSet.key);
       TEST_CASES.forEach(function (tc) {
         localStorage.removeItem("mb820_combined_" + activeSet.key + "_" + tc.key);
+      });
+    } catch (e) { /* ignore */ }
+  }
+
+  // Clears ALL progress across every quiz and case study (used by the full reset button).
+  function clearAllProgress() {
+    try {
+      QUESTION_SETS.forEach(function (set) {
+        localStorage.removeItem("mb820_quiz_progress_" + set.key);
+        localStorage.removeItem("mb820_completed_quiz_" + set.key);
+        TEST_CASES.forEach(function (tc) {
+          localStorage.removeItem("mb820_combined_" + set.key + "_" + tc.key);
+        });
+      });
+      // Clear random quiz progress
+      localStorage.removeItem("mb820_quiz_progress_random");
+      TEST_CASES.forEach(function (tc) {
+        localStorage.removeItem("mb820_case_" + tc.key);
+        localStorage.removeItem("mb820_completed_case_" + tc.key);
       });
     } catch (e) { /* ignore */ }
   }
@@ -641,7 +681,8 @@
               : (hasCombinedSaved
                   ? '<button class="set-btn resume-set-btn" data-key="' + set.key + '" data-combined-case-key="' + combinedTc.key + '">Resume</button>'
                   : '')) +
-            '<button class="set-btn start-set-btn" data-key="' + set.key + '">' +
+            '<button class="set-btn start-set-btn" data-key="' + set.key + '"' +
+              (hasSaved || hasCombinedSaved ? ' data-has-saved="true"' : '') + '>' +
               (hasSaved || hasCombinedSaved ? 'New Quiz' : 'Start Quiz') +
             '</button>' +
           '</div>' +
@@ -674,7 +715,8 @@
             (randomHasSaved
               ? '<button class="set-btn resume-set-btn" id="random-resume-btn">Resume</button>'
               : '') +
-            '<button class="set-btn start-set-btn" id="random-start-btn">' +
+            '<button class="set-btn start-set-btn" id="random-start-btn"' +
+              (randomHasSaved ? ' data-has-saved="true"' : '') + '>' +
               (randomHasSaved ? 'New Random Quiz' : 'Start Random Quiz') +
             '</button>' +
           '</div>' +
@@ -720,7 +762,8 @@
                 (hasSaved
                   ? '<button class="set-btn resume-set-btn case-resume-btn" data-case-key="' + tc.key + '">Resume</button>'
                   : '') +
-                '<button class="set-btn start-set-btn case-start-btn" data-case-key="' + tc.key + '">' +
+                '<button class="set-btn start-set-btn case-start-btn" data-case-key="' + tc.key + '"' +
+                  (hasSaved ? ' data-has-saved="true"' : '') + '>' +
                   (hasSaved ? 'New Attempt' : 'Start') +
                 '</button>'
               : '<span class="coming-soon-label">Available soon</span>') +
@@ -729,6 +772,11 @@
     });
 
     html += '</div></div>';
+
+    // ── Reset All Progress ───────────────────────────────────────────────
+    html += '<div class="reset-all-container">' +
+      '<button class="reset-all-btn" id="reset-all-btn">\uD83D\uDDD1\uFE0F Reset All Progress</button>' +
+    '</div>';
 
     setSelectionEl.innerHTML = html;
 
@@ -767,7 +815,15 @@
         caseStudyMode  = caseStudy ? "combined" : null;
         savedQuizState = null;
         casePhase      = "quiz";
-        init(false);
+        if (btn.dataset.hasSaved) {
+          showConfirm(
+            "Start New Quiz?",
+            "Your current in-progress quiz will be discarded. Are you sure you want to start a new quiz?",
+            function () { init(false); }
+          );
+        } else {
+          init(false);
+        }
       });
     });
 
@@ -798,7 +854,15 @@
         caseStudyMode  = "standalone";
         savedQuizState = null;
         casePhase      = "quiz";
-        initStandaloneCase(false);
+        if (btn.dataset.hasSaved) {
+          showConfirm(
+            "Start New Attempt?",
+            "Your current in-progress case study will be discarded. Are you sure you want to start a new attempt?",
+            function () { initStandaloneCase(false); }
+          );
+        } else {
+          initStandaloneCase(false);
+        }
       });
     });
 
@@ -823,7 +887,32 @@
       randomResumeBtn.addEventListener("click", function () { initRandomQuiz(true); });
     }
     if (randomStartBtn) {
-      randomStartBtn.addEventListener("click", function () { initRandomQuiz(false); });
+      randomStartBtn.addEventListener("click", function () {
+        if (randomStartBtn.dataset.hasSaved) {
+          showConfirm(
+            "Start New Random Quiz?",
+            "Your current in-progress random quiz will be discarded. Are you sure you want to start a new one?",
+            function () { initRandomQuiz(false); }
+          );
+        } else {
+          initRandomQuiz(false);
+        }
+      });
+    }
+
+    // Reset All Progress button
+    const resetAllBtn = document.getElementById("reset-all-btn");
+    if (resetAllBtn) {
+      resetAllBtn.addEventListener("click", function () {
+        showConfirm(
+          "Reset All Progress?",
+          "This will permanently delete all quiz results, completion badges, and case study progress. This cannot be undone.",
+          function () {
+            clearAllProgress();
+            showSetSelection();
+          }
+        );
+      });
     }
   }
 
@@ -1157,20 +1246,25 @@
 
     choicesEl.innerHTML = "";
 
-    q.choices.forEach(function (choice, idx) {
+    // Shuffle choices so answer position varies between attempts
+    const choiceOrder = shuffle(q.choices.map(function (text, idx) {
+      return { text: text, originalIdx: idx };
+    }));
+
+    choiceOrder.forEach(function (choiceItem, displayIdx) {
       const item  = document.createElement("div");
       item.className    = "choice-item";
-      item.dataset.idx  = idx;
+      item.dataset.idx  = choiceItem.originalIdx;
 
       const input = document.createElement("input");
       input.type  = q.type === "multiple" ? "checkbox" : "radio";
       input.name  = "choice";
-      input.id    = "choice-" + idx;
-      input.value = idx;
+      input.id    = "choice-" + displayIdx;
+      input.value = choiceItem.originalIdx;
 
       const label  = document.createElement("label");
-      label.htmlFor    = "choice-" + idx;
-      label.textContent = choice;
+      label.htmlFor    = "choice-" + displayIdx;
+      label.textContent = choiceItem.text;
 
       item.appendChild(input);
       item.appendChild(label);
@@ -1302,6 +1396,12 @@
     }
     exp.innerHTML = "<strong>" + feedbackLabel + "</strong><br>" + q.explanation;
     choicesEl.appendChild(exp);
+
+    // Scroll the feedback into view (helpful on mobile when the explanation is below the fold).
+    // The small delay lets the browser finish painting the newly appended element first.
+    setTimeout(function () {
+      exp.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 50);
 
     nextBtn.style.display  = "inline-block";
     if (current + 1 < shuffled.length) {

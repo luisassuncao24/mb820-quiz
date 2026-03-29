@@ -1129,3 +1129,67 @@ body {
 #math-submit-btn:hover {
   background: #0369a1;
 }
+
+/* ── Confirmation overlay ─────────────────────────────────────────────── */
+#confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1001;
+}
+
+#confirm-card {
+  background: #1e293b;
+  border: 2px solid #f59e0b;
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+}
+
+#confirm-card h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f59e0b;
+  margin-bottom: 0.75rem;
+}
+
+#confirm-card p {
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  line-height: 1.6;
+  margin-bottom: 1.75rem;
+}
+
+/* ── Reset-all button on set-selection ───────────────────────────────── */
+.reset-all-container {
+  text-align: center;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #334155;
+}
+
+.reset-all-btn {
+  padding: 0.55rem 1.5rem;
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.reset-all-btn:hover {
+  background: #450a0a;
+  color: #fca5a5;
+  border-color: #ef4444;
+}
