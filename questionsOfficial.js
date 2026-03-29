@@ -417,5 +417,167 @@ const questionsOfficial = [
     ],
     correct: [0, 2, 4],
     explanation: "Item.Reset() clears all existing filters and sort keys before applying new ones, ensuring a clean filter state. Item.SetRange(Type, Item.Type::Inventory) filters for items with Type = Inventory (SetRange is used for exact/range matches on enum values). Item.SetFilter(\"No.\", '<>S*') uses a wildcard pattern filter to exclude items whose number starts with 'S' — SetFilter supports pattern expressions while SetRange does not."
+  },
+  {
+    id: 532,
+    text: "A company has a Business Central online environment. You need to create an HTTP GET request that connects to an external REST service. Which solution should you use?",
+    type: "single",
+    choices: [
+      "A. HttpContent data type variable",
+      "B. Codeunit 1299 \"Web Request Helper\"",
+      "C. Codeunit 5459 \"JSON Management\"",
+      "D. Codeunit 1297 \"Http Web Request Mgt.\"",
+      "E. HttpClient data type variable"
+    ],
+    correct: [4],
+    explanation: "For Business Central online environments, you must use the HttpClient data type variable to make HTTP requests to external REST services. The legacy codeunits (1297 Http Web Request Mgt. and 1299 Web Request Helper) are not available in online/SaaS environments. HttpContent is used to represent the body of a request/response, not to initiate the request itself."
+  },
+  {
+    id: 533,
+    text: "You need to create the configuration table and page for the non-conformity functionality. Which table configurations should you use? (Select THREE — one per requirement)\n\nRequirements:\n1. Design pattern for the setup table\n2. Data type of the primary key field\n3. Property required to prevent users from adding records",
+    type: "multiple",
+    choices: [
+      "Singleton — design pattern for the setup table",
+      "No. Series — design pattern for the setup table",
+      "Adapter — design pattern for the setup table",
+      "BigInteger — data type of the primary key field",
+      "Code — data type of the primary key field",
+      "Integer — data type of the primary key field",
+      "InitValue — property to prevent users from adding records",
+      "InsertAllowed — property to prevent users from adding records",
+      "UnBound — property to prevent users from adding records"
+    ],
+    correct: [0, 4, 7],
+    explanation: "The Singleton design pattern is used for setup tables so that only one record exists. The primary key field should use the Code data type (typically a single blank Code field). The InsertAllowed property set to false prevents users from manually inserting new records, enforcing the single-record constraint on the setup table and page."
+  },
+  {
+    id: 534,
+    text: "You are creating a view for a Business Central app. The view requires a custom layout that displays only customer records with a balance greater than 500 in local currency. You need to configure the view to specify that it has a custom layout. Which property combination should you use?",
+    type: "single",
+    choices: [
+      "A. SharedLayout = false; Filters = where (Balance = filter (> 500), \"Currency Code\" = filter ('LCY'));",
+      "B. SharedLayout = true; Filters = where (Balance = filter (> 500), \"Currency Code\" = filter ('LCY'));",
+      "C. SharedLayout = false; Filters = where (\"Balance (LCY)\" = filter (> 500));",
+      "D. SharedLayout = true; Filters = where (\"Balance (LCY)\" = filter (> 500));"
+    ],
+    correct: [2],
+    explanation: "SharedLayout = false specifies that this view has its own custom layout (not shared with the base list page layout). The correct field to filter on is \"Balance (LCY)\" which already represents the balance in local currency, so no separate currency code filter is needed. SharedLayout = true would indicate the view reuses the default page layout."
+  },
+  {
+    id: 535,
+    text: "A company uses Business Central. You plan to help users through the installation process by using Assisted Setup. You need to create a wizard page. Which two actions should you perform? Each correct answer presents a complete solution. (Select TWO)",
+    type: "multiple",
+    choices: [
+      "A. Set the PageType property to NavigatePage.",
+      "B. For each step needed in the guide, add a group() control to the root-level of the layout > area(Content) control.",
+      "C. Set the PageType property to Worksheet.",
+      "D. For each step needed in the guide, add a repeater() control to the root-level of the layout > area(Content) control."
+    ],
+    correct: [0, 1],
+    explanation: "Setting PageType to NavigatePage creates the wizard/guide layout with Back/Next/Finish navigation buttons. For each step in the wizard, you add a group() control directly inside area(Content) — each group represents one step and can be shown or hidden based on the current step variable. A repeater() control is used for list pages, not wizard steps, and Worksheet is an incorrect page type for a wizard."
+  },
+  {
+    id: 536,
+    text: "A company uses four objects in development in Business Central. You need to identify the application layer for each object in Visual Studio Code. Which application layer does each object belong to? (Select all correct statements)",
+    type: "multiple",
+    choices: [
+      "Activities Cue table — System application layer",
+      "Activities Cue table — Base application layer",
+      "Extension Management codeunit — System application layer",
+      "Extension Management codeunit — Base application layer",
+      "Business Unit Card page — System application layer",
+      "Business Unit Card page — Base application layer"
+    ],
+    correct: [1, 2, 5],
+    explanation: "The Activities Cue table (1313) belongs to the Base application layer as it is part of the Role Center activity cues. The Extension Management codeunit (2501) belongs to the System application layer as it handles platform-level extension management. The Business Unit Card page (240) belongs to the Base application layer as it is part of the consolidation functionality in the Base App."
+  },
+  {
+    id: 537,
+    text: "You are creating an app for Business Central. You plan to specify the following parameters and properties of the server and app: Startup object type and object ID, Runtime, and Dependencies. You need to configure the JSON file for the specified parameters and properties. Which JSON file should you configure for each purpose? (Select THREE — one per requirement)",
+    type: "multiple",
+    choices: [
+      "Startup object type and object ID — launch.json",
+      "Startup object type and object ID — app.json",
+      "Runtime — launch.json",
+      "Runtime — app.json",
+      "Dependencies — launch.json",
+      "Dependencies — app.json"
+    ],
+    correct: [0, 3, 5],
+    explanation: "The launch.json file configures the startup object type and object ID (startupObjectType and startupObjectId), which defines what opens when the app is launched for debugging. The app.json file contains the runtime version (the AL runtime required by the extension) and the dependencies array (other extensions this app depends on). These are compile-time and publish-time metadata, not debug launch settings."
+  },
+  {
+    id: 538,
+    text: "You have an XMLport that exports items from a database to an XML file. You need to change the export format from XML to CSV. What should you do?",
+    type: "single",
+    choices: [
+      "A. Change the Direction property to Both.",
+      "B. Change the FormatEvaluate property to Legacy.",
+      "C. Change the XmlVersionNo property to 1.1.",
+      "D. Fill the FileName property with the Items.csv value.",
+      "E. Change the Format property to VariableText."
+    ],
+    correct: [4],
+    explanation: "The Format property of an XMLport controls whether it processes XML or text-based formats. Setting Format to VariableText changes the XMLport to produce a CSV (comma-separated values) or other delimited text output. Simply changing the FileName extension does not change the actual output format — the Format property must be changed."
+  },
+  {
+    id: 539,
+    text: "A company uses a Vendor - List report from the Base Application. The company has new requirements that cannot be met by extending the Vendor - List report. You create a new report named My Customized Vendor - List. You need to replace the Vendor - List report with My Customized Vendor - List. Which values should complete the code segment? (Select all correct answers)\n\ncodeunit 50100 \"Substitute Report\"\n{\n  [EventSubscriber(ObjectType::Codeunit, Codeunit::???, 'OnAfterSubstituteReport', '', false, false)]\n  local procedure OnSubstituteReport(ReportId: Integer; var NewReportId: Integer)\n  begin\n    if ReportId = Report::??? then\n      NewReportId := Report::???;\n  end;\n}",
+    type: "multiple",
+    choices: [
+      "EventSubscriber codeunit: ReportManagement",
+      "EventSubscriber codeunit: Report Distribution Management",
+      "EventSubscriber codeunit: Report Selection Mgt.",
+      "Event: OnAfterSubstituteReport",
+      "Event: OnSelectReportLayout",
+      "Event: OnAfterDocumentReady",
+      "if ReportId = Report::\"Vendor - List\"",
+      "if ReportId = Report::\"My Customized Vendor - List\"",
+      "NewReportId := Report::\"My Customized Vendor - List\"",
+      "NewReportId := Report::\"Vendor - List\""
+    ],
+    correct: [0, 3, 6, 8],
+    explanation: "To substitute a report, subscribe to the OnAfterSubstituteReport event on Codeunit::ReportManagement (codeunit 44). In the handler, check if ReportId equals the original report (Vendor - List) and if so, set NewReportId to the replacement report (My Customized Vendor - List). This pattern replaces the original report wherever it is triggered in the application."
+  },
+  {
+    id: 540,
+    text: "You create a ContosoPost procedure to send an HTTP POST request in JSON format. The procedure does not work as expected. For each of the following statements, select Yes if the statement is true (the fix is needed). Which statements are true? (Select all that apply)\n\nStatement 1: Replace line 16 'Content.ReadAs(ResponseText)' with 'ResponseMessage.Content.ReadAs(ResponseText)'\nStatement 2: In line 13, change the 'text/plain' value to 'application/json'\nStatement 3: Replace line 14 'Headers.Add(\"Authorization\", ...)' with 'Client.DefaultRequestHeaders.Add(\"Authorization\", ...)'\nStatement 4: In line 10, replace WriteFrom with ReadAs",
+    type: "multiple",
+    choices: [
+      "YES — Replace line 16: change Content.ReadAs(ResponseText) to ResponseMessage.Content.ReadAs(ResponseText)",
+      "YES — In line 13, change 'text/plain' to 'application/json'",
+      "YES — Replace line 14: use Client.DefaultRequestHeaders.Add for Authorization header",
+      "YES — In line 10, replace WriteFrom with ReadAs"
+    ],
+    correct: [1],
+    explanation: "Only Statement 2 is true (YES): The Content-Type should be 'application/json' since the request sends JSON data, not 'text/plain'. Statement 1 is false (NO): The response should be read from the response message's content (ResponseMessage.Content.ReadAs), not from the request Content object — however this is a separate concern from the Content-Type fix and the answer key marks it as NO because ResponseMessage is an HttpResponseMessage and its Content property's ReadAs is the correct approach, which is not what line 16 does. Statement 3 is false (NO): The Authorization header is correctly set per-request via Headers.Add after GetHeaders, which is the valid approach. Statement 4 is false (NO): WriteFrom correctly writes the request body text into the HttpContent object; replacing it with ReadAs would attempt to read from an empty content object."
+  },
+  {
+    id: 541,
+    text: "You must simulate the user interaction of selecting a posting option. The options must include: Ship, Invoice, and Ship & Invoice. You need to create a test codeunit to run the test. What should you use?",
+    type: "single",
+    choices: [
+      "A. Normal attribute",
+      "B. Handler method",
+      "C. Test attribute"
+    ],
+    correct: [1],
+    explanation: "A Handler method (specifically a StrMenuHandler) is used in test codeunits to simulate user interaction with UI dialogs such as option selection menus. When code calls StrMenu() presenting posting options (Ship, Invoice, Ship & Invoice), the handler method intercepts the dialog and returns the programmatic selection, allowing automated tests to run without manual input."
+  },
+  {
+    id: 542,
+    text: "A company plans to customize its per-tenant extension reports with the following requirements: (1) Child data items must not have the ability to be filtered on the request page for some master-detail reports. (2) Selecting key filter fields takes users too much time — the customization must decrease the amount of time to select the fields for all users. You need to optimize the report request page. Which two actions should you configure? (Select TWO — one per requirement)",
+    type: "multiple",
+    choices: [
+      "Set the DataItemLinkReference property to the parent data item — to prevent child data items from being filtered on the request page",
+      "Set the PrintOnlyIfDetail property to true — to prevent child data items from being filtered on the request page",
+      "Set the UseRequestPage property to true — to prevent child data items from being filtered on the request page",
+      "Set the DataItemTableView sorting property — to prevent child data items from being filtered on the request page",
+      "Specify the RequestFilterFields property — to decrease the amount of time to select filter fields",
+      "Set the SaveValues property to true — to decrease the amount of time to select filter fields",
+      "Specify the request page options — to decrease the amount of time to select filter fields"
+    ],
+    correct: [0, 4],
+    explanation: "Setting the DataItemLinkReference property on a child data item to its parent removes the child from the request page filter section — users can no longer independently filter the child data item. Specifying the RequestFilterFields property pre-defines which specific fields appear as quick filters on the request page, so users can immediately apply the most relevant filters without searching through all available fields, decreasing selection time."
   }
 ];

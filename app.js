@@ -32,7 +32,7 @@
       key: "official",
       label: "Official Questions",
       difficulty: "official",
-      description: "31 official MB-820 exam questions covering deployment architecture, AL development, permissions, XMLports, queries, and more.",
+      description: "42 official MB-820 exam questions covering deployment architecture, AL development, permissions, XMLports, queries, HTTP, reports, and more.",
       data: questionsOfficial
     }
   ];
