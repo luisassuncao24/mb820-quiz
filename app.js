@@ -351,6 +351,18 @@
     try { localStorage.removeItem(saveKey()); } catch (e) { /* ignore */ }
   }
 
+  // Clears ALL in-progress saves for the active set (standalone + every combined variant).
+  // Called on fresh start so stale progress from a previous mode never leaks through.
+  function clearAllProgressForSet() {
+    if (!activeSet) return;
+    try {
+      localStorage.removeItem("mb820_quiz_progress_" + activeSet.key);
+      TEST_CASES.forEach(function (tc) {
+        localStorage.removeItem("mb820_combined_" + activeSet.key + "_" + tc.key);
+      });
+    } catch (e) { /* ignore */ }
+  }
+
   // ── Completed-state persistence ────────────────────────────────────────────
   function completedQuizKey(setKey) { return "mb820_completed_quiz_" + setKey; }
   function completedCaseKey(caseKey) { return "mb820_completed_case_" + caseKey; }
@@ -549,6 +561,43 @@
       const meta       = difficultyMeta[set.difficulty] || {};
       const savedTimer = hasSaved ? saved.timerSeconds : null;
 
+      // Check for any in-progress combined run (quiz + case study) for this set.
+      // Only shown when there is no standalone progress (they can't coexist after the fix).
+      let combinedSaved = null;
+      let combinedTc    = null;
+      if (!hasSaved) {
+        for (let i = 0; i < TEST_CASES.length; i++) {
+          const tc = TEST_CASES[i];
+          if (tc.questions.length === 0) continue;
+          const cp = loadCombinedProgress(set, tc);
+          if (cp && ((cp.phase === "quiz" && Array.isArray(cp.results) && cp.results.length > 0) ||
+                      cp.phase === "testcase")) {
+            combinedSaved = cp;
+            combinedTc    = tc;
+            break;
+          }
+        }
+      }
+      const hasCombinedSaved = !!combinedSaved;
+
+      // Build resume-info text for a combined run
+      let combinedResumeInfo = "";
+      if (hasCombinedSaved) {
+        if (combinedSaved.phase === "testcase") {
+          const tcDone  = combinedSaved.testcase && Array.isArray(combinedSaved.testcase.results) ? combinedSaved.testcase.results.length : 0;
+          const tcTotal = combinedSaved.testcase && Array.isArray(combinedSaved.testcase.shuffledIds) ? combinedSaved.testcase.shuffledIds.length : 0;
+          const tcTimer = combinedSaved.testcase && typeof combinedSaved.testcase.timerSeconds === "number" ? combinedSaved.testcase.timerSeconds : null;
+          combinedResumeInfo = '<p class="set-card-resume">\u23F8 Saved: Case Study phase (' + combinedTc.label + '), question ' +
+            (tcDone + 1) + ' of ' + tcTotal +
+            (tcTimer !== null ? ' \u2014 \u23F1 ' + formatTime(tcTimer) + ' left' : '') + '</p>';
+        } else {
+          const cTimer = typeof combinedSaved.timerSeconds === "number" ? combinedSaved.timerSeconds : null;
+          combinedResumeInfo = '<p class="set-card-resume">\u23F8 Saved: question ' + (combinedSaved.results.length + 1) +
+            ' of ' + combinedSaved.shuffledIds.length + ' (+ ' + combinedTc.label + ')' +
+            (cTimer !== null ? ' \u2014 \u23F1 ' + formatTime(cTimer) + ' left' : '') + '</p>';
+        }
+      }
+
       // Build the case study selector options
       let caseOptions = '<option value="">None</option>';
       TEST_CASES.forEach(function (tc) {
@@ -576,7 +625,7 @@
           (hasSaved
             ? '<p class="set-card-resume">\u23F8 Saved: question ' + (saved.results.length + 1) + ' of ' + saved.shuffled.length +
               (savedTimer !== null ? ' \u2014 \u23F1 ' + formatTime(savedTimer) + ' left' : '') + '</p>'
-            : '') +
+            : combinedResumeInfo) +
           '<div class="case-selector">' +
             '<label class="case-selector-label">\uD83D\uDCCB Case Study (optional):</label>' +
             '<select class="case-select" data-quiz-key="' + set.key + '">' +
@@ -589,9 +638,11 @@
               : '') +
             (hasSaved
               ? '<button class="set-btn resume-set-btn" data-key="' + set.key + '">Resume</button>'
-              : '') +
+              : (hasCombinedSaved
+                  ? '<button class="set-btn resume-set-btn" data-key="' + set.key + '" data-combined-case-key="' + combinedTc.key + '">Resume</button>'
+                  : '')) +
             '<button class="set-btn start-set-btn" data-key="' + set.key + '">' +
-              (hasSaved ? 'New Quiz' : 'Start Quiz') +
+              (hasSaved || hasCombinedSaved ? 'New Quiz' : 'Start Quiz') +
             '</button>' +
           '</div>' +
         '</div>';
@@ -685,11 +736,17 @@
     setSelectionEl.querySelectorAll(".resume-set-btn:not(.case-resume-btn)").forEach(function (btn) {
       if (btn.id === "random-resume-btn") return; // handled separately
       btn.addEventListener("click", function () {
-        const key = btn.dataset.key;
+        const key             = btn.dataset.key;
+        const combinedCaseKey = btn.dataset.combinedCaseKey;
         reviewMode     = false;
         activeSet      = QUESTION_SETS.find(function (s) { return s.key === key; });
-        caseStudyMode  = null;
-        caseStudy      = null;
+        if (combinedCaseKey) {
+          caseStudy     = TEST_CASES.find(function (tc) { return tc.key === combinedCaseKey; }) || null;
+          caseStudyMode = caseStudy ? "combined" : null;
+        } else {
+          caseStudyMode = null;
+          caseStudy     = null;
+        }
         savedQuizState = null;
         casePhase      = "quiz";
         init(true);
@@ -782,28 +839,75 @@
     nextBtn.style.display        = "none";
 
     if (resume) {
-      const saved = loadProgress(activeSet);
-      if (saved && saved.current < saved.shuffled.length) {
-        shuffled     = saved.shuffled;
-        current      = saved.current;
-        score        = saved.score;
-        results      = saved.results;
-        timerSeconds = saved.timerSeconds;
-        // Advance past any already-answered question (user closed after answering but before clicking Next)
-        if (current < results.length) {
-          current = results.length;
+      if (caseStudyMode === "combined") {
+        // Restore an in-progress combined run (quiz-phase or testcase-phase)
+        const saved = loadCombinedProgress(activeSet, caseStudy);
+        if (saved) {
+          if (saved.phase === "testcase" && saved.quiz && saved.testcase) {
+            // Resume from the test-case phase
+            savedQuizState = saved.quiz;
+            casePhase      = "testcase";
+            const qMap = {};
+            caseStudy.questions.forEach(function (q) { qMap[q.id] = q; });
+            const restoredTc = saved.testcase.shuffledIds.map(function (id) { return qMap[id]; });
+            if (!restoredTc.some(function (q) { return !q; }) && restoredTc.length > 0) {
+              shuffled     = restoredTc;
+              current      = typeof saved.testcase.current === "number" ? saved.testcase.current : 0;
+              score        = typeof saved.testcase.score === "number" ? saved.testcase.score : 0;
+              results      = Array.isArray(saved.testcase.results) ? saved.testcase.results : [];
+              timerSeconds = typeof saved.testcase.timerSeconds === "number" ? saved.testcase.timerSeconds : TIMER_DURATION;
+              if (current < results.length) current = results.length;
+              if (current < shuffled.length) {
+                startTimer();
+                renderQuestion();
+                return;
+              }
+            }
+          } else if (saved.phase === "quiz" && Array.isArray(saved.shuffledIds)) {
+            // Resume from the quiz phase of a combined run
+            const qMap = {};
+            activeSet.data.forEach(function (q) { qMap[q.id] = q; });
+            const restored = saved.shuffledIds.map(function (id) { return qMap[id]; });
+            if (!restored.some(function (q) { return !q; }) && restored.length > 0) {
+              shuffled     = restored;
+              current      = typeof saved.current === "number" ? saved.current : 0;
+              score        = typeof saved.score === "number" ? saved.score : 0;
+              results      = Array.isArray(saved.results) ? saved.results : [];
+              timerSeconds = typeof saved.timerSeconds === "number" ? saved.timerSeconds : TIMER_DURATION;
+              if (current < results.length) current = results.length;
+              if (current < shuffled.length) {
+                startTimer();
+                renderQuestion();
+                return;
+              }
+            }
+          }
         }
-        if (current < shuffled.length) {
-          startTimer();
-          renderQuestion();
-          return;
+        // Fall through to a fresh combined start
+      } else {
+        const saved = loadProgress(activeSet);
+        if (saved && saved.current < saved.shuffled.length) {
+          shuffled     = saved.shuffled;
+          current      = saved.current;
+          score        = saved.score;
+          results      = saved.results;
+          timerSeconds = saved.timerSeconds;
+          // Advance past any already-answered question (user closed after answering but before clicking Next)
+          if (current < results.length) {
+            current = results.length;
+          }
+          if (current < shuffled.length) {
+            startTimer();
+            renderQuestion();
+            return;
+          }
+          // All questions already answered — fall through to a fresh start
         }
-        // All questions already answered — fall through to a fresh start
       }
     }
 
-    // Fresh start
-    clearProgress();
+    // Fresh start — clear all saved state for this set before beginning
+    clearAllProgressForSet();
     shuffled     = shuffle(activeSet.data);
     current      = 0;
     score        = 0;
