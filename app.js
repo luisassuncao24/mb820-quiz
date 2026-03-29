@@ -475,15 +475,40 @@
       }
     }
 
-    // Fresh start
+    // Fresh start — show scenario intro before first question
     clearProgress();
     shuffled     = shuffle(caseStudy.questions);
     current      = 0;
     score        = 0;
     results      = [];
     timerSeconds = TIMER_DURATION;
-    startTimer();
-    renderQuestion();
+    showCaseIntro();
+  }
+
+  // ── Case study intro screen ───────────────────────────────────────────────
+  function showCaseIntro() {
+    hideTimer();
+    const scenario = caseStudy.scenario || caseStudy.description;
+    questionEl.innerHTML =
+      '<div class="case-intro">' +
+        '<div class="case-intro-badge">\uD83D\uDCCB Case Study</div>' +
+        '<h2 class="case-intro-title">' + caseStudy.label + '</h2>' +
+        '<p class="case-intro-desc">' + scenario + '</p>' +
+        '<div class="resume-buttons">' +
+          '<button class="resume-btn" id="case-intro-start-btn">Start Case Study</button>' +
+          '<button class="new-quiz-btn" id="case-intro-back-btn">Back</button>' +
+        '</div>' +
+      '</div>';
+    choicesEl.innerHTML   = "";
+    nextBtn.style.display = "none";
+
+    document.getElementById("case-intro-start-btn").addEventListener("click", function () {
+      startTimer();
+      renderQuestion();
+    });
+    document.getElementById("case-intro-back-btn").addEventListener("click", function () {
+      showSetSelection();
+    });
   }
 
   // ── Transition: quiz done → test case phase ───────────────────────────────
@@ -593,10 +618,13 @@
 
     questionEl.innerHTML =
       phaseBanner +
-      '<div class="progress">Question ' + (current + 1) + ' of ' + shuffled.length + '</div>' +
+      (caseStudyMode !== "standalone"
+        ? '<div class="progress">Question ' + (current + 1) + ' of ' + shuffled.length + '</div>'
+        : '') +
       '<div class="question-type-badge ' + (q.type === "multiple" ? "multiple" : "single") + '">' +
         (q.type === "multiple" ? "Multiple Choice \u2014 select all that apply" : "Single Choice") +
       '</div>' +
+      (q.context ? '<div class="question-context">' + q.context + '</div>' : '') +
       '<p class="question-text">' + q.text + '</p>';
 
     choicesEl.innerHTML = "";
