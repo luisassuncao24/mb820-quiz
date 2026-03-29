@@ -76,7 +76,7 @@
 
   homeBtn.addEventListener("click", function () {
     stopTimer();
-    clearProgress();
+    saveProgress();
     activeSet      = null;
     caseStudyMode  = null;
     caseStudy      = null;
