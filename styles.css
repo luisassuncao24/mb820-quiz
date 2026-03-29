@@ -895,3 +895,106 @@ body {
   padding: 0.6rem 0.9rem;
   margin-bottom: 0.9rem;
 }
+
+/* ── Preparation progress bar ────────────────────────────────────────── */
+.prep-progress-bar-container {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 1rem 1.25rem 0.85rem;
+  margin-bottom: 0.25rem;
+}
+
+.prep-progress-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-bottom: 0.6rem;
+}
+
+.prep-progress-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.prep-progress-pct {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.prep-progress-track {
+  height: 10px;
+  background: #1e293b;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.prep-progress-fill {
+  height: 100%;
+  background: #0284c7;
+  border-radius: 999px;
+  transition: width 0.4s ease;
+  min-width: 0;
+}
+
+.prep-progress-fill.prep-fill-good {
+  background: #22c55e;
+}
+
+.prep-progress-fill.prep-fill-full {
+  background: #22c55e;
+}
+
+.prep-progress-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* ── Completed badge on set cards ────────────────────────────────────── */
+.set-card-completed {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 0.5rem;
+}
+
+.set-card-completed.completed-pass {
+  background: #052e16;
+  color: #86efac;
+  border: 1px solid #22c55e;
+}
+
+.set-card-completed.completed-fail {
+  background: #1c1204;
+  color: #fde68a;
+  border: 1px solid #f59e0b;
+}
+
+/* ── Review Results button ───────────────────────────────────────────── */
+.review-btn {
+  background: #1e1a3b;
+  color: #c4b5fd;
+  border: 1px solid #7c3aed !important;
+  border-radius: 8px;
+}
+
+.review-btn:hover {
+  background: #2e2a5b !important;
+}
+
+/* ── Random difficulty badge ─────────────────────────────────────────── */
+.diff-random {
+  background: #0c1a3b;
+  color: #7dd3fc;
+  border: 1px solid #0284c7;
+}
