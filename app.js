@@ -314,7 +314,8 @@
           current: current,
           score: score,
           results: results,
-          timerSeconds: caseStudyMode === "standalone" ? null : timerSeconds
+          timerSeconds: caseStudyMode === "standalone" ? null : timerSeconds,
+          practiceMode: practiceMode
         }));
       }
     } catch (e) { /* storage unavailable */ }
@@ -335,7 +336,8 @@
         current: typeof saved.current === "number" ? saved.current : 0,
         score: typeof saved.score === "number" ? saved.score : 0,
         results: Array.isArray(saved.results) ? saved.results : [],
-        timerSeconds: typeof saved.timerSeconds === "number" ? saved.timerSeconds : TIMER_DURATION
+        timerSeconds: typeof saved.timerSeconds === "number" ? saved.timerSeconds : TIMER_DURATION,
+        practiceMode: typeof saved.practiceMode === "boolean" ? saved.practiceMode : true
       };
     } catch (e) { return null; }
   }
@@ -1104,6 +1106,7 @@
           score        = saved.score;
           results      = saved.results;
           timerSeconds = saved.timerSeconds;
+          if (typeof saved.practiceMode === "boolean") practiceMode = saved.practiceMode;
           // Advance past any already-answered question (user closed after answering but before clicking Next)
           if (current < results.length) {
             current = results.length;
@@ -1310,9 +1313,14 @@
     const timerInfo = typeof saved.timerSeconds === "number"
       ? ' with <strong>' + formatTime(saved.timerSeconds) + '</strong> remaining on the clock'
       : '';
+    const savedPracticeMode = saved.practiceMode !== false;
+    const modeLabel = savedPracticeMode
+      ? '\uD83D\uDCDA Practice Mode'
+      : '\uD83D\uDCDD Test Mode';
     questionEl.innerHTML =
       '<div class="resume-prompt">' +
         '<h2>Resume Quiz?</h2>' +
+        '<p class="resume-meta"><strong>' + activeSet.label + '</strong> &mdash; ' + modeLabel + '</p>' +
         '<p>You were on question <strong>' + nextQuestion + ' of ' + saved.shuffled.length + '</strong> ' +
         'with a score of <strong>' + Math.round((saved.score / saved.shuffled.length) * 100) + '%</strong>' + timerInfo + '.</p>' +
         '<div class="resume-buttons">' +
@@ -1480,9 +1488,10 @@
     if (isCorrect) {
       questionScore = 1;
     } else if (q.type === "multiple" && q.correct.length > 1) {
-      const correctlySelected   = selected.filter(function (s) { return q.correct.includes(s); }).length;
-      // Credit = correctly identified / total correct answers (no penalty for wrong selections)
-      questionScore = q.correct.length > 0 ? correctlySelected / q.correct.length : 0;
+      const correctlySelected = selected.filter(function (s) { return q.correct.includes(s); }).length;
+      const wronglySelected   = selected.filter(function (s) { return !q.correct.includes(s); }).length;
+      // Penalize wrong selections: deduct one point per wrong answer, floor at 0
+      questionScore = q.correct.length > 0 ? Math.max(0, (correctlySelected - wronglySelected) / q.correct.length) : 0;
     }
     score += questionScore;
 

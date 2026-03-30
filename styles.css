@@ -330,6 +330,12 @@ body {
   line-height: 1.6;
 }
 
+.resume-prompt p.resume-meta {
+  font-size: 1rem;
+  color: #94a3b8;
+  margin-bottom: 0.5rem;
+}
+
 .resume-buttons {
   display: flex;
   gap: 1rem;
