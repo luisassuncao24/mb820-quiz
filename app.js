@@ -124,7 +124,8 @@
   // ── Quick Practice state ─────────────────────────────────────────────────
   const QP_STREAK_KEY = "mb820_qp_streak";
   const QP_BEST_KEY   = "mb820_qp_best";
-  var qp = { pool: [], poolIdx: 0, streak: 0, bestStreak: 0 };
+  const QP_SEEN_KEY   = "mb820_qp_seen"; // question IDs answered in the current run
+  var qp = { pool: [], poolIdx: 0, streak: 0, bestStreak: 0, seenInRun: new Set() };
   var UT_MESSAGES = [
     { streak: 5,  msg: "KILLING SPREE!",   emoji: "\uD83D\uDD25", color: "#f97316" },
     { streak: 10, msg: "RAMPAGE!",          emoji: "\uD83D\uDCA5", color: "#ef4444" },
@@ -469,6 +470,9 @@
       });
       // Clear attempt history
       localStorage.removeItem(HISTORY_KEY);
+      // Clear Quick Practice run state
+      localStorage.removeItem(QP_SEEN_KEY);
+      qp.seenInRun = new Set();
     } catch (e) { /* ignore */ }
   }
 
@@ -736,11 +740,30 @@
     });
     var failed = [], unseen = [], others = [];
     ALL_QUESTIONS.forEach(function (q) {
-      if (failedIds[q.id])     failed.push(q);
-      else if (!seenIds[q.id]) unseen.push(q);
-      else                     others.push(q);
+      if (qp.seenInRun.has(q.id))   { /* skip — already answered this run */ }
+      else if (failedIds[q.id])      failed.push(q);
+      else if (!seenIds[q.id])       unseen.push(q);
+      else                           others.push(q);
     });
     return shuffle(failed).concat(shuffle(unseen)).concat(shuffle(others));
+  }
+
+  function loadQpSeen() {
+    try {
+      var raw = localStorage.getItem(QP_SEEN_KEY);
+      if (!raw) return new Set();
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? new Set(arr) : new Set();
+    } catch (e) { return new Set(); }
+  }
+
+  function saveQpSeen() {
+    try { localStorage.setItem(QP_SEEN_KEY, JSON.stringify(Array.from(qp.seenInRun))); } catch (e) { /**/ }
+  }
+
+  function resetQpRun() {
+    qp.seenInRun = new Set();
+    try { localStorage.removeItem(QP_SEEN_KEY); } catch (e) { /**/ }
   }
 
   function qpEsc(s) {
@@ -750,8 +773,12 @@
   function renderQuickPractice() {
     var container = document.getElementById("qp-container");
     if (!container) return;
-    if (!qp.pool.length) { qp.pool = buildQuickPracticePool(); qp.poolIdx = 0; }
-    if (qp.poolIdx >= qp.pool.length) { qp.pool = buildQuickPracticePool(); qp.poolIdx = 0; }
+    // Pool exhausted — user answered every remaining question correctly: reset run
+    if (!qp.pool.length || qp.poolIdx >= qp.pool.length) {
+      resetQpRun();
+      qp.pool    = buildQuickPracticePool();
+      qp.poolIdx = 0;
+    }
 
     var q = qp.pool[qp.poolIdx];
     var orderedChoices = shuffle(q.choices.map(function (t, i) { return { text: t, idx: i }; }));
@@ -848,9 +875,14 @@
       qp.streak++;
       if (qp.streak > qp.bestStreak) qp.bestStreak = qp.streak;
       try { localStorage.setItem(QP_STREAK_KEY, qp.streak); localStorage.setItem(QP_BEST_KEY, qp.bestStreak); } catch (e) { /**/ }
+      // Mark this question as answered in the current run so it won't reappear on reload
+      qp.seenInRun.add(q.id);
+      saveQpSeen();
     } else {
       qp.streak = 0;
       try { localStorage.setItem(QP_STREAK_KEY, 0); } catch (e) { /**/ }
+      // Wrong answer — reset the run so all questions are available again
+      resetQpRun();
     }
 
     var expDiv = document.createElement("div");
@@ -863,7 +895,14 @@
     if (btnRow) {
       btnRow.innerHTML = '<button class="qp-next-btn" id="qp-next-btn">Next Question \u2192</button>';
       document.getElementById("qp-next-btn").addEventListener("click", function () {
-        qp.poolIdx++; renderQuickPractice();
+        if (!isCorrect) {
+          // Run was reset — rebuild pool from all questions and start fresh
+          qp.pool    = buildQuickPracticePool();
+          qp.poolIdx = 0;
+        } else {
+          qp.poolIdx++;
+        }
+        renderQuickPractice();
       });
     }
 
@@ -892,6 +931,7 @@
       qp.streak     = isNaN(s) ? 0 : s;
       qp.bestStreak = isNaN(b) ? 0 : b;
     } catch (e) { qp.streak = 0; qp.bestStreak = 0; }
+    qp.seenInRun = loadQpSeen();
     qp.pool    = buildQuickPracticePool();
     qp.poolIdx = 0;
     return '<div class="section-divider"></div>' +
