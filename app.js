@@ -400,6 +400,8 @@
         localStorage.removeItem("mb820_case_" + tc.key);
         localStorage.removeItem("mb820_completed_case_" + tc.key);
       });
+      // Clear attempt history
+      localStorage.removeItem(HISTORY_KEY);
     } catch (e) { /* ignore */ }
   }
 
@@ -427,6 +429,14 @@
           shuffledIds: shuffled.map(function (q) { return q.id; }),
           results: results, timerSeconds: timerSeconds
         }));
+        // Record combined attempt in history
+        const combinedPct = Math.round(0.70 * quizPct + 0.30 * casePct);
+        saveToHistory({
+          type: "combined", date: new Date().toISOString(),
+          quizLabel: activeSet.label, quizKey: activeSet.key, quizPct: quizPct,
+          caseLabel: caseStudy.label, caseKey: caseStudy.key, casePct: casePct,
+          combinedPct: combinedPct
+        });
       } else if (caseStudyMode === "standalone") {
         const total = shuffled.length;
         const pct   = total ? Math.round((score / total) * 100) : 0;
@@ -435,6 +445,11 @@
           shuffledIds: shuffled.map(function (q) { return q.id; }),
           results: results, timerSeconds: timerSeconds
         }));
+        // Record standalone case attempt in history
+        saveToHistory({
+          type: "case", date: new Date().toISOString(),
+          caseLabel: caseStudy.label, caseKey: caseStudy.key, casePct: pct
+        });
       } else if (activeSet && activeSet.key !== "random") {
         // Random-practice quiz results are intentionally not persisted as
         // "completed" state — the quiz serves only for ad-hoc practice and
@@ -446,6 +461,11 @@
           shuffledIds: shuffled.map(function (q) { return q.id; }),
           results: results, timerSeconds: timerSeconds
         }));
+        // Record standalone quiz attempt in history
+        saveToHistory({
+          type: "quiz", date: new Date().toISOString(),
+          quizLabel: activeSet.label, quizKey: activeSet.key, quizPct: pct
+        });
       }
     } catch (e) { /* storage unavailable */ }
   }
@@ -470,7 +490,88 @@
     } catch (e) { return null; }
   }
 
-  // ── Preparation progress bar ───────────────────────────────────────────────
+  // ── Attempt history ────────────────────────────────────────────────────────
+  const HISTORY_KEY = "mb820_history";
+  const MAX_HISTORY = 50;
+
+  function saveToHistory(entry) {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      let history = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(history)) history = [];
+      history.unshift(entry);
+      if (history.length > MAX_HISTORY) history = history.slice(0, MAX_HISTORY);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    } catch (e) { /* ignore */ }
+  }
+
+  function loadHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      if (!raw) return [];
+      const h = JSON.parse(raw);
+      return Array.isArray(h) ? h : [];
+    } catch (e) { return []; }
+  }
+
+  function clearHistory() {
+    try { localStorage.removeItem(HISTORY_KEY); } catch (e) { /* ignore */ }
+  }
+
+  function buildHistorySection() {
+    const history = loadHistory();
+    if (history.length === 0) return "";
+
+    let html = '<div class="section-divider"></div>' +
+      '<h2 class="set-selection-title">\uD83D\uDCCB Previous Attempts</h2>' +
+      '<div class="history-list">';
+
+    history.forEach(function (entry) {
+      const date = new Date(entry.date);
+      const dateStr = isNaN(date.getTime())
+        ? ""
+        : date.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }) +
+          " \u2014 " +
+          date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+
+      let badgeCls, info;
+      if (entry.type === "combined") {
+        badgeCls = entry.combinedPct >= PASS_PCT ? "history-pass" : (entry.combinedPct >= MARGINAL_PCT ? "history-marginal" : "history-fail");
+        info =
+          '<span class="history-label">\uD83D\uDCDA ' + entry.quizLabel + ' + \uD83D\uDCCB ' + entry.caseLabel + '</span>' +
+          '<div class="history-scores">' +
+            '<span class="history-score-item">Quiz: <strong>' + entry.quizPct + '%</strong></span>' +
+            '<span class="history-score-sep">&middot;</span>' +
+            '<span class="history-score-item">Case: <strong>' + entry.casePct + '%</strong></span>' +
+            '<span class="history-score-sep">&middot;</span>' +
+            '<span class="history-score-item history-combined-score">Combined: <strong>' + entry.combinedPct + '%</strong></span>' +
+          '</div>';
+      } else if (entry.type === "quiz") {
+        badgeCls = entry.quizPct >= PASS_PCT ? "history-pass" : (entry.quizPct >= MARGINAL_PCT ? "history-marginal" : "history-fail");
+        info =
+          '<span class="history-label">\uD83D\uDCDA ' + entry.quizLabel + '</span>' +
+          '<span class="history-score-item">Score: <strong>' + entry.quizPct + '%</strong></span>';
+      } else {
+        badgeCls = entry.casePct >= PASS_PCT ? "history-pass" : (entry.casePct >= MARGINAL_PCT ? "history-marginal" : "history-fail");
+        info =
+          '<span class="history-label">\uD83D\uDCCB ' + entry.caseLabel + '</span>' +
+          '<span class="history-score-item">Score: <strong>' + entry.casePct + '%</strong></span>';
+      }
+
+      html +=
+        '<div class="history-entry ' + badgeCls + '">' +
+          '<div class="history-entry-date">' + dateStr + '</div>' +
+          '<div class="history-entry-info">' + info + '</div>' +
+        '</div>';
+    });
+
+    html += '</div>' +
+      '<div class="history-clear-row">' +
+        '<button class="history-clear-btn" id="history-clear-btn">\uD83D\uDDD1\uFE0F Clear History</button>' +
+      '</div>';
+
+    return html;
+  }
   function buildProgressBar() {
     const availableCases = TEST_CASES.filter(function (tc) { return tc.questions.length > 0; });
     const totalItems = QUESTION_SETS.length + availableCases.length;
@@ -774,6 +875,8 @@
     html += '</div></div>';
 
     // ── Reset All Progress ───────────────────────────────────────────────
+    html += buildHistorySection();
+
     html += '<div class="reset-all-container">' +
       '<button class="reset-all-btn" id="reset-all-btn">\uD83D\uDDD1\uFE0F Reset All Progress</button>' +
     '</div>';
@@ -906,9 +1009,24 @@
       resetAllBtn.addEventListener("click", function () {
         showConfirm(
           "Reset All Progress?",
-          "This will permanently delete all quiz results, completion badges, and case study progress. This cannot be undone.",
+          "This will permanently delete all quiz results, completion badges, case study progress, and attempt history. This cannot be undone.",
           function () {
             clearAllProgress();
+            showSetSelection();
+          }
+        );
+      });
+    }
+
+    // History clear button
+    const historyClearBtn = document.getElementById("history-clear-btn");
+    if (historyClearBtn) {
+      historyClearBtn.addEventListener("click", function () {
+        showConfirm(
+          "Clear History?",
+          "This will remove all previous attempt records from the log. This cannot be undone.",
+          function () {
+            clearHistory();
             showSetSelection();
           }
         );
@@ -1038,7 +1156,7 @@
 
     // Fresh start — show scenario intro before first question
     clearProgress();
-    shuffled     = shuffle(caseStudy.questions);
+    shuffled     = caseStudy.questions.slice(); // test case questions are presented in order
     current      = 0;
     score        = 0;
     results      = [];
@@ -1134,8 +1252,8 @@
     };
     casePhase = "testcase";
 
-    // Set up test case questions
-    shuffled = shuffle(caseStudy.questions);
+    // Set up test case questions (presented in order, not shuffled)
+    shuffled = caseStudy.questions.slice();
     current  = 0;
     score    = 0;
     results  = [];
