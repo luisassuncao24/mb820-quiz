@@ -93,6 +93,7 @@
   let results       = []; // {questionId, isCorrect, selected, correct}
   let timerSeconds  = TIMER_DURATION;
   let timerInterval = null;
+  let studyOnlyInterval = null; // hidden study-time ticker for sessions without a countdown clock
   let reviewMode    = false; // true when re-viewing a completed quiz (no re-save)
 
   // ── Idle / auto-pause state ───────────────────────────────────────────────
@@ -150,6 +151,8 @@
     isPaused     = false;
     hidePauseOverlay();
     stopTimer();
+    stopStudyOnlyTimer();
+    saveStudyTime();
     if (shuffled.length > 0 && current < shuffled.length && !reviewMode) saveProgress();
     reviewMode     = false;
     activeSet      = null;
@@ -209,6 +212,23 @@
   function hideTimer() {
     stopTimer();
     timerEl.style.display = "none";
+  }
+
+  // Hidden ticker used when there is no countdown clock (standalone case studies).
+  // Increments studyTimeSeconds every second and saves every 10 s.
+  function startStudyOnlyTimer() {
+    stopStudyOnlyTimer();
+    studyOnlyInterval = setInterval(function () {
+      studyTimeSeconds++;
+      if (studyTimeSeconds % 10 === 0) { saveProgress(); saveStudyTime(); }
+    }, 1000);
+  }
+
+  function stopStudyOnlyTimer() {
+    if (studyOnlyInterval) {
+      clearInterval(studyOnlyInterval);
+      studyOnlyInterval = null;
+    }
   }
 
   function formatTime(totalSeconds) {
@@ -292,7 +312,9 @@
     pauseTimerWasRunning = (timerInterval !== null);
     clearIdleTimer();
     stopTimer();
+    stopStudyOnlyTimer();
     saveProgress();
+    saveStudyTime();
     showPauseOverlay();
   }
 
@@ -301,6 +323,7 @@
     isPaused = false;
     hidePauseOverlay();
     if (pauseTimerWasRunning) startTimer();
+    else if (caseStudyMode === "standalone") startStudyOnlyTimer();
     startIdleTimer();
   }
 
@@ -1621,6 +1644,7 @@
         }
         if (current < shuffled.length) {
           hideTimer();
+          startStudyOnlyTimer();
           renderQuestion();
           return;
         }
@@ -1705,6 +1729,7 @@
     nextBtn.style.display = "none";
 
     document.getElementById("case-intro-start-btn").addEventListener("click", function () {
+      startStudyOnlyTimer();
       renderQuestion();
     });
     document.getElementById("case-intro-back-btn").addEventListener("click", function () {
@@ -2062,6 +2087,8 @@
     quizIsActive = false;
     clearIdleTimer();
     hideTimer();
+    stopStudyOnlyTimer();
+    saveStudyTime();
     questionEl.innerHTML  = "";
     choicesEl.innerHTML   = "";
     nextBtn.style.display = "none";
