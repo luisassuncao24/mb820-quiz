@@ -523,16 +523,17 @@ const questionsOfficial = [
   },
   {
     id: 540,
-    text: "You create a ContosoPost procedure to send an HTTP POST request in JSON format. The procedure does not work as expected. For each of the following statements, select Yes if the statement is true (the fix is needed). Which statements are true? (Select all that apply)\n\nStatement 1: Replace line 16 'Content.ReadAs(ResponseText)' with 'ResponseMessage.Content.ReadAs(ResponseText)'\nStatement 2: In line 13, change the 'text/plain' value to 'application/json'\nStatement 3: Replace line 14 'Headers.Add(\"Authorization\", ...)' with 'Client.DefaultRequestHeaders.Add(\"Authorization\", ...)'\nStatement 4: In line 10, replace WriteFrom with ReadAs",
+    context: "You create the following ContosoPost procedure to send an HTTP POST request in JSON format, but it does not work as expected:\n<pre class=\"question-code-block\">01: procedure ContosoPost()\n02: var\n03:     Client: HttpClient;\n04:     Content: HttpContent;\n05:     Headers: HttpHeaders;\n06:     ResponseMessage: HttpResponseMessage;\n07:     ResponseText: Text;\n08:     JsonBody: Text;\n09: begin\n10:     Content.WriteFrom('{\"id\":1,\"name\":\"Contoso\"}');\n11:     Content.GetHeaders(Headers);\n12:     Headers.Clear();\n13:     Headers.Add('Content-Type', 'text/plain');\n14:     Headers.Add('Authorization', 'Bearer ' + GetToken());\n15:     Client.Post('https://api.contoso.com/items', Content, ResponseMessage);\n16:     Content.ReadAs(ResponseText);\n17:     Message(ResponseText);\n18: end;</pre>",
+    text: "Which single change will make the procedure send the request correctly?",
     type: "single",
     choices: [
-      "YES — Replace line 16: change Content.ReadAs(ResponseText) to ResponseMessage.Content.ReadAs(ResponseText)",
-      "YES — In line 13, change 'text/plain' to 'application/json'",
-      "YES — Replace line 14: use Client.DefaultRequestHeaders.Add for Authorization header",
-      "YES — In line 10, replace WriteFrom with ReadAs"
+      "Line 16: change Content.ReadAs(ResponseText) to ResponseMessage.Content.ReadAs(ResponseText)",
+      "Line 13: change 'text/plain' to 'application/json'",
+      "Line 14: replace Headers.Add('Authorization', ...) with Client.DefaultRequestHeaders.Add('Authorization', ...)",
+      "Line 10: replace WriteFrom with ReadAs"
     ],
     correct: [1],
-    explanation: "Only Statement 2 is true (YES): The Content-Type should be 'application/json' since the request sends JSON data, not 'text/plain'. Statement 1 is false (NO): The existing line 16 'Content.ReadAs(ResponseText)' reads from the request Content object, which has already been sent and is not the response. The correct approach would be to read from ResponseMessage.Content — however, the exam answer marks this as NO (no change needed) because the question focuses on the most critical fix (Content-Type). Statement 3 is false (NO): The Authorization header is correctly set per-request via Headers.Add after GetHeaders, which is a valid approach for per-request headers. Statement 4 is false (NO): WriteFrom correctly writes the request body text into the HttpContent object; replacing it with ReadAs would attempt to read from an empty content object instead of writing to it."
+    explanation: "Line 13 must use 'application/json' as the Content-Type because the body contains JSON data. Sending JSON with a 'text/plain' content type causes the receiving server to misparse or reject the request. Line 16 Content.ReadAs reads from the request content object in memory (not the HTTP response), so it is not the issue here — to read the response body you would use ResponseMessage.Content.ReadAs, but the question focuses on the sending bug. Line 14 Headers.Add for per-request headers via GetHeaders() is a valid approach. Line 10 WriteFrom correctly writes the request body; replacing it with ReadAs would attempt to read from an empty object."
   },
   {
     id: 541,
@@ -798,16 +799,17 @@ const questionsOfficial = [
   },
   {
     id: 561,
-    text: "You have a column in a report. You receive the following CodeCop warning: \"Field 'Home Page' is marked for removal. Reason: Field length will be increased to 255. AL(AL0432)\"\n\nFor each statement, select Yes if true:\n\nStatement 1: Create a custom Home Page field for the Company Information table.\nStatement 2: Enclose Line 1 within #pragma warning disable AL0432 ... #pragma warning restore AL0432.\nStatement 3: Disable the AL0432 rule in the ruleset.\nStatement 4: Remove or comment the column and then put it back after the field length is increased.",
+    context: "A report in your extension contains the following column that triggers a CodeCop warning:\n<pre class=\"question-code-block\">column(HomePage; CompanyInformation.\"Home Page\")  // Line 1\n{\n}</pre>\nWarning: \"Field 'Home Page' is marked for removal. Reason: Field length will be increased to 255. AL(AL0432)\"",
+    text: "You need to resolve or suppress the AL0432 warning without removing the column. Which TWO approaches are correct? (Select TWO)",
     type: "multiple",
     choices: [
-      "YES — Create a custom Home Page field for the Company Information table",
-      "YES — Enclose the code within #pragma warning disable/restore AL0432",
-      "YES — Disable the AL0432 rule in the ruleset",
-      "YES — Remove or comment the column and put it back after the field length is increased"
+      "Create a custom Home Page field on the Company Information table to replace the built-in field",
+      "Enclose line 1 within #pragma warning disable AL0432 ... #pragma warning restore AL0432",
+      "Disable the AL0432 rule in the project ruleset file",
+      "Remove or comment out the column and put it back after the field length is increased"
     ],
     correct: [1, 2],
-    explanation: "Statement 1 is false (NO): Creating a custom field is unnecessary overhead and does not address the warning properly. Statement 2 is true (YES): Using #pragma warning disable AL0432 / #pragma warning restore AL0432 suppresses the specific warning for just that code block, which is valid when the field is still needed temporarily. Statement 3 is true (YES): Disabling the AL0432 rule in the project ruleset file prevents the warning from appearing for all occurrences in the app. Statement 4 is false (NO): Removing the column would break the report; you cannot simply remove production functionality while waiting for a framework update."
+    explanation: "Using #pragma warning disable AL0432 / #pragma warning restore AL0432 around line 1 suppresses the warning for that specific block — valid when the field is still needed temporarily. Disabling the AL0432 rule in the project ruleset file suppresses it across the whole app. Creating a custom field is unnecessary overhead and does not directly address the warning. Removing the column breaks the report and is not a solution — you cannot remove production functionality while waiting for a framework update."
   },
   {
     id: 562,

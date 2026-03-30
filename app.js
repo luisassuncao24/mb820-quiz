@@ -115,6 +115,19 @@
   // practiceMode = false: show answers only on the evaluation / summary screen
   let practiceMode = true;
 
+  // ── Quick Practice state ─────────────────────────────────────────────────
+  const QP_STREAK_KEY = "mb820_qp_streak";
+  const QP_BEST_KEY   = "mb820_qp_best";
+  var qp = { pool: [], poolIdx: 0, streak: 0, bestStreak: 0 };
+  var UT_MESSAGES = [
+    { streak: 5,  msg: "KILLING SPREE!",   emoji: "\uD83D\uDD25", color: "#f97316" },
+    { streak: 10, msg: "RAMPAGE!",          emoji: "\uD83D\uDCA5", color: "#ef4444" },
+    { streak: 15, msg: "DOMINATING!",       emoji: "\u26A1",       color: "#8b5cf6" },
+    { streak: 20, msg: "UNSTOPPABLE!",      emoji: "\uD83C\uDF2A\uFE0F", color: "#06b6d4" },
+    { streak: 25, msg: "GODLIKE!",          emoji: "\u2B50",       color: "#f59e0b" },
+    { streak: 30, msg: "BEYOND GODLIKE!",   emoji: "\uD83D\uDE80", color: "#22c55e" }
+  ];
+
   // ── DOM refs ─────────────────────────────────────────────────────────────
   const setSelectionEl = document.getElementById("set-selection");
   const questionEl     = document.getElementById("question");
@@ -286,6 +299,19 @@
     homeBtn.click(); // delegate to existing home-button handler
   });
 
+  // Wire up peek overlay buttons
+  document.getElementById("peek-continue-btn").addEventListener("click", function () {
+    document.getElementById("peek-overlay").style.display = "none";
+  });
+  document.getElementById("peek-quit-btn").addEventListener("click", function () {
+    document.getElementById("peek-overlay").style.display = "none";
+    homeBtn.click();
+  });
+
+  // Wire up streak overlay dismiss button
+  document.getElementById("streak-dismiss-btn").addEventListener("click", function () {
+    document.getElementById("streak-overlay").style.display = "none";
+  });
 
   function saveKey() {
     if (caseStudyMode === "standalone") {
@@ -643,7 +669,248 @@
 
     return html;
   }
-  function buildProgressBar() {
+
+  // ── Confetti celebration ──────────────────────────────────────────────────
+  function launchConfetti() {
+    var container = document.createElement("div");
+    container.style.cssText = "position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9999;";
+    document.body.appendChild(container);
+    var colors = ["#38bdf8","#22c55e","#f59e0b","#a855f7","#ef4444","#06b6d4","#84cc16","#f97316"];
+    for (var i = 0; i < 90; i++) {
+      var el = document.createElement("div");
+      var color    = colors[Math.floor(Math.random() * colors.length)];
+      var size     = 6 + Math.random() * 10;
+      var startX   = Math.random() * 100;
+      var delay    = Math.random() * 2;
+      var duration = 3 + Math.random() * 4;
+      var isCircle = Math.random() > 0.5;
+      el.style.cssText = [
+        "position:absolute", "width:" + size + "px", "height:" + size + "px",
+        "background:" + color, "border-radius:" + (isCircle ? "50%" : "2px"),
+        "left:" + startX + "%", "top:-20px",
+        "animation:confettiFall " + duration + "s " + delay + "s ease-in forwards"
+      ].join(";");
+      container.appendChild(el);
+    }
+    setTimeout(function () { if (container.parentNode) container.parentNode.removeChild(container); }, 8000);
+  }
+
+  // ── Quick Practice ────────────────────────────────────────────────────────
+  function buildQuickPracticePool() {
+    var failedIds = {}, seenIds = {};
+    QUESTION_SETS.forEach(function (set) {
+      var c = loadCompletedQuiz(set);
+      if (c && Array.isArray(c.results)) {
+        c.results.forEach(function (r) {
+          if (r.partialScore < 1) failedIds[r.questionId] = true;
+          else seenIds[r.questionId] = true;
+        });
+      }
+    });
+    TEST_CASES.forEach(function (tc) {
+      var c = loadCompletedCase(tc);
+      if (c && Array.isArray(c.results)) {
+        c.results.forEach(function (r) {
+          if (r.partialScore < 1) failedIds[r.questionId] = true;
+          else seenIds[r.questionId] = true;
+        });
+      }
+    });
+    var failed = [], unseen = [], others = [];
+    ALL_QUESTIONS.forEach(function (q) {
+      if (failedIds[q.id])     failed.push(q);
+      else if (!seenIds[q.id]) unseen.push(q);
+      else                     others.push(q);
+    });
+    return shuffle(failed).concat(shuffle(unseen)).concat(shuffle(others));
+  }
+
+  function qpEsc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+
+  function renderQuickPractice() {
+    var container = document.getElementById("qp-container");
+    if (!container) return;
+    if (!qp.pool.length) { qp.pool = buildQuickPracticePool(); qp.poolIdx = 0; }
+    if (qp.poolIdx >= qp.pool.length) { qp.pool = buildQuickPracticePool(); qp.poolIdx = 0; }
+
+    var q = qp.pool[qp.poolIdx];
+    var orderedChoices = shuffle(q.choices.map(function (t, i) { return { text: t, idx: i }; }));
+
+    var choicesHtml = "";
+    orderedChoices.forEach(function (ch, di) {
+      choicesHtml +=
+        '<div class="qp-choice-item" data-idx="' + ch.idx + '">' +
+          '<input type="' + (q.type === "multiple" ? "checkbox" : "radio") +
+            '" name="qp-choice" id="qp-c' + di + '" value="' + ch.idx + '">' +
+          '<label for="qp-c' + di + '">' + qpEsc(ch.text) + '</label>' +
+        '</div>';
+    });
+
+    container.innerHTML =
+      '<div class="qp-card">' +
+        '<div class="qp-meta-row">' +
+          '<span class="qp-progress">\u26A1 ' + (qp.poolIdx + 1) + ' / ' + qp.pool.length + '</span>' +
+          '<span class="qp-streak-bar">' +
+            '\uD83D\uDD25 <span class="qp-streak-num">' + qp.streak + '</span> in a row' +
+            (qp.bestStreak > 0 ? ' &nbsp;&bull;&nbsp; Best: <span class="qp-best-num">' + qp.bestStreak + '</span>' : '') +
+          '</span>' +
+        '</div>' +
+        '<div class="question-type-badge ' + q.type + '" style="margin-bottom:0.75rem">' +
+          (q.type === "multiple" ? 'Multiple Choice \u2014 select all that apply' : 'Single Choice') +
+        '</div>' +
+        (q.context ? '<div class="question-context">' + q.context + '</div>' : '') +
+        '<div class="question-text qp-question-text">' + qpEsc(q.text) + '</div>' +
+        '<div class="qp-choices">' + choicesHtml + '</div>' +
+        '<div class="qp-btn-row">' +
+          '<button class="qp-submit-btn" id="qp-submit-btn"' + (q.type === "single" ? " disabled" : "") + '>Submit Answer</button>' +
+          '<button class="qp-skip-btn" id="qp-skip-btn">Skip \u23ED</button>' +
+        '</div>' +
+      '</div>';
+
+    // Choice interaction
+    container.querySelectorAll(".qp-choice-item").forEach(function (item) {
+      var inp = item.querySelector("input");
+      item.addEventListener("click", function (e) {
+        if (item.classList.contains("qp-correct") || item.classList.contains("qp-incorrect")) return;
+        if (q.type === "single") {
+          if (e.target === inp || e.target.tagName === "LABEL") return;
+          container.querySelectorAll(".qp-choice-item").forEach(function (el) {
+            el.classList.remove("qp-selected"); el.querySelector("input").checked = false;
+          });
+          inp.checked = true; item.classList.add("qp-selected");
+          var sb = document.getElementById("qp-submit-btn"); if (sb) sb.disabled = false;
+        } else {
+          if (e.target === inp || e.target.tagName === "LABEL") return;
+          inp.checked = !inp.checked; item.classList.toggle("qp-selected", inp.checked);
+        }
+      });
+      inp.addEventListener("change", function () {
+        if (q.type === "single") {
+          container.querySelectorAll(".qp-choice-item").forEach(function (el) { el.classList.remove("qp-selected"); });
+          item.classList.add("qp-selected");
+          var sb = document.getElementById("qp-submit-btn"); if (sb) sb.disabled = false;
+        } else {
+          item.classList.toggle("qp-selected", inp.checked);
+        }
+      });
+    });
+
+    var submitBtn = document.getElementById("qp-submit-btn");
+    if (submitBtn) submitBtn.addEventListener("click", function () { onQpSubmit(container, q); });
+    var skipBtn = document.getElementById("qp-skip-btn");
+    if (skipBtn) skipBtn.addEventListener("click", function () { qp.poolIdx++; renderQuickPractice(); });
+  }
+
+  function onQpSubmit(container, q) {
+    var selected;
+    if (q.type === "single") {
+      var chk = container.querySelector("input[type=radio]:checked");
+      if (!chk) return;
+      selected = [parseInt(chk.value, 10)];
+    } else {
+      selected = Array.from(container.querySelectorAll("input[type=checkbox]:checked"))
+        .map(function (i) { return parseInt(i.value, 10); });
+      if (!selected.length) return;
+    }
+
+    var sortedSel = selected.slice().sort(function (a, b) { return a - b; });
+    var sortedCor = q.correct.slice().sort(function (a, b) { return a - b; });
+    var isCorrect = arraysEqual(sortedSel, sortedCor);
+
+    container.querySelectorAll(".qp-choice-item").forEach(function (item) {
+      var idx = parseInt(item.dataset.idx, 10);
+      item.querySelector("input").disabled = true;
+      if (q.correct.includes(idx))  item.classList.add("qp-correct");
+      else if (selected.includes(idx)) item.classList.add("qp-incorrect");
+    });
+
+    if (isCorrect) {
+      qp.streak++;
+      if (qp.streak > qp.bestStreak) qp.bestStreak = qp.streak;
+      try { localStorage.setItem(QP_STREAK_KEY, qp.streak); localStorage.setItem(QP_BEST_KEY, qp.bestStreak); } catch (e) { /**/ }
+    } else {
+      qp.streak = 0;
+      try { localStorage.setItem(QP_STREAK_KEY, 0); } catch (e) { /**/ }
+    }
+
+    var expDiv = document.createElement("div");
+    expDiv.className = "qp-explanation " + (isCorrect ? "qp-correct-exp" : "qp-incorrect-exp");
+    expDiv.innerHTML = "<strong>" + (isCorrect ? "\u2713 Correct!" : "\u2717 Incorrect") + "</strong><br>" + (q.explanation || "");
+    var choicesDiv = container.querySelector(".qp-choices");
+    if (choicesDiv) choicesDiv.after(expDiv);
+
+    var btnRow = container.querySelector(".qp-btn-row");
+    if (btnRow) {
+      btnRow.innerHTML = '<button class="qp-next-btn" id="qp-next-btn">Next Question \u2192</button>';
+      document.getElementById("qp-next-btn").addEventListener("click", function () {
+        qp.poolIdx++; renderQuickPractice();
+      });
+    }
+
+    // Update streak display immediately
+    var streakNum = container.querySelector(".qp-streak-num");
+    if (streakNum) streakNum.textContent = qp.streak;
+    var bestNum = container.querySelector(".qp-best-num");
+    if (bestNum) bestNum.textContent = qp.bestStreak;
+
+    // Milestone celebration
+    var milestone = UT_MESSAGES.find(function (m) { return m.streak === qp.streak; });
+    if (milestone) {
+      document.getElementById("streak-icon").textContent  = milestone.emoji;
+      var msgEl = document.getElementById("streak-msg");
+      msgEl.textContent = milestone.msg;
+      msgEl.style.color = milestone.color;
+      document.getElementById("streak-count").textContent = qp.streak + " in a row!";
+      document.getElementById("streak-overlay").style.display = "flex";
+    }
+  }
+
+  function buildQuickPracticeSection() {
+    try {
+      var s = parseInt(localStorage.getItem(QP_STREAK_KEY), 10);
+      var b = parseInt(localStorage.getItem(QP_BEST_KEY),   10);
+      qp.streak     = isNaN(s) ? 0 : s;
+      qp.bestStreak = isNaN(b) ? 0 : b;
+    } catch (e) { qp.streak = 0; qp.bestStreak = 0; }
+    qp.pool    = buildQuickPracticePool();
+    qp.poolIdx = 0;
+    return '<div class="section-divider"></div>' +
+      '<h2 class="set-selection-title">\u26A1 Quick Practice</h2>' +
+      '<p class="set-selection-sub">One question at a time \u2014 no timer, instant feedback. Failed questions appear first. Build your streak!</p>' +
+      '<div id="qp-container"></div>';
+  }
+
+  function showPeekOverlay() {
+    var answeredCount = results.length;
+    var currentPct    = answeredCount > 0 ? Math.round((score / answeredCount) * 100) : 0;
+    var remaining     = shuffled.length - answeredCount;
+    document.getElementById("peek-pct").textContent    = currentPct + "%";
+    document.getElementById("peek-detail").textContent =
+      answeredCount + " of " + shuffled.length + " answered" +
+      (remaining > 0 ? " (" + remaining + " remaining)" : "");
+    var emoji, title, taunt;
+    if (answeredCount === 0) {
+      emoji = "\uD83E\uDD14"; title = "Nothing to see here!";
+      taunt = "You haven\u2019t answered anything yet\u2026 Why peek? \uD83D\uDE02";
+    } else if (currentPct >= PASS_PCT) {
+      emoji = "\uD83D\uDE08"; title = "Afraid to continue?";
+      taunt = "Sitting at " + currentPct + "% \u2014 not bad. But can you keep it up? The hardest questions may still be ahead\u2026";
+    } else if (currentPct >= MARGINAL_PCT) {
+      emoji = "\uD83D\uDE0F"; title = "Afraid to continue?";
+      taunt = currentPct + "% \u2014 you\u2019re close but not there yet. Maybe you should have studied harder? \uD83D\uDE09";
+    } else {
+      emoji = "\uD83D\uDE30"; title = "Struggling a bit?";
+      taunt = "Only " + currentPct + "%\u2026 Might want to rethink that study plan. \uD83D\uDE05 You can always give up now.";
+    }
+    document.getElementById("peek-emoji").textContent = emoji;
+    document.getElementById("peek-title").textContent = title;
+    document.getElementById("peek-taunt").textContent = taunt;
+    document.getElementById("peek-overlay").style.display = "flex";
+  }
+
+
     const availableCases = TEST_CASES.filter(function (tc) { return tc.questions.length > 0; });
     const totalItems = QUESTION_SETS.length + availableCases.length;
     let completedItems = 0;
@@ -759,6 +1026,9 @@
 
     // ── Progress bar ─────────────────────────────────────────────────────
     let html = '<div class="set-selection-wrapper">' + buildProgressBar();
+
+    // ── Quick Practice (above Practice Quizzes) ──────────────────────────
+    html += buildQuickPracticeSection();
 
     // ── Section 1: Practice Quizzes ──────────────────────────────────────
     html += '<div class="section-divider"></div>' +
@@ -962,6 +1232,9 @@
     '</div>';
 
     setSelectionEl.innerHTML = html;
+
+    // Render the Quick Practice card now that the container exists in the DOM
+    renderQuickPractice();
 
     // Export / Import progress buttons
     const exportBtn = document.getElementById("export-progress-btn");
@@ -1462,13 +1735,19 @@
       '<div class="progress">Question ' + (current + 1) + ' of ' + shuffled.length +
         (practiceMode
           ? '<span class="mode-indicator-badge mode-indicator-practice">\uD83D\uDCDA Practice</span>'
-          : '<span class="mode-indicator-badge mode-indicator-test">\uD83D\uDCDD Test</span>') +
+          : '<span class="mode-indicator-badge mode-indicator-test">\uD83D\uDCDD Test</span>' +
+            '<button class="peek-btn" id="peek-btn" title="Peek at your current score">\uD83D\uDC41\uFE0F Peek</button>') +
       '</div>' +
       '<div class="question-type-badge ' + (q.type === "multiple" ? "multiple" : "single") + '">' +
         (q.type === "multiple" ? "Multiple Choice \u2014 select all that apply" : "Single Choice") +
       '</div>' +
       (q.context ? '<div class="question-context">' + q.context + '</div>' : '') +
-      '<p class="question-text">' + q.text + '</p>';
+      '<div class="question-text">' + q.text + '</div>';
+
+    if (!practiceMode) {
+      var peekBtnEl = document.getElementById("peek-btn");
+      if (peekBtnEl) peekBtnEl.addEventListener("click", showPeekOverlay);
+    }
 
     choicesEl.innerHTML = "";
 
@@ -1826,6 +2105,7 @@
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
+        (pct >= PASS_PCT && !reviewMode ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">You cleared the MB-820 passing threshold!</span></div>' : '') +
         '<h2>' + (isRandom ? "Random Practice Complete!" : "Quiz Complete!") + '</h2>' +
         '<p class="summary-set-label">' +
           dmeta.icon + ' ' + activeSet.label + ' &nbsp;&middot;&nbsp; ' + perfLabel +
@@ -1851,6 +2131,7 @@
       bd.breakdownHtml;
 
     summaryEl.style.display = "block";
+    if (pct >= PASS_PCT && !reviewMode) launchConfetti();
 
     document.getElementById("restart-btn").addEventListener("click", function () {
       reviewMode = false;
@@ -1894,6 +2175,7 @@
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
+        (pct >= PASS_PCT && !reviewMode ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">You cleared the passing threshold!</span></div>' : '') +
         '<h2>Case Study Complete!</h2>' +
         '<p class="summary-set-label">\uD83D\uDCCB ' + caseStudy.label + ' &nbsp;&middot;&nbsp; ' + perfLabel + '</p>' +
         '<div class="score-circle">' +
@@ -1916,6 +2198,7 @@
       bd.breakdownHtml;
 
     summaryEl.style.display = "block";
+    if (pct >= PASS_PCT && !reviewMode) launchConfetti();
 
     document.getElementById("restart-case-btn").addEventListener("click", function () {
       reviewMode = false;
@@ -1981,6 +2264,7 @@
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
+        (combinedPct >= PASS_PCT && !reviewMode ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">Combined score above the MB-820 threshold!</span></div>' : '') +
         '<h2>Combined Result!</h2>' +
         '<p class="summary-set-label">' +
           dmeta.icon + ' ' + activeSet.label + ' + \uD83D\uDCCB ' + caseStudy.label + ' &nbsp;&middot;&nbsp; ' + perfLabel +
@@ -2021,6 +2305,7 @@
       caseBd.breakdownHtml;
 
     summaryEl.style.display = "block";
+    if (combinedPct >= PASS_PCT && !reviewMode) launchConfetti();
 
     document.getElementById("combined-restart-btn").addEventListener("click", function () {
       reviewMode     = false;
