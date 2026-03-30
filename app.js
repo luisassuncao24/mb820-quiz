@@ -1364,10 +1364,11 @@
 
     choicesEl.innerHTML = "";
 
-    // Shuffle choices so answer position varies between attempts
-    const choiceOrder = shuffle(q.choices.map(function (text, idx) {
-      return { text: text, originalIdx: idx };
-    }));
+    // Shuffle choices so answer position varies between attempts.
+    // Test-case questions intentionally group choices by type (e.g. all
+    // "HTTP call:" options together), so preserve their original order.
+    const indexedChoices = q.choices.map(function (text, idx) { return { text: text, originalIdx: idx }; });
+    const choiceOrder = caseStudyMode !== null ? indexedChoices : shuffle(indexedChoices);
 
     choiceOrder.forEach(function (choiceItem, displayIdx) {
       const item  = document.createElement("div");
