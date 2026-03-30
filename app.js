@@ -911,6 +911,7 @@
   }
 
 
+  function buildProgressBar() {
     const availableCases = TEST_CASES.filter(function (tc) { return tc.questions.length > 0; });
     const totalItems = QUESTION_SETS.length + availableCases.length;
     let completedItems = 0;
