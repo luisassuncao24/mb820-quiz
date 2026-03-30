@@ -94,6 +94,11 @@
   let casePhase      = "quiz";
   let savedQuizState = null;
 
+  // ── Quiz mode (practice vs test) ─────────────────────────────────────────
+  // practiceMode = true:  show correct answers + explanation after each question
+  // practiceMode = false: show answers only on the evaluation / summary screen
+  let practiceMode = true;
+
   // ── DOM refs ─────────────────────────────────────────────────────────────
   const setSelectionEl = document.getElementById("set-selection");
   const questionEl     = document.getElementById("question");
@@ -922,10 +927,10 @@
           showConfirm(
             "Start New Quiz?",
             "Your current in-progress quiz will be discarded. Are you sure you want to start a new quiz?",
-            function () { init(false); }
+            function () { showModeOverlay(function () { init(false); }); }
           );
         } else {
-          init(false);
+          showModeOverlay(function () { init(false); });
         }
       });
     });
@@ -961,10 +966,10 @@
           showConfirm(
             "Start New Attempt?",
             "Your current in-progress case study will be discarded. Are you sure you want to start a new attempt?",
-            function () { initStandaloneCase(false); }
+            function () { showModeOverlay(function () { initStandaloneCase(false); }); }
           );
         } else {
-          initStandaloneCase(false);
+          showModeOverlay(function () { initStandaloneCase(false); });
         }
       });
     });
@@ -995,10 +1000,10 @@
           showConfirm(
             "Start New Random Quiz?",
             "Your current in-progress random quiz will be discarded. Are you sure you want to start a new one?",
-            function () { initRandomQuiz(false); }
+            function () { showModeOverlay(function () { initRandomQuiz(false); }); }
           );
         } else {
-          initRandomQuiz(false);
+          showModeOverlay(function () { initRandomQuiz(false); });
         }
       });
     }
@@ -1353,9 +1358,11 @@
 
     questionEl.innerHTML =
       phaseBanner +
-      (caseStudyMode !== "standalone"
-        ? '<div class="progress">Question ' + (current + 1) + ' of ' + shuffled.length + '</div>'
-        : '') +
+      '<div class="progress">Question ' + (current + 1) + ' of ' + shuffled.length +
+        (practiceMode
+          ? '<span class="mode-indicator-badge mode-indicator-practice">\uD83D\uDCDA Practice</span>'
+          : '<span class="mode-indicator-badge mode-indicator-test">\uD83D\uDCDD Test</span>') +
+      '</div>' +
       '<div class="question-type-badge ' + (q.type === "multiple" ? "multiple" : "single") + '">' +
         (q.type === "multiple" ? "Multiple Choice \u2014 select all that apply" : "Single Choice") +
       '</div>' +
@@ -1474,24 +1481,26 @@
       questionScore = 1;
     } else if (q.type === "multiple" && q.correct.length > 1) {
       const correctlySelected   = selected.filter(function (s) { return q.correct.includes(s); }).length;
-      const incorrectlySelected = selected.filter(function (s) { return !q.correct.includes(s); }).length;
-      questionScore = Math.max(0, (correctlySelected - incorrectlySelected) / q.correct.length);
+      // Credit = correctly identified / total correct answers (no penalty for wrong selections)
+      questionScore = q.correct.length > 0 ? correctlySelected / q.correct.length : 0;
     }
     score += questionScore;
 
     // Record result for summary
     results.push({ questionId: q.id, isCorrect: isCorrect, partialScore: questionScore, selected: selected, correct: q.correct });
 
-    // Disable & colour choices
+    // Disable choices (always); only colour them in practice mode
     choicesEl.querySelectorAll(".choice-item").forEach(function (item) {
       const idx = parseInt(item.dataset.idx, 10);
       const inp = item.querySelector("input");
       inp.disabled = true;
 
-      if (q.correct.includes(idx)) {
-        item.classList.add("correct");
-      } else if (selected.includes(idx)) {
-        item.classList.add("incorrect");
+      if (practiceMode) {
+        if (q.correct.includes(idx)) {
+          item.classList.add("correct");
+        } else if (selected.includes(idx)) {
+          item.classList.add("incorrect");
+        }
       }
     });
 
@@ -1499,21 +1508,26 @@
     const submitBtn = choicesEl.querySelector(".submit-btn");
     if (submitBtn) submitBtn.disabled = true;
 
-    // Explanation — show partial credit info when applicable
+    // Show feedback — full explanation in practice mode, neutral notice in test mode
     const exp = document.createElement("div");
-    let feedbackLabel;
-    if (isCorrect) {
-      feedbackLabel = "\u2713 Correct!";
-      exp.className = "explanation correct-exp";
-    } else if (questionScore > 0) {
-      const pctPartial = Math.round(questionScore * 100);
-      feedbackLabel = "\u25D1 Partially correct (" + pctPartial + "% credit)";
-      exp.className = "explanation partial-exp";
+    if (practiceMode) {
+      let feedbackLabel;
+      if (isCorrect) {
+        feedbackLabel = "\u2713 Correct!";
+        exp.className = "explanation correct-exp";
+      } else if (questionScore > 0) {
+        const pctPartial = Math.round(questionScore * 100);
+        feedbackLabel = "\u25D1 Partially correct (" + pctPartial + "% credit)";
+        exp.className = "explanation partial-exp";
+      } else {
+        feedbackLabel = "\u2717 Incorrect";
+        exp.className = "explanation incorrect-exp";
+      }
+      exp.innerHTML = "<strong>" + feedbackLabel + "</strong><br>" + q.explanation;
     } else {
-      feedbackLabel = "\u2717 Incorrect";
-      exp.className = "explanation incorrect-exp";
+      exp.className = "explanation test-mode-exp";
+      exp.textContent = "\uD83D\uDCDD Answer recorded \u2014 results will be shown at the end.";
     }
-    exp.innerHTML = "<strong>" + feedbackLabel + "</strong><br>" + q.explanation;
     choicesEl.appendChild(exp);
 
     // Scroll the feedback into view (helpful on mobile when the explanation is below the fold).
@@ -1706,6 +1720,7 @@
     const dmeta = difficultyMeta[activeSet.difficulty] || { icon: "", label: "" };
 
     const bd = buildBreakdownHtml("Quiz", results, activeSet.data);
+    const chart = buildCategoryChart(results, activeSet.data);
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
@@ -1724,6 +1739,7 @@
           (partialResults.length > 0 ? '<span class="meta-item">\u25D1 ' + partialResults.length + ' partial</span>' : '') +
           '<span class="meta-item">\u2717 ' + wrongCount + ' wrong</span>' +
         '</div>' +
+        chart +
         '<div class="summary-actions">' +
           '<button class="restart-btn" id="restart-btn">' + (isRandom ? 'New Random Quiz' : 'Restart Quiz') + '</button>' +
           '<button class="change-set-btn" id="change-set-btn-summary">Back to Menu</button>' +
@@ -1737,10 +1753,10 @@
     document.getElementById("restart-btn").addEventListener("click", function () {
       reviewMode = false;
       if (isRandom) {
-        initRandomQuiz(false);
+        showModeOverlay(function () { initRandomQuiz(false); });
       } else {
         caseStudyMode = null; caseStudy = null; savedQuizState = null; casePhase = "quiz";
-        init(false);
+        showModeOverlay(function () { init(false); });
       }
     });
     document.getElementById("change-set-btn-summary").addEventListener("click", function () {
@@ -1765,12 +1781,6 @@
         ? "Almost there \u2014 you need " + PASS_PCT + "% to pass. Review the explanations and try again!"
         : "Keep studying \u2014 review the explanations below and try again.";
 
-    const timeTaken   = TIMER_DURATION - timerSeconds;
-    const timeExpired = timerSeconds === 0;
-    const timeStr     = timeExpired
-      ? "Time expired (" + formatTime(TIMER_DURATION) + " used)"
-      : formatTime(timeTaken) + " used (" + formatTime(timerSeconds) + " remaining)";
-
     let perfLabel = "";
     if (pct >= 90)                perfLabel = "\uD83C\uDFC6 Excellent";
     else if (pct >= PASS_PCT)     perfLabel = "\u2705 Pass";
@@ -1778,6 +1788,7 @@
     else                          perfLabel = "\u274C Needs Work";
 
     const bd = buildBreakdownHtml(caseStudy.label, results, caseStudy.questions);
+    const chart = buildCategoryChart(results, caseStudy.questions);
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
@@ -1789,11 +1800,11 @@
         '</div>' +
         '<p class="score-verdict">' + verdict + '</p>' +
         '<div class="summary-meta">' +
-          '<span class="meta-item">\u23F1 ' + timeStr + '</span>' +
           '<span class="meta-item">\u2713 ' + fullyCorrect + ' correct</span>' +
           (partials.length > 0 ? '<span class="meta-item">\u25D1 ' + partials.length + ' partial</span>' : '') +
           '<span class="meta-item">\u2717 ' + wrongCount + ' wrong</span>' +
         '</div>' +
+        chart +
         '<div class="summary-actions">' +
           '<button class="restart-btn" id="restart-case-btn">Try Again</button>' +
           '<button class="change-set-btn" id="back-home-btn">Back to Menu</button>' +
@@ -1806,7 +1817,7 @@
 
     document.getElementById("restart-case-btn").addEventListener("click", function () {
       reviewMode = false;
-      initStandaloneCase(false);
+      showModeOverlay(function () { initStandaloneCase(false); });
     });
     document.getElementById("back-home-btn").addEventListener("click", function () {
       showSetSelection();
@@ -1862,6 +1873,9 @@
     // Build breakdowns for both parts
     const quizBd = buildBreakdownHtml(activeSet.label, quizResultsArr, activeSet.data);
     const caseBd = buildBreakdownHtml(caseStudy.label, caseResultsArr, caseStudy.questions);
+    const allResults = quizResultsArr.concat(caseResultsArr);
+    const allData    = activeSet.data.concat(caseStudy.questions);
+    const chart = buildCategoryChart(allResults, allData);
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
@@ -1893,6 +1907,7 @@
         '<div class="summary-meta">' +
           '<span class="meta-item">\u23F1 ' + timeStr + '</span>' +
         '</div>' +
+        chart +
         '<div class="summary-actions">' +
           '<button class="restart-btn" id="combined-restart-btn">Restart Quiz</button>' +
           '<button class="change-set-btn" id="combined-home-btn">Back to Menu</button>' +
@@ -1912,11 +1927,199 @@
       caseStudy      = cs;
       savedQuizState = null;
       casePhase      = "quiz";
-      init(false);
+      showModeOverlay(function () { init(false); });
     });
     document.getElementById("combined-home-btn").addEventListener("click", function () {
       showSetSelection();
     });
+  }
+
+  // ── Mode selection overlay ─────────────────────────────────────────────────
+  function showModeOverlay(onStart) {
+    document.getElementById("mode-overlay").style.display = "flex";
+
+    function cleanup() {
+      document.getElementById("mode-overlay").style.display = "none";
+      document.getElementById("practice-mode-btn").removeEventListener("click", onPractice);
+      document.getElementById("test-mode-btn").removeEventListener("click", onTest);
+      document.getElementById("mode-cancel-btn").removeEventListener("click", onCancel);
+    }
+    function onPractice() { cleanup(); practiceMode = true;  onStart(); }
+    function onTest()     { cleanup(); practiceMode = false; onStart(); }
+    function onCancel()   { cleanup(); showSetSelection(); }
+
+    document.getElementById("practice-mode-btn").addEventListener("click", onPractice);
+    document.getElementById("test-mode-btn").addEventListener("click", onTest);
+    document.getElementById("mode-cancel-btn").addEventListener("click", onCancel);
+  }
+
+  // ── Question category lookup ───────────────────────────────────────────────
+  // Maps official MB-820 question IDs (501-578) to exam domain categories
+  var OFFICIAL_CATEGORY_MAP = {
+    501: "Deployment & Architecture", 502: "Deployment & Architecture",
+    503: "Describe Business Central",  504: "Development Tools",
+    505: "Development Tools",          506: "Development Tools",
+    507: "AL Objects",                 508: "Deployment & Architecture",
+    509: "Deployment & Architecture",  510: "AL Objects",
+    511: "AL Objects",                 512: "AL Objects",
+    513: "AL Objects",                 514: "AL Development",
+    515: "Development Tools",          516: "AL Objects",
+    517: "AL Objects",                 518: "AL Objects",
+    519: "AL Objects",                 520: "AL Development",
+    521: "AL Development",             522: "AL Development",
+    523: "AL Development",             524: "AL Objects",
+    525: "AL Objects",                 526: "AL Objects",
+    527: "AL Objects",                 528: "AL Development",
+    529: "AL Objects",                 530: "AL Objects",
+    531: "AL Development",             532: "Integration",
+    533: "AL Objects",                 534: "AL Objects",
+    535: "AL Development",             536: "Describe Business Central",
+    537: "Deployment & Architecture",  538: "AL Objects",
+    539: "AL Objects",                 540: "Integration",
+    541: "Development Tools",          542: "AL Objects",
+    543: "Development Tools",          544: "AL Objects",
+    545: "AL Objects",                 546: "AL Objects",
+    547: "AL Objects",                 548: "AL Objects",
+    549: "AL Objects",                 550: "AL Objects",
+    551: "AL Objects",                 552: "Deployment & Architecture",
+    553: "AL Development",             554: "AL Objects",
+    555: "AL Objects",                 556: "AL Objects",
+    557: "AL Objects",                 558: "AL Development",
+    559: "AL Objects",                 560: "AL Development",
+    561: "Development Tools",          562: "Development Tools",
+    563: "Development Tools",          564: "Development Tools",
+    565: "Development Tools",          566: "Deployment & Architecture",
+    567: "AL Objects",                 568: "Integration",
+    569: "AL Objects",                 570: "AL Development",
+    571: "AL Objects",                 572: "AL Objects",
+    573: "AL Objects",                 574: "AL Objects",
+    575: "AL Development",             576: "Development Tools",
+    577: "Development Tools",          578: "Development Tools"
+  };
+
+  function getQuestionCategory(id) {
+    // Official MB-820 questions (IDs 501-578)
+    if (OFFICIAL_CATEGORY_MAP[id]) return OFFICIAL_CATEGORY_MAP[id];
+
+    // questions.js — BC functional consultant areas (IDs 1-100)
+    if (id >= 1   && id <= 5)   return "Financial Management";
+    if (id >= 6   && id <= 8)   return "Sales & Receivables";
+    if (id >= 9   && id <= 10)  return "Purchasing & Payables";
+    if (id >= 11  && id <= 14)  return "Inventory & Items";
+    if (id >= 15  && id <= 17)  return "Manufacturing";
+    if (id >= 18  && id <= 19)  return "Service Management";
+    if (id === 20)               return "Assembly Management";
+    if (id >= 21  && id <= 22)  return "Planning";
+    if (id >= 23  && id <= 24)  return "Project Management";
+    if (id >= 25  && id <= 27)  return "Setup & Administration";
+    if (id === 28)               return "Intercompany";
+    if (id >= 29  && id <= 30)  return "Reporting & Analytics";
+    if (id >= 31  && id <= 40)  return "Financial Management";
+    if (id >= 41  && id <= 46)  return "Sales & Receivables";
+    if (id >= 47  && id <= 50)  return "Purchasing & Payables";
+    if (id >= 51  && id <= 56)  return "Inventory & Items";
+    if (id >= 57  && id <= 60)  return "Manufacturing";
+    if (id >= 61  && id <= 63)  return "Service Management";
+    if (id >= 64  && id <= 65)  return "Assembly Management";
+    if (id >= 66  && id <= 69)  return "Planning";
+    if (id >= 70  && id <= 72)  return "Project Management";
+    if (id >= 73  && id <= 76)  return "Setup & Administration";
+    if (id >= 77  && id <= 78)  return "Cash Management";
+    if (id >= 79  && id <= 80)  return "Fixed Assets";
+    if (id >= 81  && id <= 82)  return "Intercompany";
+    if (id >= 83  && id <= 84)  return "Dimensions";
+    if (id >= 85  && id <= 86)  return "Reporting & Analytics";
+    if (id >= 87  && id <= 88)  return "Workflows";
+    if (id >= 89  && id <= 90)  return "Warehouse Management";
+    if (id >= 91  && id <= 94)  return "Financial Management";
+    if (id >= 95  && id <= 96)  return "Sales & Receivables";
+    if (id >= 97  && id <= 98)  return "Purchasing & Payables";
+    if (id >= 99  && id <= 100) return "Inventory & Items";
+
+    // questions2.js — developer concepts (IDs 201-300)
+    if (id >= 201 && id <= 300) return "BC Developer Concepts";
+
+    // testcases.js — case study questions (IDs 301+)
+    return "Case Study";
+  }
+
+  // ── Category pie chart ─────────────────────────────────────────────────────
+  function buildCategoryChart(results, qData) {
+    if (!results || results.length === 0) return "";
+
+    const categoryData = {};
+    results.forEach(function (r) {
+      const cat = getQuestionCategory(r.questionId);
+      if (!categoryData[cat]) categoryData[cat] = { total: 0, score: 0 };
+      categoryData[cat].total++;
+      categoryData[cat].score += r.partialScore;
+    });
+
+    const categories = Object.keys(categoryData);
+    if (categories.length === 0) return "";
+
+    var COLORS = [
+      "#4a9eff", "#34c759", "#ff9f0a", "#bf5af2", "#ff453a",
+      "#32ade6", "#ff6b35", "#30d158", "#e65100", "#7c4dff"
+    ];
+
+    var total = results.length;
+    var cx = 100, cy = 100, outerR = 85, innerR = 42;
+    var startAngle = -Math.PI / 2;
+    var paths = "";
+    var legendRows = "";
+
+    categories.forEach(function (cat, i) {
+      var data  = categoryData[cat];
+      var pct   = data.total > 0 ? Math.round((data.score / data.total) * 100) : 0;
+      var slice = data.total / total;
+      var angle = slice * 2 * Math.PI;
+      var endAngle = startAngle + angle;
+      var color = COLORS[i % COLORS.length];
+
+      if (categories.length === 1) {
+        paths +=
+          '<circle cx="' + cx + '" cy="' + cy + '" r="' + outerR + '" fill="' + color + '" />' +
+          '<circle cx="' + cx + '" cy="' + cy + '" r="' + innerR + '" fill="#0f172a" />';
+      } else {
+        var x1o = cx + outerR * Math.cos(startAngle);
+        var y1o = cy + outerR * Math.sin(startAngle);
+        var x2o = cx + outerR * Math.cos(endAngle);
+        var y2o = cy + outerR * Math.sin(endAngle);
+        var x1i = cx + innerR * Math.cos(endAngle);
+        var y1i = cy + innerR * Math.sin(endAngle);
+        var x2i = cx + innerR * Math.cos(startAngle);
+        var y2i = cy + innerR * Math.sin(startAngle);
+        var largeArc = angle > Math.PI ? 1 : 0;
+        paths +=
+          '<path d="M ' + x1o.toFixed(2) + ' ' + y1o.toFixed(2) +
+          ' A ' + outerR + ' ' + outerR + ' 0 ' + largeArc + ' 1 ' + x2o.toFixed(2) + ' ' + y2o.toFixed(2) +
+          ' L ' + x1i.toFixed(2) + ' ' + y1i.toFixed(2) +
+          ' A ' + innerR + ' ' + innerR + ' 0 ' + largeArc + ' 0 ' + x2i.toFixed(2) + ' ' + y2i.toFixed(2) +
+          ' Z" fill="' + color + '" stroke="#0f172a" stroke-width="2" />';
+      }
+
+      var badgeCls = pct >= 70 ? "pct-pass" : pct >= 50 ? "pct-marginal" : "pct-fail";
+      legendRows +=
+        '<div class="chart-legend-row">' +
+          '<span class="chart-legend-dot" style="background:' + color + '"></span>' +
+          '<span class="chart-legend-cat">' + cat + '</span>' +
+          '<span class="chart-legend-pct ' + badgeCls + '">' + pct + '%</span>' +
+          '<span class="chart-legend-count">(' + data.total + 'q)</span>' +
+        '</div>';
+
+      startAngle = endAngle;
+    });
+
+    return '<div class="category-chart-section">' +
+      '<h3 class="breakdown-title">\uD83D\uDCCA Performance by Category</h3>' +
+      '<div class="category-chart-layout">' +
+        '<svg class="category-pie-svg" viewBox="0 0 200 200" width="180" height="180">' +
+          paths +
+        '</svg>' +
+        '<div class="category-chart-legend">' + legendRows + '</div>' +
+      '</div>' +
+    '</div>';
   }
 
   // ── Bot prevention / human verification ──────────────────────────────────
