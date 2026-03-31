@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MB-820 Quiz — User Guide</title>
+  <style>
+    /* ── Base reset ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #1d4ed8;
+      --blue-light: #3b82f6;
+      --blue-bg:    #eff6ff;
+      --green:      #15803d;
+      --green-bg:   #f0fdf4;
+      --red:        #b91c1c;
+      --red-bg:     #fef2f2;
+      --amber:      #92400e;
+      --amber-bg:   #fffbeb;
+      --purple:     #6d28d9;
+      --purple-bg:  #f5f3ff;
+      --gray:       #374151;
+      --gray-light: #9ca3af;
+      --gray-bg:    #f9fafb;
+      --border:     #e5e7eb;
+      --shadow:     0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md:  0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #111827;
+      background: #fff;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 2.5rem;
+    }
+
+    /* ── Print styles ─────────────────────────────────────────────── */
+    @media print {
+      body { padding: 0; max-width: 100%; font-size: 12px; }
+      .page-break { page-break-before: always; break-before: page; }
+      .no-break    { page-break-inside: avoid; break-inside: avoid; }
+      .cover-page  { page-break-after: always; break-after: page; }
+      a            { color: inherit; text-decoration: none; }
+      .print-hide  { display: none !important; }
+      h2           { page-break-after: avoid; break-after: avoid; }
+    }
+
+    /* ── Cover page ───────────────────────────────────────────────── */
+    .cover-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #0f172a 100%);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 4rem 3rem;
+      margin-bottom: 3rem;
+    }
+    .cover-badge {
+      background: rgba(56,189,248,.15);
+      border: 1px solid rgba(56,189,248,.3);
+      color: #38bdf8;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      padding: .35rem .9rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      display: inline-block;
+    }
+    .cover-title {
+      font-size: 3rem;
+      font-weight: 800;
+      color: #38bdf8;
+      line-height: 1.15;
+      margin-bottom: .75rem;
+    }
+    .cover-subtitle {
+      font-size: 1.25rem;
+      color: #94a3b8;
+      margin-bottom: 2.5rem;
+      font-weight: 400;
+    }
+    .cover-divider {
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #38bdf8, #818cf8);
+      border-radius: 99px;
+      margin: 0 auto 2.5rem;
+    }
+    .cover-meta {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: .85rem;
+      color: #64748b;
+    }
+    .cover-meta-item {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .cover-meta-icon { font-size: 1rem; }
+    .cover-features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2.5rem;
+      width: 100%;
+      max-width: 600px;
+    }
+    .cover-feature {
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
+      padding: .85rem;
+      font-size: .8rem;
+      color: #cbd5e1;
+    }
+    .cover-feature-icon { font-size: 1.4rem; display: block; margin-bottom: .35rem; }
+
+    /* ── Table of contents ────────────────────────────────────────── */
+    .toc {
+      background: var(--gray-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem 2rem;
+      margin-bottom: 3rem;
+    }
+    .toc-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .35rem .5rem;
+    }
+    .toc-item {
+      display: flex;
+      align-items: baseline;
+      gap: .5rem;
+      font-size: .85rem;
+      color: #374151;
+      text-decoration: none;
+    }
+    .toc-item:hover { color: var(--blue); }
+    .toc-num {
+      flex-shrink: 0;
+      font-weight: 700;
+      color: var(--blue-light);
+      width: 1.4rem;
+      font-size: .8rem;
+    }
+
+    /* ── Section headings ─────────────────────────────────────────── */
+    .section {
+      margin-bottom: 3rem;
+    }
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: .75rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .section-num {
+      background: var(--blue);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      letter-spacing: -.01em;
+    }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #111827;
+    }
+    .section-icon { font-size: 1.3rem; }
+
+    h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: .6rem;
+      margin-top: 1.4rem;
+    }
+
+    p { margin-bottom: .8rem; color: #374151; }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Screenshot frames ────────────────────────────────────────── */
+    .screenshot-wrap {
+      margin: 1.25rem 0;
+    }
+    .screenshot-wrap.no-break { page-break-inside: avoid; break-inside: avoid; }
+    .screenshot-label {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--gray-light);
+      margin-bottom: .4rem;
+    }
+    .screenshot-frame {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
+      background: #0f172a;
+    }
+    .screenshot-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .screenshot-caption {
+      font-size: .78rem;
+      color: #6b7280;
+      margin-top: .5rem;
+      font-style: italic;
+      padding: 0 .25rem;
+    }
+
+    /* Side-by-side screenshots */
+    .screenshot-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    /* ── Info boxes ───────────────────────────────────────────────── */
+    .info-box {
+      border-radius: 8px;
+      padding: .9rem 1.1rem;
+      margin: 1rem 0;
+      border-left: 4px solid;
+      font-size: .875rem;
+    }
+    .info-box.tip  { background: var(--blue-bg); border-color: var(--blue-light); color: #1e40af; }
+    .info-box.note { background: var(--amber-bg); border-color: #f59e0b; color: var(--amber); }
+    .info-box.good { background: var(--green-bg); border-color: #22c55e; color: var(--green); }
+    .info-box.warn { background: var(--red-bg); border-color: #ef4444; color: var(--red); }
+    .info-box strong { font-weight: 700; }
+
+    /* ── Feature cards ────────────────────────────────────────────── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .85rem;
+      margin: 1rem 0;
+    }
+    .feature-card {
+      background: var(--gray-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .9rem 1rem;
+    }
+    .feature-card-title {
+      font-weight: 700;
+      font-size: .875rem;
+      margin-bottom: .3rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .feature-card p { font-size: .82rem; color: #6b7280; margin: 0; }
+
+    /* ── Step list ────────────────────────────────────────────────── */
+    .step-list { list-style: none; padding: 0; margin: .75rem 0 1rem; }
+    .step-list li {
+      display: flex;
+      gap: .75rem;
+      align-items: flex-start;
+      padding: .5rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: .875rem;
+    }
+    .step-list li:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      background: var(--blue);
+      color: #fff;
+      font-size: .7rem;
+      font-weight: 800;
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: .1rem;
+    }
+    .step-text { color: #374151; }
+    .step-text strong { color: #111827; }
+
+    /* ── Bullet lists ─────────────────────────────────────────────── */
+    ul.bullet { padding-left: 1.2rem; margin: .5rem 0 1rem; }
+    ul.bullet li { margin-bottom: .35rem; font-size: .875rem; color: #374151; }
+    ul.bullet li::marker { color: var(--blue-light); }
+
+    /* ── Badges / pills ───────────────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      padding: .2rem .6rem;
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-green    { background: #dcfce7; color: #15803d; }
+    .badge-yellow   { background: #fef9c3; color: #854d0e; }
+    .badge-red      { background: #fee2e2; color: #b91c1c; }
+    .badge-blue     { background: #dbeafe; color: #1d4ed8; }
+    .badge-purple   { background: #ede9fe; color: #6d28d9; }
+    .badge-gray     { background: #f3f4f6; color: #374151; }
+    .badge-orange   { background: #ffedd5; color: #9a3412; }
+
+    /* ── Comparison table ─────────────────────────────────────────── */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: .85rem;
+    }
+    .compare-table th {
+      background: #1d4ed8;
+      color: #fff;
+      padding: .6rem .85rem;
+      text-align: left;
+      font-weight: 700;
+    }
+    .compare-table th:first-child { border-radius: 6px 0 0 0; }
+    .compare-table th:last-child  { border-radius: 0 6px 0 0; }
+    .compare-table td {
+      padding: .55rem .85rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .compare-table tr:nth-child(even) td { background: var(--gray-bg); }
+    .compare-table .check  { color: var(--green); font-weight: 700; }
+    .compare-table .cross  { color: var(--red);   font-weight: 700; }
+
+    /* ── Quiz set cards ───────────────────────────────────────────── */
+    .quiz-sets {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .85rem;
+      margin: 1rem 0;
+    }
+    .quiz-set-card {
+      border-radius: 8px;
+      padding: .9rem 1rem;
+      border: 1px solid var(--border);
+    }
+    .quiz-set-card.beginner     { background: #f0fdf4; border-color: #bbf7d0; }
+    .quiz-set-card.intermediate { background: #fefce8; border-color: #fef08a; }
+    .quiz-set-card.proficient   { background: #fef2f2; border-color: #fecaca; }
+    .quiz-set-card.official     { background: #eff6ff; border-color: #bfdbfe; }
+    .quiz-set-card.random       { background: #faf5ff; border-color: #ddd6fe; }
+    .quiz-set-name {
+      font-weight: 700;
+      font-size: .9rem;
+      margin-bottom: .25rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+    }
+    .quiz-set-card p { font-size: .78rem; color: #6b7280; margin: 0; }
+
+    /* ── Timer indicator ──────────────────────────────────────────── */
+    .timer-states {
+      display: flex;
+      gap: .75rem;
+      margin: .75rem 0;
+      flex-wrap: wrap;
+    }
+    .timer-state {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .35rem .8rem;
+      border-radius: 6px;
+      font-size: .8rem;
+      font-weight: 600;
+    }
+    .timer-state.green  { background: #dcfce7; color: #15803d; }
+    .timer-state.yellow { background: #fef9c3; color: #854d0e; }
+    .timer-state.red    { background: #fee2e2; color: #b91c1c; }
+
+    /* ── Keyboard shortcuts ───────────────────────────────────────── */
+    .shortcuts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: .5rem .75rem;
+      margin: .75rem 0;
+    }
+    .shortcut-item {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .82rem;
+      color: #374151;
+    }
+    kbd {
+      background: #f3f4f6;
+      border: 1px solid #d1d5db;
+      border-radius: 4px;
+      padding: .15rem .45rem;
+      font-size: .72rem;
+      font-family: monospace;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 1px 0 #d1d5db;
+    }
+
+    /* ── Progress section ─────────────────────────────────────────── */
+    .progress-visual {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 1.25rem 1.5rem;
+      margin: 1rem 0;
+      color: #e2e8f0;
+    }
+    .progress-label {
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: #64748b;
+      margin-bottom: .5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+    .progress-bar-track {
+      background: #334155;
+      border-radius: 999px;
+      height: 10px;
+      overflow: hidden;
+      margin-bottom: .35rem;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #3b82f6, #22c55e);
+    }
+
+    /* ── FAQ / Tips ───────────────────────────────────────────────── */
+    .tip-list { padding: 0; list-style: none; margin: .75rem 0; }
+    .tip-list li {
+      padding: .6rem .75rem;
+      background: var(--gray-bg);
+      border-radius: 6px;
+      margin-bottom: .5rem;
+      font-size: .85rem;
+      color: #374151;
+      border-left: 3px solid var(--blue-light);
+      display: flex;
+      gap: .5rem;
+    }
+    .tip-icon { flex-shrink: 0; font-size: 1rem; }
+
+    /* ── Footer ───────────────────────────────────────────────────── */
+    .footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 2px solid var(--border);
+      text-align: center;
+      font-size: .78rem;
+      color: #9ca3af;
+    }
+    .footer strong { color: #374151; }
+
+    /* ── Annotation callout ───────────────────────────────────────── */
+    .callout-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+      margin: 1rem 0;
+    }
+    .callout-img { flex: 0 0 55%; }
+    .callout-text { flex: 1; }
+    .callout-text h3 { margin-top: 0; }
+    .callout-item {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: .5rem;
+      font-size: .82rem;
+    }
+    .callout-dot {
+      flex-shrink: 0;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .6rem;
+      font-weight: 800;
+      color: #fff;
+      margin-top: .1rem;
+    }
+    .callout-dot.blue   { background: #2563eb; }
+    .callout-dot.green  { background: #16a34a; }
+    .callout-dot.orange { background: #ea580c; }
+    .callout-dot.purple { background: #7c3aed; }
+    .callout-dot.red    { background: #dc2626; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ COVER ═══ -->
+<div class="cover-page">
+  <div class="cover-badge">Official Documentation</div>
+  <h1 class="cover-title">MB-820 Quiz</h1>
+  <p class="cover-subtitle">Complete User Guide &amp; Feature Overview</p>
+  <div class="cover-divider"></div>
+  <div class="cover-meta">
+    <div class="cover-meta-item"><span class="cover-meta-icon">📚</span> 277 Questions</div>
+    <div class="cover-meta-item"><span class="cover-meta-icon">🎓</span> 4 Difficulty Levels</div>
+    <div class="cover-meta-item"><span class="cover-meta-icon">📋</span> 3 Case Studies</div>
+    <div class="cover-meta-item"><span class="cover-meta-icon">⚡</span> Quick Practice Mode</div>
+    <div class="cover-meta-item"><span class="cover-meta-icon">📊</span> Progress Tracking</div>
+  </div>
+  <div class="cover-features">
+    <div class="cover-feature">
+      <span class="cover-feature-icon">🤖</span>
+      Bot Protection
+    </div>
+    <div class="cover-feature">
+      <span class="cover-feature-icon">🔁</span>
+      Save &amp; Resume
+    </div>
+    <div class="cover-feature">
+      <span class="cover-feature-icon">⏱</span>
+      120-min Timer
+    </div>
+    <div class="cover-feature">
+      <span class="cover-feature-icon">📚</span>
+      Practice Mode
+    </div>
+    <div class="cover-feature">
+      <span class="cover-feature-icon">📝</span>
+      Test Mode
+    </div>
+    <div class="cover-feature">
+      <span class="cover-feature-icon">💾</span>
+      Export Progress
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════ TABLE OF CONTENTS ═ -->
+<div class="toc no-break">
+  <div class="toc-title">📑 Table of Contents</div>
+  <div class="toc-grid">
+    <a class="toc-item" href="#s1"><span class="toc-num">01</span> Getting Started &amp; Verification</a>
+    <a class="toc-item" href="#s2"><span class="toc-num">02</span> Main Dashboard Overview</a>
+    <a class="toc-item" href="#s3"><span class="toc-num">03</span> Quick Practice ⚡</a>
+    <a class="toc-item" href="#s4"><span class="toc-num">04</span> Practice Quiz Sets</a>
+    <a class="toc-item" href="#s5"><span class="toc-num">05</span> Choosing Your Quiz Mode</a>
+    <a class="toc-item" href="#s6"><span class="toc-num">06</span> Answering Questions</a>
+    <a class="toc-item" href="#s7"><span class="toc-num">07</span> Timer &amp; Auto-Pause</a>
+    <a class="toc-item" href="#s8"><span class="toc-num">08</span> Test Mode &amp; Peek Score</a>
+    <a class="toc-item" href="#s9"><span class="toc-num">09</span> Results &amp; Answer Review</a>
+    <a class="toc-item" href="#s10"><span class="toc-num">10</span> Case Studies</a>
+    <a class="toc-item" href="#s11"><span class="toc-num">11</span> Progress Tracking &amp; History</a>
+    <a class="toc-item" href="#s12"><span class="toc-num">12</span> Export &amp; Import Progress</a>
+    <a class="toc-item" href="#s13"><span class="toc-num">13</span> Tips &amp; Best Practices</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 1 ════ -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <span class="section-icon">🔐</span>
+    <h2 class="section-title">Getting Started &amp; Human Verification</h2>
+  </div>
+
+  <p>The MB-820 Quiz is a browser-based study tool designed to help you prepare for the <strong>Microsoft Dynamics 365 Business Central Functional Consultant (MB-820)</strong> certification exam. No installation is required — simply open <code>index.html</code> in your browser.</p>
+
+  <div class="callout-row no-break">
+    <div class="callout-img">
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">Figure 1.1 — Human Verification Screen</div>
+        <div class="screenshot-frame">
+          <img src="guide-assets/01_verification.png" alt="Human Verification Screen">
+        </div>
+        <div class="screenshot-caption">A simple math challenge protects the quiz from automated access.</div>
+      </div>
+    </div>
+    <div class="callout-text">
+      <h3>What is the verification?</h3>
+      <p>When you first open the quiz, a <strong>Human Verification</strong> card appears over a blurred background. This is a lightweight bot-protection mechanism that ensures real users are accessing the content.</p>
+
+      <div class="callout-item">
+        <div class="callout-dot blue">1</div>
+        <span>A random arithmetic question is shown (e.g., <em>"What is 13 − 7?"</em>)</span>
+      </div>
+      <div class="callout-item">
+        <div class="callout-dot blue">2</div>
+        <span>Type the numeric answer in the input field</span>
+      </div>
+      <div class="callout-item">
+        <div class="callout-dot blue">3</div>
+        <span>Click <strong>Enter</strong> (or press <kbd>Enter</kbd>) to proceed</span>
+      </div>
+      <div class="callout-item">
+        <div class="callout-dot blue">4</div>
+        <span>A new question is generated if you answer incorrectly — no lockout</span>
+      </div>
+
+      <div class="info-box tip" style="margin-top:.9rem">
+        <strong>💡 Tip:</strong> The verification only runs once per session. Refreshing the page will show it again.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 2 ════ -->
+<div class="section page-break" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <span class="section-icon">🏠</span>
+    <h2 class="section-title">Main Dashboard Overview</h2>
+  </div>
+
+  <p>After passing verification, you land on the <strong>Main Dashboard</strong> — your hub for all quiz activities. It is organized into distinct sections that scroll vertically.</p>
+
+  <div class="screenshot-wrap no-break">
+    <div class="screenshot-label">Figure 2.1 — Main Dashboard (top portion)</div>
+    <div class="screenshot-frame">
+      <img src="guide-assets/02_dashboard_full.png" alt="Main Dashboard">
+    </div>
+    <div class="screenshot-caption">The dashboard shows your preparation progress, in-progress sessions, Quick Practice, and all available quiz sets.</div>
+  </div>
+
+  <h3>Dashboard Sections</h3>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-card-title">🎯 Preparation Progress Bar</div>
+      <p>Tracks how many quizzes and case studies you have completed with ≥70%. Fills to 100% when everything is passed.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">⏸ In-Progress Banner</div>
+      <p>Shown when you have paused or navigated away mid-quiz. Reminds you to continue where you left off.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">⚡ Quick Practice</div>
+      <p>One question at a time, no timer, instant feedback. Draws from all 277 questions and prioritizes ones you previously got wrong.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">📚 Practice Quizzes</div>
+      <p>Four structured quiz sets (Beginner → Official) each with a 120-minute timer. Can be combined with a Case Study.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">🎲 Random Practice</div>
+      <p>67 randomly selected questions from all sets. Results don't count towards preparation progress.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">📋 Case Studies</div>
+      <p>3 standalone scenario-based test cases (Alpine, Contoso, Fabrikam). Can also be run after a Practice Quiz for a combined score.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">💾 Export / Import</div>
+      <p>Transfer all your progress between devices by exporting to a JSON file and importing on another browser.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">🗑️ Reset All Progress</div>
+      <p>Wipes all saved data including scores, history, and timers. Individual quiz/case reset buttons are also available per card.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 3 ════ -->
+<div class="section page-break" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <span class="section-icon">⚡</span>
+    <h2 class="section-title">Quick Practice</h2>
+  </div>
+
+  <p>Quick Practice is the fastest way to squeeze in focused study. It sits at the top of the dashboard and serves <strong>one question at a time</strong> with no countdown pressure.</p>
+
+  <div class="screenshot-pair no-break">
+    <div>
+      <div class="screenshot-label">Figure 3.1 — Quick Practice card</div>
+      <div class="screenshot-frame">
+        <img src="guide-assets/04_multiple_choice_question.png" alt="Quick Practice question">
+      </div>
+    </div>
+    <div>
+      <div class="screenshot-label">Figure 3.2 — Streak milestone overlay</div>
+      <div class="screenshot-frame">
+        <img src="guide-assets/09_streak_milestone.png" alt="Streak milestone">
+      </div>
+    </div>
+  </div>
+
+  <h3>How it works</h3>
+  <ul class="bullet">
+    <li>Questions are drawn from <strong>all 277 questions</strong> across every quiz set and case study.</li>
+    <li>Questions you previously answered <strong>incorrectly appear first</strong>, then unseen ones, then correctly-answered ones.</li>
+    <li>Clicking <strong>Submit Answer</strong> immediately reveals whether you were right or wrong, along with the explanation.</li>
+    <li>Use <strong>Skip ⏭</strong> to jump over a question you're not ready for.</li>
+    <li>Use <strong>📋 Copy</strong> to copy the question details to your clipboard to report an issue via Teams.</li>
+  </ul>
+
+  <h3>🔥 Streak System</h3>
+  <p>Every consecutive correct answer increases your streak counter. Milestone achievements unlock a celebration overlay:</p>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-card-title"><span style="color:#f97316">🔥</span> 5 in a row</div>
+      <p><strong>KILLING SPREE!</strong> — Keep the momentum going.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span style="color:#ef4444">💥</span> 10 in a row</div>
+      <p><strong>RAMPAGE!</strong> — You're on fire!</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span style="color:#8b5cf6">⚡</span> 15 in a row</div>
+      <p><strong>DOMINATING!</strong> — Impressive knowledge.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span style="color:#06b6d4">🌪️</span> 20 in a row</div>
+      <p><strong>UNSTOPPABLE!</strong> — You know this material cold.</p>
+    </div>
+  </div>
+
+  <div class="info-box note">
+    <strong>⚠️ Note:</strong> If you get a question <strong>wrong</strong>, your streak resets to 0 and the question pool resets so all questions become available again — giving you a fresh chance to build your streak.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 4 ════ -->
+<div class="section page-break" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <span class="section-icon">📚</span>
+    <h2 class="section-title">Practice Quiz Sets</h2>
+  </div>
+
+  <p>There are <strong>four structured quiz sets</strong> designed to progressively challenge you, plus a random practice option. Each has a 120-minute countdown timer mirroring the actual exam conditions.</p>
+
+  <div class="quiz-sets no-break">
+    <div class="quiz-set-card beginner">
+      <div class="quiz-set-name">🟢 Beginner Quiz</div>
+      <p>66 foundational questions covering core Business Central concepts and terminology. Perfect starting point for newcomers.</p>
+    </div>
+    <div class="quiz-set-card intermediate">
+      <div class="quiz-set-name">🟡 Intermediate Quiz</div>
+      <p>67 questions bridging foundational knowledge and advanced Business Central topics. For those with some BC experience.</p>
+    </div>
+    <div class="quiz-set-card proficient">
+      <div class="quiz-set-name">🔴 Proficient Quiz</div>
+      <p>67 scenario-based questions balanced across the full MB-820 exam: AL development, events, testing, permissions, API pages, XMLports, telemetry, and deployment.</p>
+    </div>
+    <div class="quiz-set-card official">
+      <div class="quiz-set-name">📋 Official Questions</div>
+      <p>77 official MB-820 exam questions covering deployment architecture, AL development, permissions, XMLports, queries, HTTP, reports, telemetry, and more.</p>
+    </div>
+    <div class="quiz-set-card random" style="grid-column: span 2;">
+      <div class="quiz-set-name">🎲 Random Practice Quiz</div>
+      <p>67 randomly selected questions drawn from <em>all</em> available sets. Great for mixed revision. Note: results do <strong>not</strong> count towards the preparation progress bar.</p>
+    </div>
+  </div>
+
+  <h3>Card Actions</h3>
+  <p>Each quiz card offers the following buttons depending on its state:</p>
+  <ul class="bullet">
+    <li><strong>Start Quiz</strong> — Begin a fresh quiz (prompts mode selection)</li>
+    <li><strong>Resume</strong> — Continue an in-progress session exactly where you left off</li>
+    <li><strong>New Quiz</strong> — Discard saved progress and start over (confirmation required)</li>
+    <li><strong>🔍 Review Results</strong> — Re-read a completed quiz's answers without re-taking it</li>
+    <li><strong>🔄 Reset</strong> — Delete all progress for this specific quiz only</li>
+  </ul>
+
+  <h3>📋 Attaching a Case Study</h3>
+  <p>Each Practice Quiz card has a <strong>Case Study (optional)</strong> dropdown. Selecting a case study (Alpine, Contoso, or Fabrikam) runs the quiz and the case study back-to-back, with a <strong>combined weighted score</strong> (70% quiz + 30% case study) shown on the results screen.</p>
+
+  <div class="info-box good">
+    <strong>✅ Pass threshold:</strong> A score of <strong>70% or higher</strong> is required to mark a quiz or case study as completed in the preparation progress bar — matching the real MB-820 pass mark.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 5 ════ -->
+<div class="section page-break" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <span class="section-icon">🎓</span>
+    <h2 class="section-title">Choosing Your Quiz Mode</h2>
+  </div>
+
+  <p>Every time you start a new quiz (or case study), a <strong>mode selection overlay</strong> appears. Choose the mode that best fits your current study goal.</p>
+
+  <div class="screenshot-wrap no-break">
+    <div class="screenshot-label">Figure 5.1 — Choose Quiz Mode overlay</div>
+    <div class="screenshot-frame" style="max-width:600px;margin:0 auto;">
+      <img src="guide-assets/03_mode_selection.png" alt="Choose Quiz Mode overlay">
+    </div>
+    <div class="screenshot-caption">The mode overlay appears before every new quiz. Your choice is shown as a badge during the quiz.</div>
+  </div>
+
+  <table class="compare-table no-break" style="margin-top:1.25rem">
+    <thead>
+      <tr>
+        <th>Feature</th>
+        <th>📖 Practice Mode</th>
+        <th>📝 Test Mode</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Immediate feedback per question</td>
+        <td class="check">✓ Yes — shown right away</td>
+        <td class="cross">✗ No — hidden</td>
+      </tr>
+      <tr>
+        <td>Explanation text per question</td>
+        <td class="check">✓ Yes</td>
+        <td class="cross">✗ Shown only at the end</td>
+      </tr>
+      <tr>
+        <td>Correct answers highlighted</td>
+        <td class="check">✓ Green/red highlight</td>
+        <td class="cross">✗ Revealed on results screen</td>
+      </tr>
+      <tr>
+        <td>Peek at current score during quiz</td>
+        <td class="cross">✗ Not available</td>
+        <td class="check">✓ Peek button available</td>
+      </tr>
+      <tr>
+        <td>Best for</td>
+        <td>Learning new material, first attempt</td>
+        <td>Simulating real exam conditions</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box tip" style="margin-top:1rem">
+    <strong>💡 Recommendation:</strong> Use <strong>Practice Mode</strong> on your first attempt to learn explanations. Switch to <strong>Test Mode</strong> once you're comfortable to simulate the real exam experience.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 6 ════ -->
+<div class="section page-break" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <span class="section-icon">❓</span>
+    <h2 class="section-title">Answering Questions</h2>
+  </div>
+
+  <p>Questions come in two types, clearly indicated by a colored badge at the top of each question.</p>
+
+  <div class="screenshot-pair no-break">
+    <div>
+      <div class="screenshot-label">Figure 6.1 — Multiple choice question</div>
+      <div class="screenshot-frame">
+        <img src="guide-assets/04_multiple_choice_question.png" alt="Multiple choice question">
+      </div>
+      <div class="screenshot-caption">Purple badge: "Multiple Choice — select all that apply". Use checkboxes.</div>
+    </div>
+    <div>
+      <div class="screenshot-label">Figure 6.2 — Single choice question (wrong answer)</div>
+      <div class="screenshot-frame">
+        <img src="guide-assets/06_wrong_answer_feedback.png" alt="Single choice question">
+      </div>
+      <div class="screenshot-caption">Blue badge: "Single Choice". Use radio buttons. Red = your wrong pick, Green = correct answer.</div>
+    </div>
+  </div>
+
+  <h3>Question Types</h3>
+  <div class="feature-grid no-break">
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="badge badge-blue">Single Choice</span></div>
+      <p>Select exactly <strong>one</strong> answer using radio buttons. The Submit Answer button becomes active immediately upon selection.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title"><span class="badge badge-purple">Multiple Choice</span></div>
+      <p>Select <strong>all correct answers</strong> using checkboxes. The question text specifies the exact count (e.g. "Select TWO", "Select ALL that apply").</p>
+    </div>
+  </div>
+
+  <div class="screenshot-wrap no-break" style="margin-top:1.25rem">
+    <div class="screenshot-label">Figure 6.3 — Correct answer feedback (Practice Mode)</div>
+    <div class="screenshot-frame">
+      <img src="guide-assets/05_correct_answer_feedback.png" alt="Correct answer feedback">
+    </div>
+    <div class="screenshot-caption">Green highlights show which answers were correct. A green explanation box beneath confirms the right answer and explains why.</div>
+  </div>
+
+  <h3>Answer Feedback Colors</h3>
+  <div class="feature-grid no-break">
+    <div class="feature-card" style="border-left: 3px solid #22c55e;">
+      <div class="feature-card-title" style="color:#15803d">🟩 Green border</div>
+      <p>This is the <strong>correct answer</strong> (shown regardless of what you selected).</p>
+    </div>
+    <div class="feature-card" style="border-left: 3px solid #ef4444;">
+      <div class="feature-card-title" style="color:#b91c1c">🟥 Red border</div>
+      <p>You selected this answer but it is <strong>incorrect</strong>.</p>
+    </div>
+  </div>
+
+  <h3>📋 Copy Issue Button</h3>
+  <p>Every question has a small <strong>📋 Copy Issue</strong> button. Clicking it copies the full question details (text, choices, correct answer) to your clipboard in a formatted template — ready to paste into a Teams chat to report a bug or typo.</p>
+
+  <div class="info-box tip">
+    <strong>💡 Partial credit:</strong> No partial credit is awarded for multiple-choice questions — you must select <em>all</em> correct options and no incorrect ones to receive full credit.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 7 ════ -->
+<div class="section page-break" id="s7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <span class="section-icon">⏱</span>
+    <h2 class="section-title">Timer &amp; Auto-Pause</h2>
+  </div>
+
+  <p>Every Practice Quiz runs with a <strong>120-minute countdown timer</strong> matching the actual MB-820 exam duration. The timer is displayed prominently in the header bar throughout the quiz.</p>
+
+  <h3>Timer Color States</h3>
+  <div class="timer-states no-break">
+    <div class="timer-state green">🟢 &gt; 30 min — Plenty of time</div>
+    <div class="timer-state yellow">🟡 10–30 min — Getting close</div>
+    <div class="timer-state red">🔴 &lt; 10 min — Hurry up!</div>
+  </div>
+  <p>When the timer reaches zero, it displays "⏱ 00:00 — Time's up!" but does not forcibly submit your quiz.</p>
+
+  <h3>⏸ Auto-Pause</h3>
+  <div class="callout-row no-break">
+    <div class="callout-img">
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">Figure 7.1 — Auto-Pause overlay</div>
+        <div class="screenshot-frame">
+          <img src="guide-assets/07_autopause_overlay.png" alt="Auto-pause overlay">
+        </div>
+        <div class="screenshot-caption">The quiz automatically pauses after 2 minutes of inactivity.</div>
+      </div>
+    </div>
+    <div class="callout-text">
+      <p>If you stop interacting with the page for <strong>2 minutes</strong>, the quiz automatically pauses and displays this overlay. Your timer also stops — so you won't lose time while away.</p>
+
+      <div class="callout-item">
+        <div class="callout-dot green">▶</div>
+        <span><strong>Continue Quiz</strong> — Resumes from exactly where you paused, timer restarts</span>
+      </div>
+      <div class="callout-item">
+        <div class="callout-dot orange">🏠</div>
+        <span><strong>Main Page</strong> — Saves progress and returns to the dashboard; you can Resume later</span>
+      </div>
+
+      <div class="info-box tip" style="margin-top:.85rem">
+        <strong>💡 Tip:</strong> Activity that resets the idle timer includes mouse movement, clicks, key presses, scrolling, and touch events.
+      </div>
+    </div>
+  </div>
+
+  <h3>Progress Auto-Save</h3>
+  <p>The quiz automatically saves your position and remaining time <strong>every 10 seconds</strong>. If your browser crashes or you accidentally close the tab, you can return and click <strong>Resume</strong> from the quiz card to pick up where you left off.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 8 ════ -->
+<div class="section page-break" id="s8">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <span class="section-icon">📝</span>
+    <h2 class="section-title">Test Mode &amp; Peek Score</h2>
+  </div>
+
+  <p>In Test Mode, no answer feedback is given during the quiz — just like the real exam. To keep you motivated (and a little nervous), there is a <strong>Peek Score</strong> feature.</p>
+
+  <div class="callout-row no-break">
+    <div class="callout-img">
+      <div class="screenshot-wrap">
+        <div class="screenshot-label">Figure 8.1 — Peek Score overlay</div>
+        <div class="screenshot-frame">
+          <img src="guide-assets/08_peek_overlay.png" alt="Peek score overlay">
+        </div>
+        <div class="screenshot-caption">Peek at your partial score mid-quiz in Test Mode — complete with a taunting message!</div>
+      </div>
+    </div>
+    <div class="callout-text">
+      <h3>How to Peek</h3>
+      <p>In Test Mode, a <strong>Peek Score</strong> button appears next to the Submit button. Click it at any time to open the Peek overlay and see your current running percentage.</p>
+
+      <div class="callout-item">
+        <div class="callout-dot blue">%</div>
+        <span>Current percentage score based on questions answered so far</span>
+      </div>
+      <div class="callout-item">
+        <div class="callout-dot purple">📊</div>
+        <span>Questions answered count and remaining</span>
+      </div>
+      <div class="callout-item">
+        <div class="callout-dot orange">😏</div>
+        <span>A cheeky motivational/taunting message based on your score</span>
+      </div>
+
+      <div class="feature-grid" style="margin-top:.85rem">
+        <div class="feature-card">
+          <div class="feature-card-title">💪 Keep Going!</div>
+          <p>Dismisses the overlay and returns to the quiz.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card-title">🏳️ Give Up</div>
+          <p>Ends the quiz and returns to the main dashboard. Progress is saved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SECTION 9 ════ -->
+<div class="section page-break" id="s9">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <span class="section-icon">📊</span>
+    <h2 class="section-title">Results &amp; Answer Review</h2>
+  </div>
+
+  <p>After answering all questions (or after time runs out), the <strong>Score Summary</strong> screen is displayed.</p>
+
+  <div class="screenshot-wrap no-break">
+    <div class="screenshot-label">Figure 9.1 — Score Summary screen</div>
+    <div class="screenshot-frame">
+      <img src="guide-assets/10_score_summary.png" alt="Score Summary">
+    </div>
+    <div class="screenshot-caption">The results screen shows your overall percentage, pass/fail status, time used, and a breakdown of correct vs wrong answers.</div>
+  </div>
+
+  <h3>What the results screen shows</h3>
+  <ul class="bullet">
+    <li>🎉 / 😞 <strong>Overall emoji</strong> and pass/fail message based on your score</li>
+    <li><strong>Percentage score</strong> and fraction (e.g., 52 / 66 correct)</li>
+    <li><strong>✅ PASS</strong> (≥ 70%) or <strong>⚠️ FAIL</strong> (&lt; 70%)</li>
+    <li><strong>Time used</strong>, quiz set name, and mode (Practice / Test)</li>
+    <li>Count of correct and wrong answers</li>
+    <li>List of <strong>questions you got wrong</strong>, showing your answer vs. the correct answer</li>
+    <li>Confetti animation 🎉 for a passing score</li>
+  </ul>
+
+  <div class="feature-grid no-break" style="margin-top:1rem">
+    <div class="feature-card">
+      <div class="feature-card-title">🏠 Main Page</div>
+      <p>Returns to the dashboard. The quiz card now shows your last attempt badge (✅ or ⚠️) with the percentage.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">🔍 Review Answers</div>
+      <p>Re-opens the quiz in read-only review mode so you can read through every question, your answer, and the explanation.</p>
+    </div>
+  </div>
+
+  <div class="info-box good">
+    <strong>✅ After passing:</strong> The quiz card on the dashboard shows a green "Last attempt: 78%" badge and a <strong>🔍 Review Results</strong> button to re-read your answers at any time. Your score is saved permanently.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ SECTION 10 ════ -->
+<div class="section page-break" id="s10">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <span class="section-icon">📋</span>
+    <h2 class="section-title">Case Studies</h2>
+  </div>
+
+  <p>Case Studies are <strong>scenario-based question sets</strong> drawn from realistic Business Central extension development projects. They are more advanced and closely mirror the style of questions found in the actual MB-820 exam.</p>
+
+  <div class="screenshot-pair no-break">
+    <div>
+      <div class="screenshot-label">Figure 10.1 — Case Study intro / scenario</div>
+      <div class="screenshot-frame">
+        <img src="guide-assets/11_case_study_intro.png" alt="Case Study intro">
+      </div>
+      <div class="screenshot-caption">The full scenario context is shown before questions begin.</div>
+    </div>
+    <div>
+      <div class="screenshot-label">Figure 10.2 — Case Study question with context</div>
+      <div class="screenshot-frame">
+        <img src="guide-assets/12_case_study_question.png" alt="Case Study question">
+      </div>
+      <div class="screenshot-caption">Each question has a context excerpt above the question text.</div>
+    </div>
+  </div>
+
+  <h3>Available Case Studies</h3>
+  <div class="quiz-sets no-break" style="grid-template-columns: repeat(3,1fr)">
+    <div class="quiz-set-card official">
+      <div class="quiz-set-name">🏔️ Alpine Ski House</div>
+      <p><strong>13 questions</strong> — Housekeeping Management extension, POS integration, custom API design, non-conformity tracking.</p>
+    </div>
+    <div class="quiz-set-card intermediate">
+      <div class="quiz-set-name">🏭 Contoso Manufacturing</div>
+      <p><strong>12 questions</strong> — Extension lifecycle, telemetry, REST APIs, AL development patterns, debugging, upgrade codeunits.</p>
+    </div>
+    <div class="quiz-set-card beginner">
+      <div class="quiz-set-name">🔧 Fabrikam Inc.</div>
+      <p><strong>10 questions</strong> — AL extension development, API design, XMLport, translations, report layouts, telemetry, upgrade codeunits.</p>
+    </div>
+  </div>
+
+  <h3>Two ways to take a Case Study</h3>
+  <div class="feature-grid no-break">
+    <div class="feature-card">
+      <div class="feature-card-title">🔵 Standalone Mode</div>
+      <p>Click <strong>Start</strong> on a case study card in the Case Studies section. Only the case study questions are shown, with no countdown timer (study time is still tracked silently).</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">🟣 Combined Mode</div>
+      <p>Select a case study from the <strong>Case Study (optional)</strong> dropdown on a Practice Quiz card before starting. The quiz runs first (with timer), then the case study follows. A combined weighted score is shown.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ SECTION 11 ════ -->
+<div class="section page-break" id="s11">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <span class="section-icon">📈</span>
+    <h2 class="section-title">Progress Tracking &amp; History</h2>
+  </div>
+
+  <p>The quiz tracks your study progress in several ways, all stored locally in your browser via <code>localStorage</code>.</p>
+
+  <h3>🎯 Preparation Progress Bar</h3>
+  <p>The bar at the top of the dashboard shows how many of the <strong>7 items</strong> (4 quizzes + 3 case studies) you have completed with ≥ 70%:</p>
+
+  <div class="progress-visual no-break">
+    <div class="progress-label">
+      <span>🎯 MB-820 Preparation Progress</span>
+      <span>3 / 7 (43%)</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" style="width: 43%"></div>
+    </div>
+    <p style="font-size:.75rem;color:#64748b;margin:0;padding-top:.3rem">Complete every quiz and case study with ≥70% to reach 100% preparation.</p>
+  </div>
+
+  <ul class="bullet">
+    <li>Bar turns <strong>blue → green</strong> as you approach 100%</li>
+    <li>A 🎉 full bar indicates you are fully prepared</li>
+    <li>Study time (total time spent in active quizzes) is shown below the bar</li>
+  </ul>
+
+  <h3>📋 Attempt History</h3>
+  <p>Scrolling to the bottom of the dashboard reveals your <strong>Previous Attempts</strong> section — a chronological list of every quiz and case study you have completed, with:</p>
+  <ul class="bullet">
+    <li>Date and time of the attempt</li>
+    <li>Quiz / case study name and type (standalone, combined, or case-only)</li>
+    <li>Score percentage, colour-coded: <span class="badge badge-green">✅ Pass ≥70%</span> <span class="badge badge-orange">⚠️ Marginal 60-70%</span> <span class="badge badge-red">✗ Fail &lt;60%</span></li>
+  </ul>
+  <p>Up to <strong>50 attempts</strong> are retained. Use the 🗑️ <strong>Clear History</strong> button to remove the history log while keeping your current best scores.</p>
+
+  <div class="info-box tip">
+    <strong>💡 Tip:</strong> Progress is stored per-browser. If you switch browsers or clear site data, your progress will be lost. Use the <strong>Export Progress</strong> feature (Section 12) to keep a safe backup.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ SECTION 12 ════ -->
+<div class="section page-break" id="s12">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <span class="section-icon">💾</span>
+    <h2 class="section-title">Export &amp; Import Progress</h2>
+  </div>
+
+  <p>The <strong>Export / Import</strong> feature at the bottom of the dashboard allows you to back up and transfer your study progress between devices or browsers.</p>
+
+  <div class="feature-grid no-break">
+    <div class="feature-card">
+      <div class="feature-card-title">⬆️ Export Progress</div>
+      <p>Downloads a <code>.json</code> file (named <em>mb820-progress-YYYY-MM-DD.json</em>) containing all your quiz results, timers, history, and streak data. Store it safely or transfer it to another device.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">⬇️ Import Progress</div>
+      <p>Opens a file picker. Select a previously exported <code>.json</code> file. A confirmation prompt warns you that existing data will be overwritten. The page reloads with your restored progress.</p>
+    </div>
+  </div>
+
+  <ol class="step-list no-break">
+    <li>
+      <div class="step-num">1</div>
+      <div class="step-text">On your <strong>current device</strong>, scroll to the bottom of the dashboard and click <strong>⬆️ Export Progress</strong>.</div>
+    </li>
+    <li>
+      <div class="step-num">2</div>
+      <div class="step-text">A file named <code>mb820-progress-YYYY-MM-DD.json</code> is downloaded to your computer.</div>
+    </li>
+    <li>
+      <div class="step-num">3</div>
+      <div class="step-text">Transfer the file to your <strong>new device</strong> (e.g., via email, USB, OneDrive).</div>
+    </li>
+    <li>
+      <div class="step-num">4</div>
+      <div class="step-text">Open the quiz on the new device, scroll to the bottom, and click <strong>⬇️ Import Progress</strong>.</div>
+    </li>
+    <li>
+      <div class="step-num">5</div>
+      <div class="step-text">Select the exported JSON file. Confirm the overwrite prompt and your progress is restored.</div>
+    </li>
+  </ol>
+
+  <div class="info-box warn">
+    <strong>⚠️ Warning:</strong> Importing will <em>overwrite</em> all existing progress on the target device. Make sure to export from the target device first if you need to preserve anything there.
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════ SECTION 13 ════ -->
+<div class="section page-break" id="s13">
+  <div class="section-header">
+    <div class="section-num">13</div>
+    <span class="section-icon">💡</span>
+    <h2 class="section-title">Tips &amp; Best Practices</h2>
+  </div>
+
+  <h3>📅 Recommended Study Path</h3>
+  <ol class="step-list no-break">
+    <li><div class="step-num">1</div><div class="step-text"><strong>Start with Beginner Quiz in Practice Mode</strong> — Learn the terminology and foundational concepts before attempting harder questions.</div></li>
+    <li><div class="step-num">2</div><div class="step-text"><strong>Use Quick Practice daily</strong> — Even 5–10 minutes per day reinforces weak areas since failed questions surface first.</div></li>
+    <li><div class="step-num">3</div><div class="step-text"><strong>Progress through Intermediate → Proficient → Official</strong> — Each level adds new exam topic coverage.</div></li>
+    <li><div class="step-num">4</div><div class="step-text"><strong>Tackle Case Studies standalone first</strong> — Get familiar with the scenario context before combining them with a timed quiz.</div></li>
+    <li><div class="step-num">5</div><div class="step-text"><strong>Do a final full combined run in Test Mode</strong> — Simulate the actual exam by picking Proficient or Official + a Case Study, switching to Test Mode.</div></li>
+  </ol>
+
+  <h3>🎯 Pro Tips</h3>
+  <ul class="tip-list no-break">
+    <li><span class="tip-icon">⏱</span><span>Don't rely on the timer too much — the 120-minute limit is generous. Focus on accuracy, not speed.</span></li>
+    <li><span class="tip-icon">🔍</span><span>Always use <strong>Review Results</strong> after failing. Read every explanation, especially for wrong answers.</span></li>
+    <li><span class="tip-icon">🔄</span><span>Reset a quiz and retake it a few days later to test long-term retention, not just short-term memory.</span></li>
+    <li><span class="tip-icon">📋</span><span>Case Study scenario text is shown as a header during each question — you don't need to memorise the scenario.</span></li>
+    <li><span class="tip-icon">💾</span><span>Export your progress before clearing browser data or switching to a private browsing window.</span></li>
+    <li><span class="tip-icon">🔥</span><span>Chase the Quick Practice streak! Reaching 10+ in a row is a good confidence indicator before exam day.</span></li>
+    <li><span class="tip-icon">📱</span><span>The quiz is mobile-friendly — you can study on your phone during commutes (Quick Practice works great on mobile).</span></li>
+  </ul>
+
+  <h3>⌨️ Keyboard Shortcuts</h3>
+  <div class="shortcuts-grid no-break">
+    <div class="shortcut-item"><kbd>Enter</kbd> Submit your selected answer</div>
+    <div class="shortcut-item"><kbd>→</kbd> Move to next question (after answering)</div>
+    <div class="shortcut-item"><kbd>1</kbd> – <kbd>4</kbd> Select choice by number (single choice)</div>
+    <div class="shortcut-item"><kbd>Esc</kbd> Close modal overlays</div>
+  </div>
+
+  <h3>🛠️ Troubleshooting</h3>
+  <div class="feature-grid no-break">
+    <div class="feature-card">
+      <div class="feature-card-title">Progress not saving</div>
+      <p>Check that your browser allows <code>localStorage</code>. Incognito/Private mode may block it. Use a regular browser window.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Found a wrong answer?</div>
+      <p>Click the <strong>📋 Copy Issue</strong> button on any question to copy a report template, then send it via Teams chat to the quiz maintainer.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Quiz won't load</div>
+      <p>Make sure all <code>.js</code> files are present in the same folder as <code>index.html</code>. The quiz requires no internet connection.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-card-title">Want to start fresh</div>
+      <p>Use <strong>🗑️ Reset All Progress</strong> at the bottom of the dashboard to clear everything, or reset individual quizzes using their 🔄 Reset buttons.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════ FOOTER ══════ -->
+<div class="footer">
+  <p><strong>MB-820 Quiz</strong> — Microsoft Dynamics 365 Business Central Functional Consultant Exam Prep</p>
+  <p style="margin-top:.3rem">This guide covers all features of the quiz application. For the latest version, refer to the repository.</p>
+  <p style="margin-top:.3rem">📌 <strong>Pass mark: 70%</strong> &nbsp;·&nbsp; ⏱ <strong>Exam duration: 120 minutes</strong> &nbsp;·&nbsp; 📚 <strong>277 practice questions</strong> &nbsp;·&nbsp; 📋 <strong>3 case studies</strong></p>
+</div>
+
+<!-- ════════════════════════════════════════════════ PRINT BUTTON ════ -->
+<div class="print-hide" style="position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;">
+  <button onclick="window.print()" style="
+    background:#1d4ed8;color:#fff;border:none;border-radius:10px;
+    padding:.65rem 1.4rem;font-size:.875rem;font-weight:700;cursor:pointer;
+    box-shadow:0 4px 14px rgba(29,78,216,.4);display:flex;align-items:center;gap:.5rem;
+  ">🖨️ Print / Save as PDF</button>
+</div>
+
+</body>
+</html>
