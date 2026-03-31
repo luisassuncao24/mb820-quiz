@@ -83,8 +83,7 @@
   const PASS_PCT     = 70; // 700/1000 points — minimum passing score for MB-820
   const MARGINAL_PCT = 60; // "close but not there" band
   const STUDY_TIME_KEY = "mb820_study_time"; // accumulated study seconds (quizzes + test cases)
-  const REPORT_EMAIL   = ""; // ← REQUIRED: set this to the developer's e-mail address.
-                              //   When empty the mailto link opens without a pre-filled recipient.
+  const REPORT_EMAIL   = "luiscarlosassuncao24@gmail.com";
 
   // ── State ────────────────────────────────────────────────────────────────
   let activeSet     = null; // one of QUESTION_SETS entries
