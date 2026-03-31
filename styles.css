@@ -509,6 +509,25 @@ body {
 }
 .start-set-btn:hover { background: #475569; }
 
+.reset-quiz-btn,
+.reset-case-btn {
+  background: transparent;
+  color: #94a3b8;
+  border: 1px solid #475569;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.reset-quiz-btn:hover,
+.reset-case-btn:hover {
+  background: #450a0a;
+  color: #fca5a5;
+  border-color: #ef4444;
+}
+
 /* ── Summary set label ────────────────────────────────────────────────── */
 .summary-set-label {
   font-size: 0.87rem;
@@ -1309,6 +1328,26 @@ body {
   border-color: #7dd3fc;
 }
 
+.export-xml-btn {
+  color: #fcd34d;
+  border-color: #f59e0b;
+}
+.export-xml-btn:hover {
+  background: #451a03;
+  color: #fef3c7;
+  border-color: #fcd34d;
+}
+
+.export-email-btn {
+  color: #c4b5fd;
+  border-color: #7c3aed;
+}
+.export-email-btn:hover {
+  background: #1e1a3b;
+  color: #ede9fe;
+  border-color: #a78bfa;
+}
+
 .import-btn {
   display: inline-block;
   background: transparent;
@@ -1543,6 +1582,22 @@ body {
   background: #1c1a04;
   color: #facc15;
   border: 1px solid #eab308;
+}
+
+/* ── Quiz name badge (shown inline in the progress row) ─────────────── */
+.quiz-name-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  background: #1e1a3b;
+  color: #c4b5fd;
+  border: 1px solid #7c3aed;
+  text-transform: none;
+  letter-spacing: 0.02em;
 }
 
 /* ── Category chart ──────────────────────────────────────────────────── */

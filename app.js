@@ -521,6 +521,28 @@
     } catch (e) { /* ignore */ }
   }
 
+  // Clears all progress (in-progress + completed + combined) for a single quiz set.
+  function clearQuizProgress(setKey) {
+    try {
+      localStorage.removeItem("mb820_quiz_progress_" + setKey);
+      localStorage.removeItem("mb820_completed_quiz_" + setKey);
+      TEST_CASES.forEach(function (tc) {
+        localStorage.removeItem("mb820_combined_" + setKey + "_" + tc.key);
+      });
+    } catch (e) { /* ignore */ }
+  }
+
+  // Clears all progress (in-progress + completed + combined) for a single case study.
+  function clearCaseProgress(caseKey) {
+    try {
+      localStorage.removeItem("mb820_case_" + caseKey);
+      localStorage.removeItem("mb820_completed_case_" + caseKey);
+      QUESTION_SETS.forEach(function (set) {
+        localStorage.removeItem("mb820_combined_" + set.key + "_" + caseKey);
+      });
+    } catch (e) { /* ignore */ }
+  }
+
   // ── Export / Import progression ─────────────────────────────────────────────
   function exportProgress() {
     try {
@@ -568,6 +590,67 @@
       }
     };
     reader.readAsText(file);
+  }
+
+  // ── XML Export ────────────────────────────────────────────────────────────
+  function escapeXml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function progressToXml() {
+    const lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<mb820progress>'];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("mb820_") && key !== AUTH_KEY) {
+        const safeKey = escapeXml(key);
+        const val     = escapeXml(localStorage.getItem(key) || "");
+        lines.push('  <entry key="' + safeKey + '">' + val + '</entry>');
+      }
+    }
+    lines.push('</mb820progress>');
+    return lines.join("\n");
+  }
+
+  function downloadProgressXml() {
+    try {
+      const xml  = progressToXml();
+      const blob = new Blob([xml], { type: "application/xml" });
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      a.download = "mb820-progress-" + new Date().toISOString().slice(0, 10) + ".xml";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (e) {
+      alert("XML export failed: " + e.message);
+    }
+  }
+
+  // mailto: body has a practical limit of ~2000 characters in many email clients.
+  const EMAIL_XML_MAX_BODY = 2000;
+
+  function emailProgressXml() {
+    try {
+      const xml     = progressToXml();
+      const subject = encodeURIComponent("MB-820 Quiz Progress Export \u2013 " + new Date().toISOString().slice(0, 10));
+      const body    = encodeURIComponent(xml);
+      if (body.length > EMAIL_XML_MAX_BODY) {
+        alert(
+          "\u26A0\uFE0F The XML export is too large for a mailto: link (" +
+          Math.round(xml.length / 1024) + "\u202FKB). Please use \u201CDownload XML\u201D to save the file, then attach it manually to your email."
+        );
+        return;
+      }
+      window.location.href = "mailto:?subject=" + subject + "&body=" + body;
+    } catch (e) {
+      alert("Could not open email client: " + e.message);
+    }
   }
 
   // ── Completed-state persistence ────────────────────────────────────────────
@@ -1274,6 +1357,9 @@
               (hasSaved || hasCombinedSaved ? ' data-has-saved="true"' : '') + '>' +
               (hasSaved || hasCombinedSaved ? 'New Quiz' : 'Start Quiz') +
             '</button>' +
+            (completed || hasSaved || hasCombinedSaved
+              ? '<button class="set-btn reset-quiz-btn" data-key="' + set.key + '" title="Reset progress for this quiz">\uD83D\uDD04 Reset</button>'
+              : '') +
           '</div>' +
         '</div>';
     });
@@ -1354,7 +1440,10 @@
                 '<button class="set-btn start-set-btn case-start-btn" data-case-key="' + tc.key + '"' +
                   (hasSaved ? ' data-has-saved="true"' : '') + '>' +
                   (hasSaved ? 'New Attempt' : 'Start') +
-                '</button>'
+                '</button>' +
+                (completed || hasSaved
+                  ? '<button class="set-btn reset-case-btn" data-case-key="' + tc.key + '" title="Reset progress for this case study">\uD83D\uDD04 Reset</button>'
+                  : '')
               : '<span class="coming-soon-label">Available soon</span>') +
           '</div>' +
         '</div>';
@@ -1369,6 +1458,8 @@
       '<p class="export-import-info">\uD83D\uDCBE <strong>Transfer your progress</strong> between devices &mdash; export your progress to a file, then import it on another device.</p>' +
       '<div class="export-import-buttons">' +
         '<button class="export-btn" id="export-progress-btn">\u2B06\uFE0F Export Progress</button>' +
+        '<button class="export-btn export-xml-btn" id="export-xml-btn">\uD83D\uDCC4 Download XML</button>' +
+        '<button class="export-btn export-email-btn" id="export-email-btn">\uD83D\uDCE7 Email XML</button>' +
         '<label class="import-btn" id="import-progress-label" for="import-progress-input">\u2B07\uFE0F Import Progress' +
           '<input type="file" id="import-progress-input" accept=".json" style="display:none;">' +
         '</label>' +
@@ -1387,6 +1478,14 @@
     const exportBtn = document.getElementById("export-progress-btn");
     if (exportBtn) {
       exportBtn.addEventListener("click", exportProgress);
+    }
+    const exportXmlBtn = document.getElementById("export-xml-btn");
+    if (exportXmlBtn) {
+      exportXmlBtn.addEventListener("click", downloadProgressXml);
+    }
+    const exportEmailBtn = document.getElementById("export-email-btn");
+    if (exportEmailBtn) {
+      exportEmailBtn.addEventListener("click", emailProgressXml);
     }
     const importInput = document.getElementById("import-progress-input");
     if (importInput) {
@@ -1501,6 +1600,40 @@
     setSelectionEl.querySelectorAll(".case-review-btn").forEach(function (btn) {
       btn.addEventListener("click", function () {
         reviewCompletedCase(btn.dataset.caseKey);
+      });
+    });
+
+    // Individual reset buttons for quizzes
+    setSelectionEl.querySelectorAll(".reset-quiz-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const key = btn.dataset.key;
+        const set = QUESTION_SETS.find(function (s) { return s.key === key; });
+        const label = set ? set.label : key;
+        showConfirm(
+          "Reset \u201C" + label + "\u201D?",
+          "This will permanently delete all progress and results for this quiz. This cannot be undone.",
+          function () {
+            clearQuizProgress(key);
+            showSetSelection();
+          }
+        );
+      });
+    });
+
+    // Individual reset buttons for case studies
+    setSelectionEl.querySelectorAll(".reset-case-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        const key = btn.dataset.caseKey;
+        const tc  = TEST_CASES.find(function (t) { return t.key === key; });
+        const label = tc ? tc.label : key;
+        showConfirm(
+          "Reset \u201C" + label + "\u201D?",
+          "This will permanently delete all progress and results for this case study. This cannot be undone.",
+          function () {
+            clearCaseProgress(key);
+            showSetSelection();
+          }
+        );
       });
     });
 
@@ -1879,6 +2012,19 @@
       phaseBanner = '<div class="phase-banner phase-case">\uD83D\uDCCB Case Study &mdash; ' + caseStudy.label + '</div>';
     }
 
+    // Determine the active quiz/case name for the inline badge
+    let quizName = "";
+    if (caseStudyMode === "combined") {
+      quizName = casePhase === "quiz" ? activeSet.label : caseStudy.label;
+    } else if (caseStudyMode === "standalone") {
+      quizName = caseStudy.label;
+    } else if (activeSet) {
+      quizName = activeSet.label;
+    }
+    const quizNameBadge = quizName
+      ? '<span class="quiz-name-badge">' + quizName + '</span>'
+      : '';
+
     questionEl.innerHTML =
       phaseBanner +
       '<div class="progress">Question ' + (current + 1) + ' of ' + shuffled.length +
@@ -1886,6 +2032,7 @@
           ? '<span class="mode-indicator-badge mode-indicator-practice">\uD83D\uDCDA Practice</span>'
           : '<span class="mode-indicator-badge mode-indicator-test">\uD83D\uDCDD Test</span>' +
             '<button class="peek-btn" id="peek-btn" title="Peek at your current score">\uD83D\uDC41\uFE0F Peek</button>') +
+        quizNameBadge +
       '</div>' +
       '<div class="question-type-badge ' + (q.type === "multiple" ? "multiple" : "single") + '">' +
         (q.type === "multiple" ? "Multiple Choice \u2014 select all that apply" : "Single Choice") +
