@@ -199,7 +199,7 @@ body {
 .submit-btn:hover:not(:disabled) { background: #6d28d9; }
 .submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* ── Report Issue button ─────────────────────────────────────────────── */
+/* ── Copy Issue button ───────────────────────────────────────────────── */
 .report-issue-btn {
   display: block;
   margin-top: 0.65rem;
@@ -217,6 +217,14 @@ body {
   background: #2d1b4e;
   color: #d8b4fe;
   border-color: #7c3aed;
+}
+
+/* ── Copy issue feedback message ─────────────────────────────────────── */
+.copy-issue-feedback {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.8rem;
+  color: #86efac;
 }
 
 /* ── Inline feedback ──────────────────────────────────────────────────── */
@@ -1326,26 +1334,6 @@ body {
   background: #0c4a6e;
   color: #e0f2fe;
   border-color: #7dd3fc;
-}
-
-.export-xml-btn {
-  color: #fcd34d;
-  border-color: #f59e0b;
-}
-.export-xml-btn:hover {
-  background: #451a03;
-  color: #fef3c7;
-  border-color: #fcd34d;
-}
-
-.export-email-btn {
-  color: #c4b5fd;
-  border-color: #7c3aed;
-}
-.export-email-btn:hover {
-  background: #1e1a3b;
-  color: #ede9fe;
-  border-color: #a78bfa;
 }
 
 .import-btn {

@@ -83,7 +83,6 @@
   const PASS_PCT     = 70; // 700/1000 points — minimum passing score for MB-820
   const MARGINAL_PCT = 60; // "close but not there" band
   const STUDY_TIME_KEY = "mb820_study_time"; // accumulated study seconds (quizzes + test cases)
-  const REPORT_EMAIL   = "luiscarlosassuncao24@gmail.com";
 
   // ── State ────────────────────────────────────────────────────────────────
   let activeSet     = null; // one of QUESTION_SETS entries
@@ -253,14 +252,14 @@
     try { localStorage.setItem(STUDY_TIME_KEY, String(studyTimeSeconds)); } catch (e) { /* ignore */ }
   }
 
-  // ── Bug / mistypo report ──────────────────────────────────────────────────
-  // Opens the user's email client with a pre-filled subject and body so they
-  // can report a problem in any question with a single click.
-  function reportIssue(q, setLabel) {
+  // ── Copy issue to clipboard ───────────────────────────────────────────────
+  // Copies question details to the clipboard so the user can paste them into
+  // a Teams chat (or any other channel) to report a bug or typo.
+  function copyIssue(q, setLabel, feedbackEl) {
     var formattedChoices = q.choices.map(function (c, i) { return (i + 1) + ". " + c; }).join("\n");
     var correctAnswerTexts = q.correct.map(function (i) { return q.choices[i]; }).join(", ");
-    var subject = encodeURIComponent("[MB-820 Quiz] Bug Report \u2014 Question #" + q.id);
-    var body = encodeURIComponent(
+    var text =
+      "[MB-820 Quiz] Issue Report — Question #" + q.id + "\n\n" +
       "Please describe the issue you found:\n" +
       "[Your description here]\n\n" +
       "------- Question Details -------\n" +
@@ -269,9 +268,41 @@
       "Question Text:\n" + q.text + "\n\n" +
       "Choices:\n" + formattedChoices + "\n\n" +
       "Correct Answer(s): " + correctAnswerTexts + "\n" +
-      "--------------------------------"
-    );
-    window.location.href = "mailto:" + REPORT_EMAIL + "?subject=" + subject + "&body=" + body;
+      "--------------------------------";
+
+    function showFeedback(msg) {
+      if (feedbackEl) {
+        feedbackEl.textContent = msg;
+        feedbackEl.style.display = "block";
+        setTimeout(function () { feedbackEl.style.display = "none"; }, 5000);
+      } else {
+        alert(msg);
+      }
+    }
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        showFeedback("✅ Copied! Send it to me via Teams chat 😊");
+      }, function () {
+        showFeedback("⚠️ Copy failed — please try again.");
+      });
+    } else {
+      // Fallback for older browsers
+      try {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.opacity  = "0";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        var ok = document.execCommand("copy");
+        document.body.removeChild(ta);
+        showFeedback(ok ? "✅ Copied! Send it to me via Teams chat 😊" : "⚠️ Copy failed — please try again.");
+      } catch (e) {
+        showFeedback("⚠️ Copy failed — please try again.");
+      }
+    }
   }
 
   // ── Confirmation modal ────────────────────────────────────────────────────
@@ -592,67 +623,6 @@
     reader.readAsText(file);
   }
 
-  // ── XML Export ────────────────────────────────────────────────────────────
-  function escapeXml(str) {
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function progressToXml() {
-    const lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<mb820progress>'];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("mb820_") && key !== AUTH_KEY) {
-        const safeKey = escapeXml(key);
-        const val     = escapeXml(localStorage.getItem(key) || "");
-        lines.push('  <entry key="' + safeKey + '">' + val + '</entry>');
-      }
-    }
-    lines.push('</mb820progress>');
-    return lines.join("\n");
-  }
-
-  function downloadProgressXml() {
-    try {
-      const xml  = progressToXml();
-      const blob = new Blob([xml], { type: "application/xml" });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement("a");
-      a.href     = url;
-      a.download = "mb820-progress-" + new Date().toISOString().slice(0, 10) + ".xml";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      alert("XML export failed: " + e.message);
-    }
-  }
-
-  // mailto: body has a practical limit of ~2000 characters in many email clients.
-  const EMAIL_XML_MAX_BODY = 2000;
-
-  function emailProgressXml() {
-    try {
-      const xml     = progressToXml();
-      const subject = encodeURIComponent("MB-820 Quiz Progress Export \u2013 " + new Date().toISOString().slice(0, 10));
-      const body    = encodeURIComponent(xml);
-      if (body.length > EMAIL_XML_MAX_BODY) {
-        alert(
-          "\u26A0\uFE0F The XML export is too large for a mailto: link (" +
-          Math.round(xml.length / 1024) + "\u202FKB). Please use \u201CDownload XML\u201D to save the file, then attach it manually to your email."
-        );
-        return;
-      }
-      window.location.href = "mailto:?subject=" + subject + "&body=" + body;
-    } catch (e) {
-      alert("Could not open email client: " + e.message);
-    }
-  }
-
   // ── Completed-state persistence ────────────────────────────────────────────
   function completedQuizKey(setKey) { return "mb820_completed_quiz_" + setKey; }
   function completedCaseKey(caseKey) { return "mb820_completed_case_" + caseKey; }
@@ -940,8 +910,9 @@
         '<div class="qp-btn-row">' +
           '<button class="qp-submit-btn" id="qp-submit-btn"' + (q.type === "single" ? " disabled" : "") + '>Submit Answer</button>' +
           '<button class="qp-skip-btn" id="qp-skip-btn">Skip \u23ED</button>' +
-          '<button class="report-issue-btn qp-report-btn" id="qp-report-btn" title="Report a bug or typo in this question">\uD83D\uDEA9 Report</button>' +
+          '<button class="report-issue-btn qp-report-btn" id="qp-report-btn" title="Copy question details to clipboard to report an issue">\uD83D\uDCCB Copy</button>' +
         '</div>' +
+        '<span class="copy-issue-feedback" id="qp-copy-feedback" style="display:none;"></span>' +
       '</div>';
 
     // Choice interaction
@@ -977,7 +948,10 @@
     var skipBtn = document.getElementById("qp-skip-btn");
     if (skipBtn) skipBtn.addEventListener("click", function () { qp.poolIdx++; renderQuickPractice(); });
     var qpReportBtn = document.getElementById("qp-report-btn");
-    if (qpReportBtn) qpReportBtn.addEventListener("click", function () { reportIssue(q, "Quick Practice"); });
+    if (qpReportBtn) {
+      var qpCopyFeedback = document.getElementById("qp-copy-feedback");
+      qpReportBtn.addEventListener("click", function () { copyIssue(q, "Quick Practice", qpCopyFeedback); });
+    }
   }
 
   function onQpSubmit(container, q) {
@@ -1458,8 +1432,6 @@
       '<p class="export-import-info">\uD83D\uDCBE <strong>Transfer your progress</strong> between devices &mdash; export your progress to a file, then import it on another device.</p>' +
       '<div class="export-import-buttons">' +
         '<button class="export-btn" id="export-progress-btn">\u2B06\uFE0F Export Progress</button>' +
-        '<button class="export-btn export-xml-btn" id="export-xml-btn">\uD83D\uDCC4 Download XML</button>' +
-        '<button class="export-btn export-email-btn" id="export-email-btn">\uD83D\uDCE7 Email XML</button>' +
         '<label class="import-btn" id="import-progress-label" for="import-progress-input">\u2B07\uFE0F Import Progress' +
           '<input type="file" id="import-progress-input" accept=".json" style="display:none;">' +
         '</label>' +
@@ -1478,14 +1450,6 @@
     const exportBtn = document.getElementById("export-progress-btn");
     if (exportBtn) {
       exportBtn.addEventListener("click", exportProgress);
-    }
-    const exportXmlBtn = document.getElementById("export-xml-btn");
-    if (exportXmlBtn) {
-      exportXmlBtn.addEventListener("click", downloadProgressXml);
-    }
-    const exportEmailBtn = document.getElementById("export-email-btn");
-    if (exportEmailBtn) {
-      exportEmailBtn.addEventListener("click", emailProgressXml);
     }
     const importInput = document.getElementById("import-progress-input");
     if (importInput) {
@@ -2039,7 +2003,8 @@
       '</div>' +
       (q.context ? '<div class="question-context">' + q.context + '</div>' : '') +
       '<div class="question-text">' + q.text + '</div>' +
-      '<button class="report-issue-btn" id="report-issue-btn" title="Report a bug or typo in this question">\uD83D\uDEA9 Report Issue</button>';
+      '<button class="report-issue-btn" id="report-issue-btn" title="Copy question details to clipboard to report an issue">\uD83D\uDCCB Copy Issue</button>' +
+      '<span class="copy-issue-feedback" id="copy-issue-feedback" style="display:none;"></span>';
 
     if (!practiceMode) {
       var peekBtnEl = document.getElementById("peek-btn");
@@ -2048,8 +2013,9 @@
 
     var reportIssueBtnEl = document.getElementById("report-issue-btn");
     if (reportIssueBtnEl) {
+      var copyFeedbackEl = document.getElementById("copy-issue-feedback");
       reportIssueBtnEl.addEventListener("click", function () {
-        reportIssue(shuffled[current], activeSet ? activeSet.label : "Unknown");
+        copyIssue(shuffled[current], activeSet ? activeSet.label : "Unknown", copyFeedbackEl);
       });
     }
 
@@ -2166,8 +2132,8 @@
     } else if (q.type === "multiple" && q.correct.length > 1) {
       const correctlySelected = selected.filter(function (s) { return q.correct.includes(s); }).length;
       const wronglySelected   = selected.filter(function (s) { return !q.correct.includes(s); }).length;
-      // Partial credit: fraction of correct answers identified (no penalty for wrong selections)
-      questionScore = q.correct.length > 0 ? correctlySelected / q.correct.length : 0;
+      // Partial credit only if no wrong answers selected; any wrong selection scores 0
+      questionScore = (wronglySelected === 0 && q.correct.length > 0) ? correctlySelected / q.correct.length : 0;
     }
     score += questionScore;
 
