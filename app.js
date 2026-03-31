@@ -2132,8 +2132,8 @@
     } else if (q.type === "multiple" && q.correct.length > 1) {
       const correctlySelected = selected.filter(function (s) { return q.correct.includes(s); }).length;
       const wronglySelected   = selected.filter(function (s) { return !q.correct.includes(s); }).length;
-      // Partial credit: fraction of correct answers identified (no penalty for wrong selections)
-      questionScore = q.correct.length > 0 ? correctlySelected / q.correct.length : 0;
+      // Partial credit only if no wrong answers selected; any wrong selection scores 0
+      questionScore = (wronglySelected === 0 && q.correct.length > 0) ? correctlySelected / q.correct.length : 0;
     }
     score += questionScore;
 
