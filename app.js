@@ -83,6 +83,7 @@
   const PASS_PCT     = 70; // 700/1000 points — minimum passing score for MB-820
   const MARGINAL_PCT = 60; // "close but not there" band
   const STUDY_TIME_KEY = "mb820_study_time"; // accumulated study seconds (quizzes + test cases)
+  const REPORT_EMAIL   = "luiscarlosassuncao24@gmail.com";
 
   // ── State ────────────────────────────────────────────────────────────────
   let activeSet     = null; // one of QUESTION_SETS entries
@@ -250,6 +251,27 @@
 
   function saveStudyTime() {
     try { localStorage.setItem(STUDY_TIME_KEY, String(studyTimeSeconds)); } catch (e) { /* ignore */ }
+  }
+
+  // ── Bug / mistypo report ──────────────────────────────────────────────────
+  // Opens the user's email client with a pre-filled subject and body so they
+  // can report a problem in any question with a single click.
+  function reportIssue(q, setLabel) {
+    var formattedChoices = q.choices.map(function (c, i) { return (i + 1) + ". " + c; }).join("\n");
+    var correctAnswerTexts = q.correct.map(function (i) { return q.choices[i]; }).join(", ");
+    var subject = encodeURIComponent("[MB-820 Quiz] Bug Report \u2014 Question #" + q.id);
+    var body = encodeURIComponent(
+      "Please describe the issue you found:\n" +
+      "[Your description here]\n\n" +
+      "------- Question Details -------\n" +
+      "Set: " + setLabel + "\n" +
+      "Question ID: #" + q.id + "\n" +
+      "Question Text:\n" + q.text + "\n\n" +
+      "Choices:\n" + formattedChoices + "\n\n" +
+      "Correct Answer(s): " + correctAnswerTexts + "\n" +
+      "--------------------------------"
+    );
+    window.location.href = "mailto:" + REPORT_EMAIL + "?subject=" + subject + "&body=" + body;
   }
 
   // ── Confirmation modal ────────────────────────────────────────────────────
@@ -538,6 +560,7 @@
             count++;
           }
         });
+        studyTimeSeconds = loadStudyTime();
         showSetSelection();
         alert("\u2705 Progress imported successfully (" + count + " items restored).");
       } catch (err) {
@@ -834,6 +857,7 @@
         '<div class="qp-btn-row">' +
           '<button class="qp-submit-btn" id="qp-submit-btn"' + (q.type === "single" ? " disabled" : "") + '>Submit Answer</button>' +
           '<button class="qp-skip-btn" id="qp-skip-btn">Skip \u23ED</button>' +
+          '<button class="report-issue-btn qp-report-btn" id="qp-report-btn" title="Report a bug or typo in this question">\uD83D\uDEA9 Report</button>' +
         '</div>' +
       '</div>';
 
@@ -869,6 +893,8 @@
     if (submitBtn) submitBtn.addEventListener("click", function () { onQpSubmit(container, q); });
     var skipBtn = document.getElementById("qp-skip-btn");
     if (skipBtn) skipBtn.addEventListener("click", function () { qp.poolIdx++; renderQuickPractice(); });
+    var qpReportBtn = document.getElementById("qp-report-btn");
+    if (qpReportBtn) qpReportBtn.addEventListener("click", function () { reportIssue(q, "Quick Practice"); });
   }
 
   function onQpSubmit(container, q) {
@@ -1865,11 +1891,19 @@
         (q.type === "multiple" ? "Multiple Choice \u2014 select all that apply" : "Single Choice") +
       '</div>' +
       (q.context ? '<div class="question-context">' + q.context + '</div>' : '') +
-      '<div class="question-text">' + q.text + '</div>';
+      '<div class="question-text">' + q.text + '</div>' +
+      '<button class="report-issue-btn" id="report-issue-btn" title="Report a bug or typo in this question">\uD83D\uDEA9 Report Issue</button>';
 
     if (!practiceMode) {
       var peekBtnEl = document.getElementById("peek-btn");
       if (peekBtnEl) peekBtnEl.addEventListener("click", showPeekOverlay);
+    }
+
+    var reportIssueBtnEl = document.getElementById("report-issue-btn");
+    if (reportIssueBtnEl) {
+      reportIssueBtnEl.addEventListener("click", function () {
+        reportIssue(shuffled[current], activeSet ? activeSet.label : "Unknown");
+      });
     }
 
     choicesEl.innerHTML = "";

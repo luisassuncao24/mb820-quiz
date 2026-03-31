@@ -199,6 +199,26 @@ body {
 .submit-btn:hover:not(:disabled) { background: #6d28d9; }
 .submit-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
+/* ── Report Issue button ─────────────────────────────────────────────── */
+.report-issue-btn {
+  display: block;
+  margin-top: 0.65rem;
+  padding: 0.3rem 0.75rem;
+  background: transparent;
+  color: #64748b;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.report-issue-btn:hover {
+  background: #2d1b4e;
+  color: #d8b4fe;
+  border-color: #7c3aed;
+}
+
 /* ── Inline feedback ──────────────────────────────────────────────────── */
 .feedback-msg {
   font-size: 0.85rem;
@@ -1742,6 +1762,12 @@ body {
   transition: background 0.15s, color 0.15s;
 }
 .qp-skip-btn:hover { background: #1e293b; color: #94a3b8; }
+
+.qp-report-btn {
+  display: inline-block;
+  margin-top: 0;
+  margin-left: auto;
+}
 
 .qp-explanation {
   margin-top: 0.75rem;
