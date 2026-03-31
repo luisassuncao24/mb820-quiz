@@ -538,6 +538,7 @@
             count++;
           }
         });
+        studyTimeSeconds = loadStudyTime();
         showSetSelection();
         alert("\u2705 Progress imported successfully (" + count + " items restored).");
       } catch (err) {
