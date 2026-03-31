@@ -1328,26 +1328,6 @@ body {
   border-color: #7dd3fc;
 }
 
-.export-xml-btn {
-  color: #fcd34d;
-  border-color: #f59e0b;
-}
-.export-xml-btn:hover {
-  background: #451a03;
-  color: #fef3c7;
-  border-color: #fcd34d;
-}
-
-.export-email-btn {
-  color: #c4b5fd;
-  border-color: #7c3aed;
-}
-.export-email-btn:hover {
-  background: #1e1a3b;
-  color: #ede9fe;
-  border-color: #a78bfa;
-}
-
 .import-btn {
   display: inline-block;
   background: transparent;

@@ -592,67 +592,6 @@
     reader.readAsText(file);
   }
 
-  // ── XML Export ────────────────────────────────────────────────────────────
-  function escapeXml(str) {
-    return str
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function progressToXml() {
-    const lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<mb820progress>'];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.startsWith("mb820_") && key !== AUTH_KEY) {
-        const safeKey = escapeXml(key);
-        const val     = escapeXml(localStorage.getItem(key) || "");
-        lines.push('  <entry key="' + safeKey + '">' + val + '</entry>');
-      }
-    }
-    lines.push('</mb820progress>');
-    return lines.join("\n");
-  }
-
-  function downloadProgressXml() {
-    try {
-      const xml  = progressToXml();
-      const blob = new Blob([xml], { type: "application/xml" });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement("a");
-      a.href     = url;
-      a.download = "mb820-progress-" + new Date().toISOString().slice(0, 10) + ".xml";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    } catch (e) {
-      alert("XML export failed: " + e.message);
-    }
-  }
-
-  // mailto: body has a practical limit of ~2000 characters in many email clients.
-  const EMAIL_XML_MAX_BODY = 2000;
-
-  function emailProgressXml() {
-    try {
-      const xml     = progressToXml();
-      const subject = encodeURIComponent("MB-820 Quiz Progress Export \u2013 " + new Date().toISOString().slice(0, 10));
-      const body    = encodeURIComponent(xml);
-      if (body.length > EMAIL_XML_MAX_BODY) {
-        alert(
-          "\u26A0\uFE0F The XML export is too large for a mailto: link (" +
-          Math.round(xml.length / 1024) + "\u202FKB). Please use \u201CDownload XML\u201D to save the file, then attach it manually to your email."
-        );
-        return;
-      }
-      window.location.href = "mailto:?subject=" + subject + "&body=" + body;
-    } catch (e) {
-      alert("Could not open email client: " + e.message);
-    }
-  }
-
   // ── Completed-state persistence ────────────────────────────────────────────
   function completedQuizKey(setKey) { return "mb820_completed_quiz_" + setKey; }
   function completedCaseKey(caseKey) { return "mb820_completed_case_" + caseKey; }
@@ -1458,8 +1397,6 @@
       '<p class="export-import-info">\uD83D\uDCBE <strong>Transfer your progress</strong> between devices &mdash; export your progress to a file, then import it on another device.</p>' +
       '<div class="export-import-buttons">' +
         '<button class="export-btn" id="export-progress-btn">\u2B06\uFE0F Export Progress</button>' +
-        '<button class="export-btn export-xml-btn" id="export-xml-btn">\uD83D\uDCC4 Download XML</button>' +
-        '<button class="export-btn export-email-btn" id="export-email-btn">\uD83D\uDCE7 Email XML</button>' +
         '<label class="import-btn" id="import-progress-label" for="import-progress-input">\u2B07\uFE0F Import Progress' +
           '<input type="file" id="import-progress-input" accept=".json" style="display:none;">' +
         '</label>' +
@@ -1478,14 +1415,6 @@
     const exportBtn = document.getElementById("export-progress-btn");
     if (exportBtn) {
       exportBtn.addEventListener("click", exportProgress);
-    }
-    const exportXmlBtn = document.getElementById("export-xml-btn");
-    if (exportXmlBtn) {
-      exportXmlBtn.addEventListener("click", downloadProgressXml);
-    }
-    const exportEmailBtn = document.getElementById("export-email-btn");
-    if (exportEmailBtn) {
-      exportEmailBtn.addEventListener("click", emailProgressXml);
     }
     const importInput = document.getElementById("import-progress-input");
     if (importInput) {
