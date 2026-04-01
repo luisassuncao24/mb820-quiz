@@ -2808,8 +2808,9 @@
     '</div>';
   }
 
-  // ── Bot prevention / human verification ──────────────────────────────────
-  const AUTH_KEY = "mb820_authenticated";
+  // ── Access control / password gate ───────────────────────────────────────
+  const AUTH_KEY    = "mb820_authenticated";
+  const ACCESS_PASS = "B(&I;y2s%=U;w3%nsc7&7-bf]=2U&'xc}'_N~nlsm(Eg9aLqdV";
 
   function isAuthenticated() {
     try { return localStorage.getItem(AUTH_KEY) === "1"; } catch (e) { return false; }
@@ -2817,26 +2818,6 @@
 
   function setAuthenticated() {
     try { localStorage.setItem(AUTH_KEY, "1"); } catch (e) { /* ignore */ }
-  }
-
-  function generateMathChallenge() {
-    var ops = ["+", "-", "*"];
-    var op = ops[Math.floor(Math.random() * ops.length)];
-    var a, b, answer;
-    if (op === "+") {
-      a = Math.floor(Math.random() * 10) + 1;
-      b = Math.floor(Math.random() * 10) + 1;
-      answer = a + b;
-    } else if (op === "-") {
-      a = Math.floor(Math.random() * 10) + 5;
-      b = Math.floor(Math.random() * a) + 1;
-      answer = a - b;
-    } else {
-      a = Math.floor(Math.random() * 9) + 2;
-      b = Math.floor(Math.random() * 9) + 2;
-      answer = a * b;
-    }
-    return { question: "What is " + a + " " + op + " " + b + " ?", answer: answer };
   }
 
   function showMathOverlay() {
@@ -2850,25 +2831,18 @@
   }
 
   function setupMathGate(onSuccess) {
-    var submitBtn   = document.getElementById("math-submit-btn");
-    var inputEl     = document.getElementById("math-input");
-    var errorEl     = document.getElementById("math-error");
-    var questionEl  = document.getElementById("math-question-display");
-
-    var challenge = generateMathChallenge();
-    questionEl.textContent = challenge.question;
+    var submitBtn = document.getElementById("math-submit-btn");
+    var inputEl   = document.getElementById("math-input");
+    var errorEl   = document.getElementById("math-error");
 
     function attempt() {
-      var parsed = parseInt(inputEl.value, 10);
-      if (!isNaN(parsed) && parsed === challenge.answer) {
+      if (inputEl.value === ACCESS_PASS) {
         setAuthenticated();
         hideMathOverlay();
         onSuccess();
       } else {
         errorEl.style.display = "block";
         inputEl.value = "";
-        challenge = generateMathChallenge();
-        questionEl.textContent = challenge.question;
         inputEl.focus();
       }
     }
