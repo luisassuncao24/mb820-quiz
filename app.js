@@ -1,15 +1,20 @@
 (function () {
   "use strict";
 
-  // ── Question sets ────────────────────────────────────────────────────────
-  // Split all questions into 3 difficulty tiers:
-  //   Beginner    (66): first 66 from questionsSet2 (foundational/conceptual)
-  //   Intermediate(67): last 34 from questionsSet2 + first 33 from questions (transitional)
-  //   Proficient  (67): curated mix of scenario-based functional questions (from
-  //                     questions.js) + AL developer questions (IDs 101-134),
-  //                     covering the full MB-820 exam topic spread.
+  // ── Per-exam configuration ────────────────────────────────────────────────
+  // Load from window.QUIZ_CONFIG if set; fall back to MB-820 defaults so the
+  // existing MB-820 page continues to work without any changes.
+  var _cfg       = (typeof window !== "undefined" && window.QUIZ_CONFIG) ? window.QUIZ_CONFIG : {};
+  var _prefix    = _cfg.prefix    || "mb820";
+  var _examName  = _cfg.examName  || "MB-820";
+  var _examTitle = _cfg.examTitle || "MB-820 Quiz";
 
-  // Proficient quiz: 33 functional questions + 34 AL/developer questions = 67
+  // ── Question sets ────────────────────────────────────────────────────────
+  // If the page provides its own question sets via QUIZ_CONFIG, use those.
+  // Otherwise fall back to the default MB-820 sets (questionsSet2, questions,
+  // questionsOfficial must be loaded before this file for the fallback to work).
+
+  // MB-820 Proficient quiz: 33 functional questions + 34 AL/developer questions = 67
   var _proficientIds = new Set([
     // ── Finance, Sales, Purchase, Inventory, Service, Planning, Jobs (33) ──
     34, 35, 37, 39, 40, 41, 43, 44, 46, 47, 48, 51, 52, 54, 55, 57,
@@ -22,36 +27,40 @@
     131, 132, 133, 134
   ]);
 
-  const QUESTION_SETS = [
-    {
-      key: "beginner",
-      label: "Beginner Quiz",
-      difficulty: "beginner",
-      description: "66 foundational questions covering core Business Central concepts and terminology.",
-      data: questionsSet2.slice(0, 66)
-    },
-    {
-      key: "intermediate",
-      label: "Intermediate Quiz",
-      difficulty: "intermediate",
-      description: "67 questions bridging foundational knowledge and advanced Business Central topics.",
-      data: questionsSet2.slice(66).concat(questions.slice(0, 33))
-    },
-    {
-      key: "proficient",
-      label: "Proficient Quiz",
-      difficulty: "proficient",
-      description: "67 scenario-based questions balanced across the full MB-820 exam — functional configuration, AL extension development, events, testing, permissions, API pages, XMLport, upgrade codeunits, telemetry, and deployment.",
-      data: questions.filter(function (q) { return _proficientIds.has(q.id); })
-    },
-    {
-      key: "official",
-      label: "Official Questions",
-      difficulty: "official",
-      description: "77 official MB-820 exam questions covering deployment architecture, AL development, permissions, XMLports, queries, HTTP, reports, telemetry, and more.",
-      data: questionsOfficial
-    }
-  ];
+  var _defaultQuestionSets = (typeof questionsSet2 !== "undefined" && typeof questions !== "undefined" && typeof questionsOfficial !== "undefined")
+    ? [
+        {
+          key: "beginner",
+          label: "Beginner Quiz",
+          difficulty: "beginner",
+          description: "66 foundational questions covering core Business Central concepts and terminology.",
+          data: questionsSet2.slice(0, 66)
+        },
+        {
+          key: "intermediate",
+          label: "Intermediate Quiz",
+          difficulty: "intermediate",
+          description: "67 questions bridging foundational knowledge and advanced Business Central topics.",
+          data: questionsSet2.slice(66).concat(questions.slice(0, 33))
+        },
+        {
+          key: "proficient",
+          label: "Proficient Quiz",
+          difficulty: "proficient",
+          description: "67 scenario-based questions balanced across the full MB-820 exam — functional configuration, AL extension development, events, testing, permissions, API pages, XMLport, upgrade codeunits, telemetry, and deployment.",
+          data: questions.filter(function (q) { return _proficientIds.has(q.id); })
+        },
+        {
+          key: "official",
+          label: "Official Questions",
+          difficulty: "official",
+          description: "77 official MB-820 exam questions covering deployment architecture, AL development, permissions, XMLports, queries, HTTP, reports, telemetry, and more.",
+          data: questionsOfficial
+        }
+      ]
+    : [];
+
+  const QUESTION_SETS = _cfg.questionSets || _defaultQuestionSets;
 
   // ── All-questions pool (used for Random Practice Quiz) ──────────────────
   const ALL_QUESTIONS = (function () {
@@ -65,24 +74,29 @@
     return pool;
   })();
 
-  const RANDOM_QUIZ_COUNT = 67;
+  const RANDOM_QUIZ_COUNT = typeof _cfg.randomQuizCount === "number" ? _cfg.randomQuizCount : 67;
   const RANDOM_SET = {
     key: "random",
     label: "Random Practice Quiz",
     difficulty: "random",
-    description: "67 randomly selected questions drawn from all available quizzes. Does not count towards preparation progress.",
+    description: RANDOM_QUIZ_COUNT + " randomly selected questions drawn from all available quizzes. Does not count towards preparation progress.",
     data: ALL_QUESTIONS
   };
 
-  const TIMER_DURATION       = 120 * 60; // 120 minutes in seconds
+  const TIMER_DURATION       = typeof _cfg.timerDuration === "number" ? _cfg.timerDuration : 120 * 60; // 120 minutes in seconds
   const TIMER_WARNING_MINS   = 30;       // yellow threshold
   const TIMER_CRITICAL_MINS  = 10;       // red threshold
   const IDLE_TIMEOUT_SECS    = 120;      // 2 minutes — auto-pause after this long without user activity
 
-  // MB-820 scoring thresholds (percentage, 0-100)
-  const PASS_PCT     = 70; // 700/1000 points — minimum passing score for MB-820
-  const MARGINAL_PCT = 60; // "close but not there" band
-  const STUDY_TIME_KEY = "mb820_study_time"; // accumulated study seconds (quizzes + test cases)
+  // Scoring thresholds (percentage, 0-100)
+  const PASS_PCT     = typeof _cfg.passPct     === "number" ? _cfg.passPct     : 70; // 700/1000 points — minimum passing score
+  const MARGINAL_PCT = typeof _cfg.marginalPct === "number" ? _cfg.marginalPct : 60; // "close but not there" band
+  const STUDY_TIME_KEY = _prefix + "_study_time"; // accumulated study seconds (quizzes + test cases)
+
+  // ── Active test-cases list ────────────────────────────────────────────────
+  // Use QUIZ_CONFIG.testCases if provided; otherwise fall back to the global
+  // TEST_CASES variable defined by testcases.js (MB-820 default).
+  var _testCases = _cfg.testCases || (typeof TEST_CASES !== "undefined" ? TEST_CASES : []);
 
   // ── State ────────────────────────────────────────────────────────────────
   let activeSet     = null; // one of QUESTION_SETS entries
@@ -123,9 +137,9 @@
   let studyTimeSeconds = 0;
 
   // ── Quick Practice state ─────────────────────────────────────────────────
-  const QP_STREAK_KEY = "mb820_qp_streak";
-  const QP_BEST_KEY   = "mb820_qp_best";
-  const QP_SEEN_KEY   = "mb820_qp_seen"; // question IDs answered in the current run
+  const QP_STREAK_KEY = _prefix + "_qp_streak";
+  const QP_BEST_KEY   = _prefix + "_qp_best";
+  const QP_SEEN_KEY   = _prefix + "_qp_seen"; // question IDs answered in the current run
   var qp = { pool: [], poolIdx: 0, streak: 0, bestStreak: 0, seenInRun: new Set() };
   var UT_MESSAGES = [
     { streak: 5,  msg: "KILLING SPREE!",   emoji: "\uD83D\uDD25", color: "#f97316" },
@@ -259,7 +273,7 @@
     var formattedChoices = q.choices.map(function (c, i) { return (i + 1) + ". " + c; }).join("\n");
     var correctAnswerTexts = q.correct.map(function (i) { return q.choices[i]; }).join(", ");
     var text =
-      "[MB-820 Quiz] Issue Report — Question #" + q.id + "\n\n" +
+      "[" + _examTitle + "] Issue Report — Question #" + q.id + "\n\n" +
       "Please describe the issue you found:\n" +
       "[Your description here]\n\n" +
       "------- Question Details -------\n" +
@@ -410,12 +424,12 @@
 
   function saveKey() {
     if (caseStudyMode === "standalone") {
-      return "mb820_case_" + caseStudy.key;
+      return _prefix + "_case_" + caseStudy.key;
     }
     if (caseStudyMode === "combined") {
-      return "mb820_combined_" + activeSet.key + "_" + caseStudy.key;
+      return _prefix + "_combined_" + activeSet.key + "_" + caseStudy.key;
     }
-    return "mb820_quiz_progress_" + activeSet.key;
+    return _prefix + "_quiz_progress_" + activeSet.key;
   }
 
   function saveProgress() {
@@ -460,7 +474,7 @@
 
   function loadProgress(set) {
     try {
-      const raw = localStorage.getItem("mb820_quiz_progress_" + set.key);
+      const raw = localStorage.getItem(_prefix + "_quiz_progress_" + set.key);
       if (!raw) return null;
       const saved = JSON.parse(raw);
       if (!saved || !Array.isArray(saved.shuffledIds) || saved.shuffledIds.length === 0) return null;
@@ -482,7 +496,7 @@
   // Load saved progress for a combined run (quiz + test case)
   function loadCombinedProgress(set, tc) {
     try {
-      const key = "mb820_combined_" + set.key + "_" + tc.key;
+      const key = _prefix + "_combined_" + set.key + "_" + tc.key;
       const raw = localStorage.getItem(key);
       if (!raw) return null;
       const saved = JSON.parse(raw);
@@ -494,7 +508,7 @@
   // Load saved progress for a standalone test case
   function loadCaseProgress(tc) {
     try {
-      const raw = localStorage.getItem("mb820_case_" + tc.key);
+      const raw = localStorage.getItem(_prefix + "_case_" + tc.key);
       if (!raw) return null;
       const saved = JSON.parse(raw);
       if (!saved || !Array.isArray(saved.shuffledIds) || saved.shuffledIds.length === 0) return null;
@@ -521,9 +535,9 @@
   function clearAllProgressForSet() {
     if (!activeSet) return;
     try {
-      localStorage.removeItem("mb820_quiz_progress_" + activeSet.key);
-      TEST_CASES.forEach(function (tc) {
-        localStorage.removeItem("mb820_combined_" + activeSet.key + "_" + tc.key);
+      localStorage.removeItem(_prefix + "_quiz_progress_" + activeSet.key);
+      _testCases.forEach(function (tc) {
+        localStorage.removeItem(_prefix + "_combined_" + activeSet.key + "_" + tc.key);
       });
     } catch (e) { /* ignore */ }
   }
@@ -532,17 +546,17 @@
   function clearAllProgress() {
     try {
       QUESTION_SETS.forEach(function (set) {
-        localStorage.removeItem("mb820_quiz_progress_" + set.key);
-        localStorage.removeItem("mb820_completed_quiz_" + set.key);
-        TEST_CASES.forEach(function (tc) {
-          localStorage.removeItem("mb820_combined_" + set.key + "_" + tc.key);
+        localStorage.removeItem(_prefix + "_quiz_progress_" + set.key);
+        localStorage.removeItem(_prefix + "_completed_quiz_" + set.key);
+        _testCases.forEach(function (tc) {
+          localStorage.removeItem(_prefix + "_combined_" + set.key + "_" + tc.key);
         });
       });
       // Clear random quiz progress
-      localStorage.removeItem("mb820_quiz_progress_random");
-      TEST_CASES.forEach(function (tc) {
-        localStorage.removeItem("mb820_case_" + tc.key);
-        localStorage.removeItem("mb820_completed_case_" + tc.key);
+      localStorage.removeItem(_prefix + "_quiz_progress_random");
+      _testCases.forEach(function (tc) {
+        localStorage.removeItem(_prefix + "_case_" + tc.key);
+        localStorage.removeItem(_prefix + "_completed_case_" + tc.key);
       });
       // Clear attempt history
       localStorage.removeItem(HISTORY_KEY);
@@ -555,10 +569,10 @@
   // Clears all progress (in-progress + completed + combined) for a single quiz set.
   function clearQuizProgress(setKey) {
     try {
-      localStorage.removeItem("mb820_quiz_progress_" + setKey);
-      localStorage.removeItem("mb820_completed_quiz_" + setKey);
-      TEST_CASES.forEach(function (tc) {
-        localStorage.removeItem("mb820_combined_" + setKey + "_" + tc.key);
+      localStorage.removeItem(_prefix + "_quiz_progress_" + setKey);
+      localStorage.removeItem(_prefix + "_completed_quiz_" + setKey);
+      _testCases.forEach(function (tc) {
+        localStorage.removeItem(_prefix + "_combined_" + setKey + "_" + tc.key);
       });
     } catch (e) { /* ignore */ }
   }
@@ -566,10 +580,10 @@
   // Clears all progress (in-progress + completed + combined) for a single case study.
   function clearCaseProgress(caseKey) {
     try {
-      localStorage.removeItem("mb820_case_" + caseKey);
-      localStorage.removeItem("mb820_completed_case_" + caseKey);
+      localStorage.removeItem(_prefix + "_case_" + caseKey);
+      localStorage.removeItem(_prefix + "_completed_case_" + caseKey);
       QUESTION_SETS.forEach(function (set) {
-        localStorage.removeItem("mb820_combined_" + set.key + "_" + caseKey);
+        localStorage.removeItem(_prefix + "_combined_" + set.key + "_" + caseKey);
       });
     } catch (e) { /* ignore */ }
   }
@@ -578,9 +592,10 @@
   function exportProgress() {
     try {
       const data = {};
+      const _keyPrefix = _prefix + "_";
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith("mb820_") && key !== AUTH_KEY) {
+        if (key && key.startsWith(_keyPrefix) && key !== AUTH_KEY) {
           data[key] = localStorage.getItem(key);
         }
       }
@@ -588,7 +603,7 @@
       const url  = URL.createObjectURL(blob);
       const a    = document.createElement("a");
       a.href     = url;
-      a.download = "mb820-progress-" + new Date().toISOString().slice(0, 10) + ".json";
+      a.download = _prefix + "-progress-" + new Date().toISOString().slice(0, 10) + ".json";
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -606,9 +621,10 @@
         if (typeof data !== "object" || Array.isArray(data)) {
           throw new Error("Invalid file format — expected a JSON object.");
         }
+        const _keyPrefix = _prefix + "_";
         let count = 0;
         Object.keys(data).forEach(function (key) {
-          if (key.startsWith("mb820_") && key !== AUTH_KEY) {
+          if (key.startsWith(_keyPrefix) && key !== AUTH_KEY) {
             localStorage.setItem(key, data[key]);
             count++;
           }
@@ -624,8 +640,8 @@
   }
 
   // ── Completed-state persistence ────────────────────────────────────────────
-  function completedQuizKey(setKey) { return "mb820_completed_quiz_" + setKey; }
-  function completedCaseKey(caseKey) { return "mb820_completed_case_" + caseKey; }
+  function completedQuizKey(setKey) { return _prefix + "_completed_quiz_" + setKey; }
+  function completedCaseKey(caseKey) { return _prefix + "_completed_case_" + caseKey; }
 
   function saveCompletedState() {
     if (reviewMode) return; // never overwrite when re-viewing
@@ -709,7 +725,7 @@
   }
 
   // ── Attempt history ────────────────────────────────────────────────────────
-  const HISTORY_KEY = "mb820_history";
+  const HISTORY_KEY = _prefix + "_history";
   const MAX_HISTORY = 50;
 
   function saveToHistory(entry) {
@@ -828,7 +844,7 @@
         });
       }
     });
-    TEST_CASES.forEach(function (tc) {
+    _testCases.forEach(function (tc) {
       var c = loadCompletedCase(tc);
       if (c && Array.isArray(c.results)) {
         c.results.forEach(function (r) {
@@ -1076,7 +1092,7 @@
 
 
   function calcPrepPct() {
-    const availableCases = TEST_CASES.filter(function (tc) { return tc.questions.length > 0; });
+    const availableCases = _testCases.filter(function (tc) { return tc.questions.length > 0; });
     const totalItems = QUESTION_SETS.length + availableCases.length;
     let completedItems = 0;
 
@@ -1102,7 +1118,7 @@
 
     return '<div class="prep-progress-bar-container">' +
       '<div class="prep-progress-header">' +
-        '<span class="prep-progress-title">\uD83C\uDFAF MB-820 Preparation Progress</span>' +
+        '<span class="prep-progress-title">\uD83C\uDFAF ' + _examName + ' Preparation Progress</span>' +
         '<span class="prep-progress-pct">' + completedItems + '\u202F/\u202F' + totalItems + ' &nbsp;(' + pct + '%)</span>' +
       '</div>' +
       '<div class="prep-progress-track">' +
@@ -1118,8 +1134,8 @@
   function buildCongratulationsScreen() {
     return '<div class="congrats-screen">' +
       '<div class="congrats-trophy">\uD83C\uDFC6</div>' +
-      '<h2 class="congrats-title">You\u2019re Ready for MB-820!</h2>' +
-      '<p class="congrats-msg">Outstanding achievement! You\u2019ve passed all quizzes and case studies with a passing score. You are fully prepared to ace the MB-820 certification exam. Go get that certification!</p>' +
+      '<h2 class="congrats-title">You\u2019re Ready for ' + _examName + '!</h2>' +
+      '<p class="congrats-msg">Outstanding achievement! You\u2019ve passed all quizzes and case studies with a passing score. You are fully prepared to ace the ' + _examName + ' certification exam. Go get that certification!</p>' +
       '<div class="congrats-badges">' +
         '<span class="congrats-badge">\u2705 All Quizzes Passed</span>' +
         '<span class="congrats-badge">\u2705 All Case Studies Passed</span>' +
@@ -1162,7 +1178,7 @@
   }
 
   function reviewCompletedCase(caseKey) {
-    const tc = TEST_CASES.find(function (t) { return t.key === caseKey; });
+    const tc = _testCases.find(function (t) { return t.key === caseKey; });
     if (!tc) return;
     const saved = loadCompletedCase(tc);
     if (!saved) return;
@@ -1229,8 +1245,8 @@
       if (s && Array.isArray(s.results) && s.results.length > 0 && s.results.length < s.shuffled.length) {
         inProgressCount++;
       } else {
-        for (let i = 0; i < TEST_CASES.length; i++) {
-          const tc = TEST_CASES[i];
+        for (let i = 0; i < _testCases.length; i++) {
+          const tc = _testCases[i];
           if (tc.questions.length === 0) continue;
           const cp = loadCombinedProgress(set, tc);
           if (cp && ((cp.phase === "quiz" && Array.isArray(cp.results) && cp.results.length > 0) || cp.phase === "testcase")) {
@@ -1242,7 +1258,7 @@
     });
     const rs = loadProgress(RANDOM_SET);
     if (rs && Array.isArray(rs.results) && rs.results.length > 0 && rs.results.length < rs.shuffled.length) inProgressCount++;
-    TEST_CASES.forEach(function (tc) {
+    _testCases.forEach(function (tc) {
       if (tc.questions.length === 0) return;
       const sc = loadCaseProgress(tc);
       if (sc && Array.isArray(sc.results) && sc.results.length > 0 && sc.results.length < sc.shuffled.length) inProgressCount++;
@@ -1279,8 +1295,8 @@
       let combinedSaved = null;
       let combinedTc    = null;
       if (!hasSaved) {
-        for (let i = 0; i < TEST_CASES.length; i++) {
-          const tc = TEST_CASES[i];
+        for (let i = 0; i < _testCases.length; i++) {
+          const tc = _testCases[i];
           if (tc.questions.length === 0) continue;
           const cp = loadCombinedProgress(set, tc);
           if (cp && ((cp.phase === "quiz" && Array.isArray(cp.results) && cp.results.length > 0) ||
@@ -1313,7 +1329,7 @@
 
       // Build the case study selector options
       let caseOptions = '<option value="">None</option>';
-      TEST_CASES.forEach(function (tc) {
+      _testCases.forEach(function (tc) {
         const disabled = tc.questions.length === 0 ? " disabled" : "";
         const label    = tc.questions.length === 0 ? tc.label + " (coming soon)" : tc.label;
         caseOptions += '<option value="' + tc.key + '"' + disabled + '>' + label + '</option>';
@@ -1405,7 +1421,7 @@
       '<p class="set-selection-sub">Practice standalone scenario-based questions from each case study.</p>' +
       '<div class="set-cards">';
 
-    TEST_CASES.forEach(function (tc) {
+    _testCases.forEach(function (tc) {
       const available   = tc.questions.length > 0;
       const savedCase   = available ? loadCaseProgress(tc) : null;
       const hasSaved    = savedCase && Array.isArray(savedCase.results) && savedCase.results.length > 0 && savedCase.results.length < savedCase.shuffled.length;
@@ -1503,7 +1519,7 @@
         reviewMode     = false;
         activeSet      = QUESTION_SETS.find(function (s) { return s.key === key; });
         if (combinedCaseKey) {
-          caseStudy     = TEST_CASES.find(function (tc) { return tc.key === combinedCaseKey; }) || null;
+          caseStudy     = _testCases.find(function (tc) { return tc.key === combinedCaseKey; }) || null;
           caseStudyMode = caseStudy ? "combined" : null;
         } else {
           caseStudyMode = null;
@@ -1525,7 +1541,7 @@
         const card     = btn.closest(".set-card");
         const sel      = card ? card.querySelector(".case-select") : null;
         const caseKey  = sel ? sel.value : "";
-        caseStudy      = caseKey ? TEST_CASES.find(function (tc) { return tc.key === caseKey; }) || null : null;
+        caseStudy      = caseKey ? _testCases.find(function (tc) { return tc.key === caseKey; }) || null : null;
         caseStudyMode  = caseStudy ? "combined" : null;
         savedQuizState = null;
         casePhase      = "quiz";
@@ -1545,7 +1561,7 @@
     setSelectionEl.querySelectorAll(".case-resume-btn").forEach(function (btn) {
       btn.addEventListener("click", function () {
         const key   = btn.dataset.caseKey;
-        const tc    = TEST_CASES.find(function (t) { return t.key === key; });
+        const tc    = _testCases.find(function (t) { return t.key === key; });
         if (!tc) return;
         reviewMode     = false;
         activeSet      = null;
@@ -1560,7 +1576,7 @@
     setSelectionEl.querySelectorAll(".case-start-btn").forEach(function (btn) {
       btn.addEventListener("click", function () {
         const key   = btn.dataset.caseKey;
-        const tc    = TEST_CASES.find(function (t) { return t.key === key; });
+        const tc    = _testCases.find(function (t) { return t.key === key; });
         if (!tc || tc.questions.length === 0) return;
         reviewMode     = false;
         activeSet      = null;
@@ -1615,7 +1631,7 @@
     setSelectionEl.querySelectorAll(".reset-case-btn").forEach(function (btn) {
       btn.addEventListener("click", function () {
         const key = btn.dataset.caseKey;
-        const tc  = TEST_CASES.find(function (t) { return t.key === key; });
+        const tc  = _testCases.find(function (t) { return t.key === key; });
         const label = tc ? tc.label : key;
         showConfirm(
           "Reset \u201C" + label + "\u201D?",
@@ -2360,7 +2376,7 @@
     const total          = shuffled.length || results.length;
     const rawScore       = score;
     const pct            = total ? Math.round((rawScore / total) * 100) : 0;
-    const mb820Points    = Math.round(pct * 10);
+    const examPoints     = Math.round(pct * 10);
     const fullyCorrect   = results.filter(function (r) { return r.isCorrect; }).length;
     const partialResults = results.filter(function (r) { return !r.isCorrect && r.partialScore > 0; });
     const wrongCount     = results.filter(function (r) { return r.partialScore === 0; }).length;
@@ -2373,10 +2389,10 @@
           ? "Well done \u2014 " + pct + "% on the random practice quiz! \uD83C\uDF89"
           : "Keep practising \u2014 " + pct + "% on the random practice quiz. Review the explanations below.")
       : (pct >= PASS_PCT
-          ? "Great work \u2014 you scored " + mb820Points + "/1000 and passed the MB-820 threshold! \uD83C\uDF89"
+          ? "Great work \u2014 you scored " + examPoints + "/1000 and passed the " + _examName + " threshold! \uD83C\uDF89"
           : pct >= MARGINAL_PCT
-            ? "Almost there \u2014 you need " + (PASS_PCT * 10) + "/1000 to pass MB-820. Review the explanations and try again!"
-            : "Keep studying \u2014 you need " + (PASS_PCT * 10) + "/1000 to pass MB-820. Review the explanations and try again.");
+            ? "Almost there \u2014 you need " + (PASS_PCT * 10) + "/1000 to pass " + _examName + ". Review the explanations and try again!"
+            : "Keep studying \u2014 you need " + (PASS_PCT * 10) + "/1000 to pass " + _examName + ". Review the explanations and try again.");
 
     const timeTaken   = TIMER_DURATION - timerSeconds;
     const timeExpired = timerSeconds === 0;
@@ -2404,14 +2420,14 @@
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
-        (pct >= PASS_PCT && !reviewMode ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">You cleared the MB-820 passing threshold!</span></div>' : '') +
+        (pct >= PASS_PCT && !reviewMode ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">You cleared the ' + _examName + ' passing threshold!</span></div>' : '') +
         '<h2>' + (isRandom ? "Random Practice Complete!" : "Quiz Complete!") + '</h2>' +
         '<p class="summary-set-label">' +
           dmeta.icon + ' ' + activeSet.label + ' &nbsp;&middot;&nbsp; ' + perfLabel +
         '</p>' +
         '<div class="score-circle">' +
           '<span class="score-number">' + pct + '%</span>' +
-          '<span class="score-label">' + (isRandom ? fullyCorrect + " / " + total + " correct" : mb820Points + ' / 1000 MB-820 pts') + '</span>' +
+          '<span class="score-label">' + (isRandom ? fullyCorrect + " / " + total + " correct" : examPoints + ' / 1000 ' + _examName + ' pts') + '</span>' +
         '</div>' +
         '<p class="score-verdict">' + verdict + '</p>' +
         '<div class="summary-meta">' +
@@ -2523,13 +2539,13 @@
     const casePct        = caseTotal ? (caseRawScore / caseTotal) * 100 : 0;
 
     const combinedPct      = Math.round(0.70 * quizPct + 0.30 * casePct);
-    const mb820Points      = Math.round(combinedPct * 10);
+    const examPoints       = Math.round(combinedPct * 10);
     const quizPctRounded   = Math.round(quizPct);
     const casePctRounded   = Math.round(casePct);
 
     const badge   = combinedPct >= PASS_PCT ? "pass" : (combinedPct >= MARGINAL_PCT ? "marginal" : "fail");
     const verdict = combinedPct >= PASS_PCT
-      ? "Great work \u2014 combined score is " + mb820Points + "/1000, above the MB-820 threshold! \uD83C\uDF89"
+      ? "Great work \u2014 combined score is " + examPoints + "/1000, above the " + _examName + " threshold! \uD83C\uDF89"
       : combinedPct >= MARGINAL_PCT
         ? "Almost there \u2014 combined score is " + combinedPct + "%. You need " + PASS_PCT + "% to pass. Review and try again!"
         : "Keep studying \u2014 combined score is " + combinedPct + "%. Review the explanations and try again.";
@@ -2563,14 +2579,14 @@
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
-        (combinedPct >= PASS_PCT && !reviewMode ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">Combined score above the MB-820 threshold!</span></div>' : '') +
+        (combinedPct >= PASS_PCT && !reviewMode ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">Combined score above the ' + _examName + ' threshold!</span></div>' : '') +
         '<h2>Combined Result!</h2>' +
         '<p class="summary-set-label">' +
           dmeta.icon + ' ' + activeSet.label + ' + \uD83D\uDCCB ' + caseStudy.label + ' &nbsp;&middot;&nbsp; ' + perfLabel +
         '</p>' +
         '<div class="score-circle">' +
           '<span class="score-number">' + combinedPct + '%</span>' +
-          '<span class="score-label">' + mb820Points + ' / 1000 MB-820 pts</span>' +
+          '<span class="score-label">' + examPoints + ' / 1000 ' + _examName + ' pts</span>' +
         '</div>' +
         '<p class="score-verdict">' + verdict + '</p>' +
         '<div class="combined-score-breakdown">' +
@@ -2640,8 +2656,9 @@
   }
 
   // ── Question category lookup ───────────────────────────────────────────────
-  // Maps official MB-820 question IDs (501-578) to exam domain categories
-  var OFFICIAL_CATEGORY_MAP = {
+  // Maps official MB-820 question IDs (501-578) to exam domain categories.
+  // Can be overridden per-exam via QUIZ_CONFIG.officialCategoryMap.
+  var OFFICIAL_CATEGORY_MAP = _cfg.officialCategoryMap || {
     501: "Deployment & Architecture", 502: "Deployment & Architecture",
     503: "Describe Business Central",  504: "Development Tools",
     505: "Development Tools",          506: "Development Tools",
@@ -2684,6 +2701,9 @@
   };
 
   function getQuestionCategory(id) {
+    // Allow a fully custom category function from QUIZ_CONFIG
+    if (typeof _cfg.categoryFn === "function") return _cfg.categoryFn(id);
+
     // Official MB-820 questions (IDs 501-578)
     if (OFFICIAL_CATEGORY_MAP[id]) return OFFICIAL_CATEGORY_MAP[id];
 
@@ -2809,8 +2829,8 @@
   }
 
   // ── Access control / password gate ───────────────────────────────────────
-  const AUTH_KEY    = "mb820_authenticated";
-  const ACCESS_PASS = "B(&I;y2s%=U;w3%nsc7&7-bf]=2U&'xc}'_N~nlsm(Eg9aLqdV";
+  const AUTH_KEY    = _prefix + "_authenticated";
+  const ACCESS_PASS = _cfg.accessPass || "B(&I;y2s%=U;w3%nsc7&7-bf]=2U&'xc}'_N~nlsm(Eg9aLqdV";
 
   function isAuthenticated() {
     try { return localStorage.getItem(AUTH_KEY) === "1"; } catch (e) { return false; }
@@ -2858,12 +2878,16 @@
   // Migrate any legacy progress keys from the old "set1"/"set2" format.
   // Then check for saved in-progress state; if exactly one set has progress, prompt resume.
   (function boot() {
-    try {
-      const legacyKeys = ["mb820_quiz_progress", "mb820_quiz_progress_set1", "mb820_quiz_progress_set2"];
-      legacyKeys.forEach(function (k) {
-        if (localStorage.getItem(k)) localStorage.removeItem(k);
-      });
-    } catch (e) { /* ignore */ }
+    // Migrate any legacy progress keys from the old "set1"/"set2" format
+    // (only applies to the MB-820 exam which existed before multi-exam support).
+    if (_prefix === "mb820") {
+      try {
+        const legacyKeys = ["mb820_quiz_progress", "mb820_quiz_progress_set1", "mb820_quiz_progress_set2"];
+        legacyKeys.forEach(function (k) {
+          if (localStorage.getItem(k)) localStorage.removeItem(k);
+        });
+      } catch (e) { /* ignore */ }
+    }
 
     function startApp() {
       studyTimeSeconds = loadStudyTime();
