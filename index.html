@@ -4,103 +4,213 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <title>MB-820 Quiz</title>
+    <title>Exam Quiz Hub</title>
+    <style>
+        .hub-container {
+            background: #1e293b;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 780px;
+            padding: 2.5rem 2.5rem 3rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, .5);
+        }
+
+        .hub-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .hub-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .hub-header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .hub-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hub-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .hub-card:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.12);
+        }
+
+        .hub-card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 3px 10px;
+            border-radius: 999px;
+            width: fit-content;
+        }
+
+        .hub-card-badge.badge-bc {
+            background: rgba(56, 189, 248, 0.15);
+            color: #38bdf8;
+        }
+
+        .hub-card-badge.badge-pp {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+        }
+
+        .hub-card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #e2e8f0;
+        }
+
+        .hub-card-exam {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .hub-card-desc {
+            color: #94a3b8;
+            font-size: 0.88rem;
+            line-height: 1.55;
+            flex: 1;
+        }
+
+        .hub-card-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .hub-meta-item {
+            font-size: 0.78rem;
+            color: #64748b;
+            background: #1e293b;
+            border: 1px solid #1e3a5f;
+            border-radius: 6px;
+            padding: 2px 8px;
+        }
+
+        .hub-start-btn {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: filter 0.15s, transform 0.1s;
+            margin-top: 0.25rem;
+            cursor: pointer;
+        }
+
+        .hub-start-btn.btn-bc {
+            background: #38bdf8;
+            color: #0f172a;
+        }
+
+        .hub-start-btn.btn-pp {
+            background: #a855f7;
+            color: #ffffff;
+        }
+
+        .hub-start-btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .hub-footer {
+            margin-top: 2.5rem;
+            text-align: center;
+            color: #475569;
+            font-size: 0.82rem;
+        }
+
+        .hub-footer a {
+            color: #64748b;
+            text-decoration: none;
+        }
+
+        .hub-footer a:hover {
+            color: #94a3b8;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div id="quiz-container">
-        <div id="quiz-header">
-            <h1>MB-820 Quiz</h1>
-            <a id="user-guide-link" href="user-guide.html" target="_blank">&#128214; User Guide</a>
-            <button id="home-btn" style="display:none;">&#127968; Main Page</button>
+    <div class="hub-container">
+        <div class="hub-header">
+            <h1>&#127891; Exam Quiz Hub</h1>
+            <p>Select an exam to start practicing. Track your progress and prepare with confidence.</p>
         </div>
-        <div id="set-selection" style="display: none;"></div>
-        <div id="timer-display" style="display: none;"></div>
-        <div id="question"></div>
-        <div id="choices"></div>
-        <button id="next-button" style="display: none;">Next</button>
-        <div id="score-summary" style="display: none;"></div>
-    </div>
-    <div id="math-overlay" style="display:none;">
-        <div id="math-card">
-            <h2>&#128274; Access Restricted</h2>
-            <p id="math-challenge-text">Enter the password to access the quiz.</p>
-            <input type="password" id="math-input" placeholder="Password" autocomplete="off" />
-            <p id="math-error" style="display:none;">Incorrect password. Please try again.</p>
-            <button id="math-submit-btn">Enter</button>
-        </div>
-    </div>
-    <div id="confirm-overlay" style="display:none;">
-        <div id="confirm-card">
-            <h2 id="confirm-title"></h2>
-            <p id="confirm-message"></p>
-            <div class="resume-buttons">
-                <button id="confirm-yes-btn" class="resume-btn">Yes</button>
-                <button id="confirm-no-btn" class="new-quiz-btn">Cancel</button>
-            </div>
-        </div>
-    </div>
-    <div id="pause-overlay" style="display:none;">
-        <div id="pause-card">
-            <div class="pause-icon">&#9646;&#9646;</div>
-            <h2>Quiz Paused</h2>
-            <p>You've been inactive for 2 minutes.<br>Your progress has been saved.</p>
-            <div class="resume-buttons">
-                <button id="pause-resume-btn" class="resume-btn">&#9654; Continue Quiz</button>
-                <button id="pause-home-btn" class="new-quiz-btn">&#127968; Main Page</button>
-            </div>
-        </div>
-    </div>
-    <div id="mode-overlay" style="display:none;">
-        <div id="mode-card">
-            <h2>&#127891; Choose Quiz Mode</h2>
-            <p>How would you like to take this quiz?</p>
-            <div class="mode-options">
-                <button class="mode-btn" id="practice-mode-btn">
-                    <div class="mode-icon-lg">&#128214;</div>
-                    <div class="mode-title">Practice Mode</div>
-                    <div class="mode-desc">Correct answers are shown after each question</div>
-                </button>
-                <button class="mode-btn" id="test-mode-btn">
-                    <div class="mode-icon-lg">&#128221;</div>
-                    <div class="mode-title">Test Mode</div>
-                    <div class="mode-desc">Answers revealed only on the evaluation screen</div>
-                </button>
-            </div>
-            <button class="new-quiz-btn" id="mode-cancel-btn">Cancel</button>
-        </div>
-    </div>
 
-    <!-- Test-mode peek score overlay -->
-    <div id="peek-overlay" style="display:none;">
-        <div id="peek-card">
-            <div class="peek-emoji" id="peek-emoji">&#128527;</div>
-            <h2 id="peek-title">Afraid to continue?</h2>
-            <div class="peek-score-display">
-                <span class="peek-pct" id="peek-pct">0%</span>
-                <span class="peek-detail" id="peek-detail">0 of 0 answered</span>
+        <div class="hub-cards">
+            <!-- MB-820 Card -->
+            <div class="hub-card">
+                <span class="hub-card-badge badge-bc">&#128218; Business Central</span>
+                <div>
+                    <div class="hub-card-exam">Exam MB-820</div>
+                    <div class="hub-card-title">Microsoft Dynamics 365 Business Central Developer</div>
+                </div>
+                <p class="hub-card-desc">
+                    Practice questions covering AL development, extensions, Business Central deployment, integration, reporting, and more.
+                </p>
+                <div class="hub-card-meta">
+                    <span class="hub-meta-item">&#128202; 4 quiz sets</span>
+                    <span class="hub-meta-item">&#128203; Case studies</span>
+                    <span class="hub-meta-item">&#8987; 120 min timer</span>
+                </div>
+                <a href="mb820.html" class="hub-start-btn btn-bc">Start MB-820 Prep &#8594;</a>
             </div>
-            <p class="peek-taunt" id="peek-taunt"></p>
-            <div class="resume-buttons">
-                <button id="peek-continue-btn" class="resume-btn">&#128170; Keep Going!</button>
-                <button id="peek-quit-btn" class="new-quiz-btn">&#127987;&#65039; Give Up</button>
+
+            <!-- PL-400 Card -->
+            <div class="hub-card">
+                <span class="hub-card-badge badge-pp">&#9889; Power Platform</span>
+                <div>
+                    <div class="hub-card-exam">Exam PL-400</div>
+                    <div class="hub-card-title">Microsoft Power Platform Developer</div>
+                </div>
+                <p class="hub-card-desc">
+                    Practice questions covering Power Apps, Power Automate, Dataverse, PCF components, plug-ins, custom connectors, and integrations.
+                </p>
+                <div class="hub-card-meta">
+                    <span class="hub-meta-item">&#128202; 2 quiz sets</span>
+                    <span class="hub-meta-item">&#128203; Case studies</span>
+                    <span class="hub-meta-item">&#8987; 120 min timer</span>
+                </div>
+                <a href="pl400.html" class="hub-start-btn btn-pp">Start PL-400 Prep &#8594;</a>
             </div>
         </div>
-    </div>
 
-    <!-- Quick Practice streak milestone overlay -->
-    <div id="streak-overlay" style="display:none;">
-        <div id="streak-card">
-            <div class="streak-icon" id="streak-icon">&#128293;</div>
-            <div class="streak-msg" id="streak-msg">KILLING SPREE!</div>
-            <div class="streak-count" id="streak-count">5 in a row!</div>
-            <button class="streak-dismiss-btn" id="streak-dismiss-btn">&#128293; Keep It Up!</button>
+        <div class="hub-footer">
+            <a href="user-guide.html" target="_blank">&#128214; User Guide</a>
+            &nbsp;&middot;&nbsp; Progress is saved per exam in your browser
         </div>
     </div>
-
-    <script src="questions.js"></script>
-    <script src="questions2.js"></script>
-    <script src="questionsOfficial.js"></script>
-    <script src="testcases.js"></script>
-    <script src="app.js"></script>
 </body>
 </html>

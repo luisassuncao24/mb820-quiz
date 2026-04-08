@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>PL-400 Quiz</title>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="quiz-header">
+            <h1>PL-400 Quiz</h1>
+            <a id="hub-link" href="index.html">&#127968; Hub</a>
+            <a id="user-guide-link" href="user-guide.html" target="_blank">&#128214; User Guide</a>
+            <button id="home-btn" style="display:none;">&#127968; Main Page</button>
+        </div>
+        <div id="set-selection" style="display: none;"></div>
+        <div id="timer-display" style="display: none;"></div>
+        <div id="question"></div>
+        <div id="choices"></div>
+        <button id="next-button" style="display: none;">Next</button>
+        <div id="score-summary" style="display: none;"></div>
+    </div>
+    <div id="math-overlay" style="display:none;">
+        <div id="math-card">
+            <h2>&#128274; Access Restricted</h2>
+            <p id="math-challenge-text">Enter the password to access the quiz.</p>
+            <input type="password" id="math-input" placeholder="Password" autocomplete="off" />
+            <p id="math-error" style="display:none;">Incorrect password. Please try again.</p>
+            <button id="math-submit-btn">Enter</button>
+        </div>
+    </div>
+    <div id="confirm-overlay" style="display:none;">
+        <div id="confirm-card">
+            <h2 id="confirm-title"></h2>
+            <p id="confirm-message"></p>
+            <div class="resume-buttons">
+                <button id="confirm-yes-btn" class="resume-btn">Yes</button>
+                <button id="confirm-no-btn" class="new-quiz-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="pause-overlay" style="display:none;">
+        <div id="pause-card">
+            <div class="pause-icon">&#9646;&#9646;</div>
+            <h2>Quiz Paused</h2>
+            <p>You've been inactive for 2 minutes.<br>Your progress has been saved.</p>
+            <div class="resume-buttons">
+                <button id="pause-resume-btn" class="resume-btn">&#9654; Continue Quiz</button>
+                <button id="pause-home-btn" class="new-quiz-btn">&#127968; Main Page</button>
+            </div>
+        </div>
+    </div>
+    <div id="mode-overlay" style="display:none;">
+        <div id="mode-card">
+            <h2>&#127891; Choose Quiz Mode</h2>
+            <p>How would you like to take this quiz?</p>
+            <div class="mode-options">
+                <button class="mode-btn" id="practice-mode-btn">
+                    <div class="mode-icon-lg">&#128214;</div>
+                    <div class="mode-title">Practice Mode</div>
+                    <div class="mode-desc">Correct answers are shown after each question</div>
+                </button>
+                <button class="mode-btn" id="test-mode-btn">
+                    <div class="mode-icon-lg">&#128221;</div>
+                    <div class="mode-title">Test Mode</div>
+                    <div class="mode-desc">Answers revealed only on the evaluation screen</div>
+                </button>
+            </div>
+            <button class="new-quiz-btn" id="mode-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Test-mode peek score overlay -->
+    <div id="peek-overlay" style="display:none;">
+        <div id="peek-card">
+            <div class="peek-emoji" id="peek-emoji">&#128527;</div>
+            <h2 id="peek-title">Afraid to continue?</h2>
+            <div class="peek-score-display">
+                <span class="peek-pct" id="peek-pct">0%</span>
+                <span class="peek-detail" id="peek-detail">0 of 0 answered</span>
+            </div>
+            <p class="peek-taunt" id="peek-taunt"></p>
+            <div class="resume-buttons">
+                <button id="peek-continue-btn" class="resume-btn">&#128170; Keep Going!</button>
+                <button id="peek-quit-btn" class="new-quiz-btn">&#127987;&#65039; Give Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Practice streak milestone overlay -->
+    <div id="streak-overlay" style="display:none;">
+        <div id="streak-card">
+            <div class="streak-icon" id="streak-icon">&#128293;</div>
+            <div class="streak-msg" id="streak-msg">KILLING SPREE!</div>
+            <div class="streak-count" id="streak-count">5 in a row!</div>
+            <button class="streak-dismiss-btn" id="streak-dismiss-btn">&#128293; Keep It Up!</button>
+        </div>
+    </div>
+
+    <script src="pl400-questions.js"></script>
+    <script src="pl400-questions2.js"></script>
+    <script src="pl400-testcases.js"></script>
+    <script>
+      window.QUIZ_CONFIG = {
+        prefix:    "pl400",
+        examName:  "PL-400",
+        examTitle: "PL-400 Quiz",
+        questionSets: [
+          {
+            key: "foundational",
+            label: "Foundational Quiz",
+            difficulty: "beginner",
+            description: "20 foundational questions covering core Power Platform concepts, Dataverse basics, Power Automate, and canvas app fundamentals.",
+            data: pl400Questions2
+          },
+          {
+            key: "proficient",
+            label: "Proficient Quiz",
+            difficulty: "proficient",
+            description: "14 advanced scenario-based questions covering technical design, Dataverse configuration, plug-ins, PCF, integrations, and Power Pages.",
+            data: pl400Questions
+          }
+        ],
+        testCases: PL400_TEST_CASES,
+        categoryFn: function (id) {
+          // pl400-questions.js: IDs 1-100 (scenario-based)
+          if (id >= 1   && id <= 2)   return "Create a Technical Design";
+          if (id >= 3   && id <= 4)   return "Configure Microsoft Dataverse";
+          if (id >= 5   && id <= 6)   return "Create and Configure Power Apps";
+          if (id >= 7   && id <= 8)   return "Configure Business Process Automation";
+          if (id >= 9   && id <= 10)  return "Extend the User Experience";
+          if (id >= 11  && id <= 12)  return "Extend the Platform";
+          if (id >= 13  && id <= 14)  return "Develop Integrations";
+          // pl400-questions2.js: IDs 101-200 (foundational)
+          if (id >= 101 && id <= 105) return "Power Platform Fundamentals";
+          if (id >= 106 && id <= 110) return "Configure Microsoft Dataverse";
+          if (id >= 111 && id <= 115) return "Power Automate";
+          if (id >= 116 && id <= 120) return "Canvas Apps";
+          // Case study questions
+          return "Case Study";
+        }
+      };
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
