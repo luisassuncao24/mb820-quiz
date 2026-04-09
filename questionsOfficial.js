@@ -203,10 +203,11 @@ const questionsOfficial = [
     choices: [
       "SubType",
       "Access",
-      "Description"
+      "Description",
+      "Permissions"
     ],
     correct: [0],
-    explanation: "The SubType property on a codeunit is used to define it as a test codeunit. By setting SubType = Test, the codeunit becomes a test codeunit where you can write test functions using the [Test] attribute. This enables the AL test runner to discover and execute the functions."
+    explanation: "The SubType property on a codeunit is used to define it as a test codeunit. By setting SubType = Test, the codeunit becomes a test codeunit where you can write test functions using the [Test] attribute. This enables the AL test runner to discover and execute the functions. The Access property controls the visibility of the codeunit (Public/Internal) but does not affect its testing capability. Description is a documentation property with no runtime effect. The Permissions property grants object-level permissions to the codeunit but does not make it a test codeunit."
   },
   {
     id: 516,
@@ -241,10 +242,11 @@ const questionsOfficial = [
     choices: [
       "XML",
       "VariableText",
-      "FixedText"
+      "FixedText",
+      "Json"
     ],
     correct: [1],
-    explanation: "VariableText format is used for CSV and other delimiter-separated text formats where field lengths are not fixed. Fields are separated by a delimiter (comma by default). XML produces XML output, and FixedText produces fixed-width (column-aligned) text files."
+    explanation: "VariableText format is used for CSV and other delimiter-separated text formats where field lengths are not fixed. Fields are separated by a configurable delimiter (comma by default). XML produces structured XML output with element tags around each field. FixedText produces fixed-width (column-aligned) text files where each field occupies a set number of characters. Json is not a valid Format property value for AL XMLports — Business Central XMLports do not natively support JSON output through the Format property."
   },
   {
     id: 519,
@@ -280,10 +282,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "Yes",
-      "No"
+      "No",
+      "Only if InherentEntitlements = RI is also added to MyTable",
+      "Partially — it resolves posting but does not grant access to the list page"
     ],
     correct: [0],
-    explanation: "Yes, this meets the goal. InherentPermissions = RI on the MyTable object grants inherent Read (R) and Insert (I) permissions through the code execution context of the app. Read allows users to access the list page, and Insert allows the posting process to insert records into MyTable. No new permission sets are created, and only the minimum required permissions (R and I) are granted, satisfying the principle of least privilege."
+    explanation: "Yes, this meets the goal. InherentPermissions = RI on the MyTable object grants inherent Read (R) and Insert (I) permissions through the code execution context of the app. Read allows users to access the list page, and Insert allows the posting process to insert records into MyTable. No new permission sets are created, and only the minimum required permissions (R and I) are granted, satisfying the principle of least privilege. InherentEntitlements is a separate concept that controls entitlement-based access and is not required here. Setting InherentPermissions = RI on the table object itself grants both Read (for the list page) and Insert (for posting) simultaneously."
   },
   {
     id: 522,
@@ -291,10 +295,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "Yes",
-      "No"
+      "No",
+      "Only if the SUPER permission set is assigned as a temporary permission scoped to MyTable",
+      "Only if SUPER is combined with InherentPermissions = RI on MyTable"
     ],
     correct: [1],
-    explanation: "No, this does not meet the goal. Assigning the SUPER permission set grants all permissions to all objects, which violates the principle of least privilege. The requirement explicitly states that the minimum necessary permissions should be used. Additionally, assigning SUPER is not a targeted solution specific to the MyTable access issue."
+    explanation: "No, this does not meet the goal. Assigning the SUPER permission set grants all permissions to all objects in Business Central, which violates the principle of least privilege. The requirement explicitly states that only the minimum necessary permissions should be granted. Additionally, the requirement says not to create new permission sets — but assigning SUPER is also not a targeted, minimal-privilege solution. The correct approach is to use InherentPermissions on the table object to grant only the specific permissions needed (Read and Insert). SUPER cannot be scoped to a single table, and there is no such concept as a 'temporary' SUPER assignment in standard Business Central."
   },
   {
     id: 523,
@@ -302,10 +308,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "Yes",
-      "No"
+      "No",
+      "Only if the list page for MyTable is also decorated with [InherentPermissions(..., 'R')]",
+      "Partially — it resolves list page access but posting will still fail"
     ],
     correct: [1],
-    explanation: "No, this does not meet the goal. The attribute only grants Read ('R') permission on MyTable to the event subscriber, but Insert permission is also required to post records (insert into MyTable). Without Insert permission, users will still get permission errors when posting sales orders. The correct permission should include at least 'RI' (Read and Insert)."
+    explanation: "No, this does not meet the goal. The attribute only grants Read ('R') permission on MyTable to the event subscriber procedure, but Insert permission ('I') is also required to post records into MyTable. Without Insert permission, users will still get permission errors when posting sales orders. The correct permission should include at least 'RI' (Read and Insert). Option C is wrong because adding Read to the list page separately would be redundant and still would not fix posting. Option D is partially true in concept — posting does fail — but the full answer is 'No', because the solution as stated also fails to resolve the list page insert issue during posting."
   },
   {
     id: 524,
@@ -371,10 +379,11 @@ const questionsOfficial = [
     choices: [
       "Codeunit 'Discount Mgmt.' compiles successfully.",
       "VariantLine in GetLine must be changed to Line and DiscountAmount removed for the codeunit to compile.",
-      "The DiscountIsValid method must be defined in the interface for the code to compile."
+      "The DiscountIsValid method must be defined in the interface for the code to compile.",
+      "The GetDiscount() return type must be changed from Decimal to Integer to match the interface."
     ],
     correct: [0],
-    explanation: "Statement A is true (Yes): The codeunit compiles successfully because it implements all required interface procedures with correct signatures — parameter names do not need to match the interface (only types matter). Statement B is false (No): VariantLine does not need to be renamed to Line; parameter names are not part of the interface contract. Statement C is false (No): Implementing codeunits can have additional procedures not defined in the interface; DiscountIsValid does not need to be in the interface."
+    explanation: "Statement A is true: The codeunit compiles successfully because it implements all required interface procedures with matching signatures — parameter names do not need to match the interface (only the parameter types and order matter). Statement B is false: VariantLine does not need to be renamed to Line; parameter names are not part of the AL interface contract. Statement C is false: Implementing codeunits can have additional procedures not defined in the interface; DiscountIsValid is a valid extra method. Statement D is false: Changing the return type would break the interface contract — the Decimal return type already matches the interface definition, so no change is needed."
   },
   {
     id: 529,
@@ -542,10 +551,11 @@ const questionsOfficial = [
     choices: [
       "A. Normal attribute",
       "B. Handler method",
-      "C. Test attribute"
+      "C. Test attribute",
+      "D. ASSERTERROR statement"
     ],
     correct: [1],
-    explanation: "A Handler method (specifically a StrMenuHandler) is used in test codeunits to simulate user interaction with UI dialogs such as option selection menus. When code calls StrMenu() presenting posting options (Ship, Invoice, Ship & Invoice), the handler method intercepts the dialog and returns the programmatic selection, allowing automated tests to run without manual input."
+    explanation: "A Handler method (specifically a StrMenuHandler decorated with [StrMenuHandler]) is used in test codeunits to simulate user interaction with UI dialogs such as option selection menus. When code calls StrMenu() presenting posting options (Ship, Invoice, Ship & Invoice), the handler method intercepts the dialog and returns the programmatic selection, allowing automated tests to run without manual input. The Normal attribute marks a helper procedure (not a test function) and does not intercept UI. The Test attribute marks a function as an individual test case but does not handle dialogs. ASSERTERROR is used to verify that a specific error is raised during test execution — it does not simulate user UI interactions."
   },
   {
     id: 542,
@@ -610,10 +620,11 @@ const questionsOfficial = [
     choices: [
       "Configure the DataItemTableView property of the Delivery Header data item",
       "Configure the RequestFilterFields property of both data items",
-      "Configure the DataItemLink property of the Delivery Line table"
+      "Configure the DataItemLink property of the Delivery Line table",
+      "Configure the PrintOnlyIfDetail property of the Delivery Header data item"
     ],
     correct: [2],
-    explanation: "Configuring the DataItemLink property on the Delivery Line data item links it to its parent Delivery Header (e.g., linking \"Document No.\" to the Header's \"No.\"). Without this link, Business Central returns all Delivery Line records rather than only those belonging to the current Delivery Header. DataItemTableView sets a static filter or sort order on a data item but does not establish a parent-child link between data items. RequestFilterFields controls which filter fields appear on the report request page for users; it does not fix the data relationship between data items."
+    explanation: "Configuring the DataItemLink property on the Delivery Line data item links it to its parent Delivery Header (e.g., linking the Line's 'Document No.' field to the Header's 'No.' field). Without this link, Business Central returns all Delivery Line records for every Delivery Header iteration, producing far more records than expected. DataItemTableView sets a static filter or sort order on a single data item but does not establish a parent-child join relationship between data items. RequestFilterFields controls which filter fields appear on the report request page for the end user — it does not fix the underlying data relationship. PrintOnlyIfDetail suppresses printing of a parent record when it has no child detail records, but it does not correct the over-reporting of line records caused by a missing data link."
   },
   {
     id: 547,
@@ -634,10 +645,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "A. Yes",
-      "B. No"
+      "B. No",
+      "C. Partially — it removes Insert/Modify but the user retains Delete access",
+      "D. Only if Permission Set C also includes a direct tabledata Job = R entry to override both sets"
     ],
     correct: [0],
-    explanation: "Yes — this solution meets the goal. Permission Set A grants RiMD (Read, insert, Modify, Delete). Permission Set B grants IMD (Insert, Modify, Delete — no Read). By including Permission Set A (which has Read) and excluding Permission Set B (which has IMD but no Read), the resulting Permission Set C retains only the Read (R) permission from A, with the Insert/Modify/Delete permissions being excluded by the ExcludedPermissionSets. The user ends up with only read access to the Job table."
+    explanation: "Yes — this solution meets the goal. Permission Set A grants RiMD (Read, indirect-insert, Modify, Delete). Permission Set B grants IMD (direct Insert, Modify, Delete — no Read). By including Permission Set A (which has Read) and excluding Permission Set B (which supplies IMD), the resulting Permission Set C retains only Read (R) from A, with all Insert/Modify/Delete permissions cancelled by the exclusion. The user ends up with only read access to the Job table. Option C is wrong — ExcludedPermissionSets removes ALL permissions in the excluded set (I, M, D), not just some of them. Option D is wrong — no direct override entry is necessary; the Include/Exclude combination achieves the desired result on its own."
   },
   {
     id: 549,
@@ -645,10 +658,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "A. Yes",
-      "B. No"
+      "B. No",
+      "C. Partially — it removes Insert/Modify/Delete but still grants no Read access",
+      "D. Only if Permission Set C is later assigned the IncludedPermissionSets property pointing to Permission Set A"
     ],
     correct: [1],
-    explanation: "No — this solution does not meet the goal. The ExcludedPermissionSets property only removes permissions that are defined in the excluded set. Permission Set B has IMD (no Read). Excluding B only removes I, M, D permissions. However, without including any permission set (like A), the base set has no permissions at all. If Permission Set C only excludes B without including A, the user may not even have Read access. The solution is incomplete — it does not include Permission Set A to provide the Read permission."
+    explanation: "No — this solution does not meet the goal. The ExcludedPermissionSets property only removes permissions that are already granted by an included set. Without setting IncludedPermissionSets to Permission Set A (or any set that grants Read), the composite Permission Set C has no base permissions to start from — excluding B from nothing still leaves the user with no access. Option C describes the partial truth but the overall answer is 'No' because having no permissions is not the goal. Option D describes an additional step that would make the solution work — but as stated, the solution is incomplete without also including Permission Set A."
   },
   {
     id: 550,
@@ -656,10 +671,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "A. Yes",
-      "B. No"
+      "B. No",
+      "C. Partially — the user receives Read access because Permission Set A's Read is not fully excluded",
+      "D. Only if a direct tabledata Job = R entry is manually added to Permission Set C after excluding A"
     ],
     correct: [1],
-    explanation: "No — this solution does not meet the goal. Including Permission Set B grants IMD (Insert, Modify, Delete — no Read). Excluding Permission Set A would attempt to remove RiMD permissions, but since A is excluded and B is included, the effective permissions would be IMD (the permissions from B). The user would have Insert, Modify, and Delete access but no Read access — the opposite of the requirement for read-only access."
+    explanation: "No — this solution does not meet the goal. Including Permission Set B grants IMD (direct Insert, Modify, Delete — no Read). Excluding Permission Set A attempts to remove RiMD permissions, but since B is the included set and A is excluded, the effective permissions in C are only what B provides: IMD. The user would have Insert, Modify, and Delete access but no Read access — the opposite of the requirement for read-only. Option C is wrong: ExcludedPermissionSets removes all permissions in the excluded set; A's Read is fully excluded, so the user has no Read. Option D describes a workaround that would give Read, but the solution as stated still does not meet the goal as described."
   },
   {
     id: 551,
@@ -695,10 +712,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "A. Yes",
-      "B. No"
+      "B. No",
+      "C. Only if SUPER is assigned alongside InherentPermissions = RI on MyTable",
+      "D. Only for system administrators — regular users would require a different approach"
     ],
     correct: [1],
-    explanation: "No — this solution does not meet the goal. While assigning SUPER would resolve the permission errors, it violates the principle of least privilege, which requires granting only the minimum permissions necessary. SUPER grants all permissions to everything in Business Central. The correct approach is to use the InherentEntitlements or InherentPermissions properties on the table or page objects to automatically grant the necessary permissions to users who have access to the related objects, without requiring explicit permission set assignments."
+    explanation: "No — this solution does not meet the goal. While assigning SUPER would technically resolve the permission errors, it violates the principle of least privilege, which requires granting only the minimum permissions necessary. SUPER grants all permissions to every object in Business Central — far more than the Read and Insert access needed for MyTable. The correct approach is to set the InherentPermissions = RI property on the MyTable table object, which automatically grants Read and Insert permissions through the app's execution context without any explicit permission set assignment. Option C is wrong because SUPER alone already breaks least privilege — combining it with InherentPermissions makes no improvement. Option D is wrong because least privilege applies to all users, not just regular ones."
   },
   {
     id: 554,
@@ -872,10 +891,11 @@ const questionsOfficial = [
     choices: [
       "A. Replace the latest version of the AL Language extension with the needed earlier version.",
       "B. Uninstall the AL Language extension and install the AL Language extension from the Business Central on-premises installation pack.",
-      "C. Change the Runtime property value of the app.json file of the app."
+      "C. Change the Runtime property value of the app.json file of the app.",
+      "D. Use the Business Central Administration Center to downgrade the target environment to the extension's runtime version."
     ],
     correct: [0],
-    explanation: "To compile and deploy an extension for an older version of Business Central, you need to use the AL Language extension that matches that older version. Replacing the AL Language VS Code extension with the version that corresponds to the target older Business Central release allows you to compile against the correct symbols and runtime. Simply changing the Runtime property in app.json is insufficient — you need the matching compiler/AL extension version."
+    explanation: "To compile and deploy an extension for an older version of Business Central, you need to replace your AL Language VS Code extension with the version that corresponds to the target older release. Each version of the AL Language extension provides the correct compiler, symbols, and runtime support for its matching Business Central version. Option B (uninstall and reinstall from the on-premises pack) is not a standard supported workflow — you replace via VS Code's extension manager. Option C (changing the Runtime in app.json) alone is insufficient — even if you set the runtime version, the AL Language extension still compiles against the latest symbols unless the extension itself matches the target version. Option D is wrong — the Business Central Administration Center manages online environments and cannot downgrade an on-premises installation."
   },
   {
     id: 567,
@@ -883,10 +903,12 @@ const questionsOfficial = [
     type: "single",
     choices: [
       "A. Yes",
-      "B. No"
+      "B. No",
+      "C. Partially — it blocks Permission Set A's permissions, leaving the user with no access at all",
+      "D. Only if Permission Set C is also assigned IncludedPermissionSets = Permission Set B to restore partial access"
     ],
     correct: [1],
-    explanation: "No — this solution does not meet the goal. Setting only ExcludedPermissionSets to Permission Set A without including any permission set means the composite Permission Set C has no base permissions to start from. Excluding A (which has RiMD) would attempt to remove those permissions from nothing, leaving the user with no access at all. The solution needs both IncludedPermissionSets (to grant some permissions) and ExcludedPermissionSets (to remove unwanted ones) to achieve read-only access."
+    explanation: "No — this solution does not meet the goal. Setting ExcludedPermissionSets to Permission Set A without including any permission set in IncludedPermissionSets means that Permission Set C has no base permissions to start from. The exclusion attempts to remove the RiMD permissions from A, but since nothing is included first, the effective result is that the user receives no access to the Job table whatsoever. Option C correctly identifies that A's permissions would be blocked, but the final answer remains 'No' — zero permissions is not the goal of read-only access. Option D describes adding Permission Set B (which has IMD, no Read) as the included set, but that would only give Insert/Modify/Delete permissions — not the read-only access required. The correct solution (from question 548) is to include Permission Set A and exclude Permission Set B."
   },
   {
     id: 568,
