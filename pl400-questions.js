@@ -210,7 +210,7 @@ var pl400Questions = [
   {
     id: 1133,
     text: 'A travel company plans to track the address of places their clients visit in an entity named Destination.\n\nClient information is captured as contact records. Client records include links to the places that clients visit.\n\nThe company must be able to link multiple rating records to the new address record.\n\nYou need to expand the Rating entity to include contact, address, and rating information in one place.\n\nWhich three actions should you perform?\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'Create a 1:N relationship between the Contact system entity and the Address system entity named Destination.',
       'Create a mapping for the Contact–Rating relationship.',
@@ -219,7 +219,7 @@ var pl400Questions = [
       'Create a mapping for the Destination–Rating relationship.',
       'Create a 1:N relationship between the Destination entity and the Rating entity.',
     ],
-    correct: [3],
+    correct: [3, 4, 5],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -436,14 +436,14 @@ var pl400Questions = [
   {
     id: 1202,
     text: 'You are configuring a Microsoft Power Virtual Agents chatbot to use the authenticate option for Microsoft Teams only.\n\nYou need to select the variables that return information about the logged-in user.\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'authToken',
       'UserDisplayName',
       'UserID',
       'isLoggedIn',
     ],
-    correct: [1],
+    correct: [1, 2],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -694,14 +694,14 @@ var pl400Questions = [
   {
     id: 1353,
     text: 'You develop code that will perform an update to existing records in a table.\n\nThe update must occur based on the alternate key configured for the table.\n\nYou need to perform the update.\n\nWhich two requests should you use? Each correct answer presents a complete solution.\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'UpdateRequest',
       'UpsertRequest',
       'CreateRequest',
       'RetrieveRequest',
     ],
-    correct: [0],
+    correct: [0, 1],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {

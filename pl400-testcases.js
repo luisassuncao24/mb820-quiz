@@ -102,7 +102,7 @@ var PL400_TEST_CASES = [
           'pac pcf push',
           'pac pcf version --strategy manifest',
         ],
-        correct: [0],
+        correct: [0, 1],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
@@ -339,14 +339,14 @@ var PL400_TEST_CASES = [
       {
         id: 9260,
         text: 'A custom connector is used to call a Web API. The connector must provide visual hints for non-developers.\n\nYou need to implement visual hints in the custom connector.\n\nWhat should you do? Each correct answer presents a complete solution.\n\nOPTIONS:',
-        type: 'single',
+        type: 'multiple',
         choices: [
           'In the custom connector, update the name of the policy template.',
           'Extend the Open API definition of the Web API for the EnvironmentName parameter.',
           'Extend the Open API definition of the Web API for the DataId parameter.',
           'In the custom connector, update the description for the DataId parameter.',
         ],
-        correct: [1],
+        correct: [1, 3],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
@@ -515,7 +515,7 @@ var PL400_TEST_CASES = [
       {
         id: 9250,
         text: 'A PCF control must display senior team members who report to a hiring manager and sort them by time-zone proximity to the applicant.\n\nWhich two inputs should you use? Each correct answer presents part of the solution.\n\nOPTIONS:',
-        type: 'single',
+        type: 'multiple',
         choices: [
           'identifier for the hiring manager',
           'time-zone offset for the job candidate',
@@ -523,7 +523,7 @@ var PL400_TEST_CASES = [
           'time-zone offset for the hiring manager',
           'identifier for the job candidate',
         ],
-        correct: [0],
+        correct: [0, 1],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {

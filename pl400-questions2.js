@@ -393,7 +393,7 @@ var pl400Questions2 = [
   {
     id: 2149,
     text: 'You are developing a new Power Platform app.\n\nThe checker fails with an error due to missing security roles.\n\nYou need to add security roles to the Power Apps Checker application user.\n\nWhich two security roles should you add? Each correct answer presents part of the solution.\n\nOPTIONS:',
-    type: 'multiple',
+    type: 'single',
     choices: [
       'Global Discovery Service Role',
       'Export Customizations',
@@ -401,7 +401,7 @@ var pl400Questions2 = [
       'Solution Checker',
       'Resource Manager',
     ],
-    correct: [1, 3],
+    correct: [1],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {

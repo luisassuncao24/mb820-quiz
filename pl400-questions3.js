@@ -287,7 +287,7 @@ var pl400Questions3 = [
   {
     id: 3147,
     text: 'An organization uses Dynamics 365 Sales. You plan to add a custom button to the app ribbon.\n\nYou need to ensure that the button displays only when conditions specified by business rules are met.\n\nWhich two code segments can you use? Each correct answer presents a complete solution.\n\nOPTIONS:',
-    type: 'multiple',
+    type: 'single',
     choices: [
       '`gridContext.refresh();`',
       '`formContext.ui.refreshRibbon(refreshAll);`',
@@ -295,7 +295,7 @@ var pl400Questions3 = [
       '`formContext.ui.refreshRibbon();`',
       '`formContext.getControl(arg).refresh();`',
     ],
-    correct: [1, 3],
+    correct: [1],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -327,7 +327,7 @@ var pl400Questions3 = [
   {
     id: 3157,
     text: 'You create and deploy a Power Platform solution that includes synchronous plug-ins.\n\nUsers report performance issues with the solution.\n\nYou need to determine whether a plug-in is the cause of the performance issues.\n\nWhich two tools can you use? Each correct answer presents part of the solution.\n\nOPTIONS:',
-    type: 'multiple',
+    type: 'single',
     choices: [
       'Tracing',
       'Data policies',
@@ -335,7 +335,7 @@ var pl400Questions3 = [
       'ISV Studio',
       'Microsoft Dataverse Analytics',
     ],
-    correct: [0, 4],
+    correct: [0],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -485,14 +485,14 @@ var pl400Questions3 = [
   {
     id: 3218,
     text: 'A company is creating a Power Apps portal to collaborate with vendors.\n\nYou need to implement custom functionality in the portal by using JavaScript code.\n\nWhich two portal entities can you use?\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'Web pages',
       'Web resources',
       'Webforms',
       'Entity lists',
     ],
-    correct: [0],
+    correct: [0, 3],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -536,14 +536,14 @@ var pl400Questions3 = [
   {
     id: 3244,
     text: 'A company is creating a Power Apps portal to collaborate with vendors.\n\nYou need to implement custom functionality in the portal by using JavaScript code.\n\nWhich two portal entities can you use? Each correct answer presents a complete solution.\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'Web pages',
       'Web resources',
       'Web roles',
       'Entity lists',
     ],
-    correct: [0],
+    correct: [0, 1],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {

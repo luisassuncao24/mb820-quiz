@@ -312,14 +312,14 @@ var pl400Questions4 = [
   {
     id: 4142,
     text: 'You have the following code:\n\n```javascript\nXrm.WebApi.createRecord("account", data).then(\n  function success(result) {\n    console.log("Success");\n  },\n  function (error) {\n    console.log(error.message);\n  }\n);\n```\n\nYou have a contact record that uses the GUID `991bf2fd-d40c-4752-9984-26b7c0455b69`.\n\nYou need to assign the contact record as the primary contact for an account when you create the account.\n\nWhich two code segments can you use? Each correct answer presents a complete solution.\n\nOPTIONS:',
-    type: 'multiple',
+    type: 'single',
     choices: [
       '`var data = { "name": "Contoso account", "primarycontactid": { "logicalname": "contact", "id": "991bf2fd-d40c-4752-9984-26b7c0455b69" } };`',
       '`var data = { "name": "Contoso account", "primarycontactid@odata.bind": "/contacts(991bf2fd-d40c-4752-9984-26b7c0455b69)" };`',
       '`var data = { "name": "Contoso account", "primarycontactid@odata.context": "/contacts(991bf2fd-d40c-4752-9984-26b7c0455b69)" };`',
       '`var data = { "name": "Contoso account", "primarycontactid": "/contacts(991bf2fd-d40c-4752-9984-26b7c0455b69)" };`',
     ],
-    correct: [0, 3],
+    correct: [0],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -451,20 +451,20 @@ var pl400Questions4 = [
   {
     id: 4211,
     text: 'A client requires that the system send an email from a button on their customer contact form.\n\nYou need to call the action from JavaScript.\n\nWhich two functions achieve this result?\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'Xrm.WebApi.online.executeMultiple()',
       'Xrm.WebApi.online.updateRecord()',
       'Xrm.WebApi.online.createRecord()',
       'Xrm.WebApi.online.execute()',
     ],
-    correct: [2],
+    correct: [2, 3],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
     id: 4212,
     text: 'A company has two development instances, two test instances, two staging instances, and one production instance.\n\nThe test team reports connection issues with the test and staging instances.\n\nYou need to identify which instances the testing team currently has access to.\n\nWhich two URLs can you use?\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'https://globaldisco.crm.dynamics.com/api/discovery/v9.1/instances',
       'https://myorg.api.crm.dynamics.com/api/data/v9.1/',
@@ -472,7 +472,7 @@ var pl400Questions4 = [
       'https://disco.crm.dynamics.com/api/discovery/v9.1/',
       'https://dev.crm.dynamics.com/api/discovery/v9.1/instances(UniqueName=\'myorg\')',
     ],
-    correct: [2],
+    correct: [2, 4],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -643,7 +643,7 @@ var pl400Questions4 = [
       'Attach the debugger to the w3wp.exe process.',
       'Install the plug-in profiler.',
     ],
-    correct: [0],
+    correct: [0, 3, 4],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {

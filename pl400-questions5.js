@@ -556,7 +556,7 @@ var pl400Questions5 = [
       'Fee parameter',
       'Fee reference',
     ],
-    correct: [0],
+    correct: [0, 1, 2],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -570,7 +570,7 @@ var pl400Questions5 = [
       'Create a custom connector that uses the JSON code.',
       'Create an API definition for the Azure Function.',
     ],
-    correct: [1],
+    correct: [1, 4],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -630,7 +630,7 @@ var pl400Questions5 = [
       'Call the List rows action again and use the FetchXML account ID option parameter set to 10,000.',
       'Turn on pagination and set the threshold to 10,000.',
     ],
-    correct: [1],
+    correct: [1, 3],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
@@ -654,7 +654,7 @@ var pl400Questions5 = [
       'Add a send email step after the HTTP step.',
       'Update the HTTP step settings and set the retry policy to: None.',
     ],
-    correct: [0],
+    correct: [0, 2],
     explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
   },
   {
