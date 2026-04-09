@@ -1,131 +1,161 @@
 var PL400_TEST_CASES = [
   {
-    key: 'bellows_sports',
-    label: 'Bellows Sports',
-    description: 'Bellows Sports case study',
-    scenario: 'Bellows Sports case study.',
+    key: 'city_power_and_light',
+    label: 'City Power & Light',
+    description: 'City Power & Light case study',
+    scenario: 'City Power & Light case study.',
     questions: [
       {
-        id: 9378,
-        text: 'Configurar app com envio de emails, mostrar Sponsor field e notificação.',
+        id: 9036,
+        text: 'You need to design the Planning Hub data model.\n\nWhich four actions should you perform in sequence?\n\nAvailable options:\nA. Select the Contact table\nB. Modify a column\nC. Create a column\nD. Enable auditing\nE. Create a custom table\nF. Enable column security\nG. Create column security profile\nH. Start auditing',
         type: 'multiple',
         choices: [
-          'Send required emails → Power Automate flow',
-          'Display the Sponsor field → Business rule',
-          'Display the notification → Onload script'
+          'Select the Contact table',
+          'Modify a column',
+          'Enable column security',
+          'Create column security profile',
         ],
-        correct: [0, 1, 2],
+        correct: [0, 1, 2, 3],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9393,
-        text: 'Resolver rendering issue for buttons e adicionar email button no registration form.',
-        type: 'multiple',
-        choices: [
-          'Resolve rendering issue for New and Save buttons → Add addRibbonDebug=true to the end of the application URL',
-          'Add email button for registration form → Use Ribbon Workbench'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9421,
-        text: 'Select data types for required fields.',
-        type: 'multiple',
-        choices: [
-          'Division → Option Set',
-          'End date → Date Only',
-          'Tournament owner → Lookup'
-        ],
-        correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      }
-    ],
-  },
-  {
-    key: 'adventure_works',
-    label: 'Adventure Works',
-    description: 'Adventure Works case study',
-    scenario: 'Adventure Works case study.',
-    questions: [
-      {
-        id: 9064,
-        text: 'Custom Package entity needs delivery-efficiency calculation and a data type for delivery time with display transformations.',
-        type: 'multiple',
-        choices: [
-          'Calculate the efficiency of the delivery → DIFFINMINUTES(Created On, Delivery Time)',
-          'Select the data type for delivery that has additional transformations applied before display → Duration'
-        ],
-        correct: [0, 1],
-        explanation: 'Duration stores values in minutes but presents them in a user-friendly time format.',
-      },
-      {
-        id: 9065,
-        text: 'Move solutions from development instance to production instance in CDS.',
-        type: 'multiple',
-        choices: [
-          'Make changes in development, export as managed, and import to production',
-          'Clone a patch in development, make changes, export, and import to production'
-        ],
-        correct: [0, 1],
-        explanation: 'Both are valid ALM approaches for managed deployments.',
-      },
-      {
-        id: 9066,
-        text: 'Package a reusable PCF component for deployment into a model-driven app.',
-        type: 'multiple',
-        choices: [
-          'pac solution init --publisher-name <publisher> --publisher-prefix <prefix>',
-          'pac solution add-reference --path <control path>',
-          'msbuild /t:build /restore'
-        ],
-        correct: [0, 1, 2],
-        explanation: 'Initialize a solution project, reference the control, then build the solution package.',
-      },
-      {
-        id: 9067,
-        text: 'In a parent-child model-driven app scenario, new child rows created from the parent form must automatically inherit values from the parent to reduce errors.',
+        id: 9037,
+        text: 'You need to implement the Suitability Assessment Tool.\n\nWhat should you use?',
         type: 'single',
         choices: [
-          'Map table columns from the parent record to the child record'
+          'Power App Component Framework (PCF) control',
+          'view',
+          'component library',
+          'form',
         ],
-        correct: [0],
-        explanation: 'Relationship column mapping is the out-of-box approach for prepopulating child records from a parent.',
-      },
-      {
-        id: 9068,
-        text: 'Register a plug-in so accounts of relationship type Customer receive an account number if one was not provided.',
-        type: 'multiple',
-        choices: [
-          '2. Register New Step with Message → Update, Primary Entity = Account, Event Pipeline Stage = PreOperation',
-          '3. Register New Image, set Image type → PreImage, and include accountnumber as a parameter'
-        ],
-        correct: [0, 1],
-        explanation: 'PreOperation is the right place to set values before commit; a pre-image avoids unnecessary retrievals.',
-      },
-      {
-        id: 9386,
-        text: 'Relacionar tools com requisitos.',
-        type: 'multiple',
-        choices: [
-          'Online sales orders → Logic Apps',
-          'Customer survey → Power Automate'
-        ],
-        correct: [0, 1],
+        correct: [2],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9429,
-        text: 'Select appropriate component for each requirement.',
+        id: 9038,
+        text: 'You need to identify the Azure service to use for the Planning Hub application.\n\nWhat service should you use?',
+        type: 'single',
+        choices: [
+          'Logic App',
+          'Service Bus',
+          'Key Vault',
+          'Function',
+        ],
+        correct: [0],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9104,
+        text: 'You need to deploy the changes and resolve the issue with the Planning Hub application.\n\nSelect the correct option for each requirement.\n\nAvailable options for Solution to deploy:\n- Appointment data\n- Claim submission portal\n- Spreadsheet\n- Suitability Assessment Tool\n\nAvailable options for How to export:\n- Export the unmanaged solution as managed\n- Export the unmanaged solution as unmanaged\n\nAvailable options for Remove the column after the deployment:\n- Publish all customizations\n- Stage for Upgrade\n- Update\n- Upgrade',
         type: 'multiple',
         choices: [
-          'Making list scroll up/down → Flip grid',
-          'Number of store visits → Linear gauge',
-          'Purpose of visit → Option set'
+          'Solution to deploy -> Claim submission portal',
+          'How to export -> Export the unmanaged solution as managed',
+          'Remove the column after the deployment -> Upgrade',
         ],
         correct: [0, 1, 2],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      }
+      },
+      {
+        id: 9105,
+        text: 'You need to resolve the funding application issue.\n\nWhich component should you use?',
+        type: 'single',
+        choices: [
+          'secure config',
+          'unsecure config',
+          'environment variable',
+          'settings',
+        ],
+        correct: [2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9106,
+        text: 'You need to resolve the issues with the appointment data.\n\nUsers report that:\n- the email address of the user who created the appointment is missing\n- searches on the description information do not return any results\n\nThe source page shows the "Quick Find All Appointments" view with interface components around the Table columns area and the Filter by area.\n\nSelect the interface components to change.\n\nSource-indicated answer options selected on the page:\n- Interface component 1 -> the filter icon in the Table columns area\n- Interface component 2 -> Edit filters in the Filter by area',
+        type: 'multiple',
+        choices: [
+          'Interface component 1 -> Filter icon in the Table columns area',
+          'Interface component 2 -> Edit filters in the Filter by area',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9210,
+        text: 'The Planning Hub application must automate submission processing. It needs to retrieve data, send an approval in Microsoft Teams, and record the result of the API upload.\n\nWhich connector should you use for each requirement?\n\nAVAILABLE CONNECTORS:\n- Approvals\n- Dataverse\n- Excel Online for Business\n- Teams',
+        type: 'multiple',
+        choices: [
+          'Retrieve data -> Excel Online for Business',
+          'Approve the submission in Microsoft Teams -> Approvals',
+          'Record the result of the API upload -> Dataverse',
+        ],
+        correct: [0, 1, 2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9308,
+        text: 'City Power & Light has a Suitability Assessment Tool solution. After deploying a change in the development environment, the changes do not appear in that development environment.\n\nYou need to resolve the issue with the eligibility assessment tool.\n\nWhich two commands should you run? Each correct answer presents part of the solution.\n\nOPTIONS:',
+        type: 'multiple',
+        choices: [
+          'pac solution version',
+          'pac solution import',
+          'pac pcf push',
+          'pac pcf version --strategy manifest',
+        ],
+        correct: [0],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9309,
+        text: 'City Power & Light must configure a custom connector for the Claim Submission Portal API. The API uses a header-based API key. You need the basic connector setup steps only.\n\nWhich three actions should you perform in sequence?\n\nOPTIONS:\nAvailable actions:\n- Certify the connector.\n- Enable basic authentication.\n- Share the connector.\n- Enable API key authentication.\n- Import an OpenAPI definition.\n- Create a connector by using the wizard.\n- Enable OAuth 2.0 authentication.\n- Import a Postman collection.',
+        type: 'multiple',
+        choices: [
+          'Create a connector by using the wizard.',
+          'Enable API key authentication.',
+          'Share the connector.',
+        ],
+        correct: [0, 1, 2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9354,
+        text: 'City Power & Light is replacing the Planning Hub spreadsheet and wants to build a new eligibility assessment application. One of the identified issues is that after deploying a change to the new eligibility assessment tool in development, the changes do not appear in the environment. You need to create the eligibility assessment app.\n\nWhich command should you run?\n\nOPTIONS:',
+        type: 'single',
+        choices: [
+          'pac application install',
+          'pac pcf init',
+          'pac plugin init',
+          'pac solution init',
+        ],
+        correct: [1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9355,
+        text: 'You are the lead Microsoft Power Platform developer for a company. Developers cannot work on the same components at the same time. Requirements include automatic push of individual changes into existing environments for testing, a dedicated development environment, and the ability to run but not create deployments directly from Microsoft Power Platform.\n\nWhich four actions should you perform in sequence?\n\nOPTIONS:\n- Assign developers to the Deployment Pipeline User role.\n- Assign developers to the Release Administrator role.\n- Create a Microsoft Power Platform pipeline.\n- Create developer environments.\n- Create a Microsoft Azure DevOps pipeline.\n- Create production environments.\n- Enable managed environments.',
+        type: 'multiple',
+        choices: [
+          'Enable managed environments.',
+          'Create developer environments.',
+          'Create a Microsoft Power Platform pipeline.',
+          'Assign developers to the Deployment Pipeline User role.',
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9356,
+        text: 'You are designing a custom connector for an internal API used by Contoso, LLC. Authentication to the API uses an API key stored in Azure Key Vault, and each environment has its own API key. You need to reference the API key from Key Vault in the custom connector.\n\nWhich four actions should you perform in sequence?\n\nOPTIONS:\n- Use the syntax @environmentVariables("contoso.ApiKey")\n- Use the syntax @environmentVariables("APIKey")\n- Add a role assignment to Key Vault\n- Create an environment variable named APIKey (contoso_APIKey)\n- Create a cloud flow\n- Create a connection reference\n- Remove the current value\n- Create a connection',
+        type: 'multiple',
+        choices: [
+          'Create an environment variable named APIKey (contoso_APIKey)',
+          'Remove the current value',
+          'Create a connection',
+          'Use the syntax @environmentVariables("contoso.ApiKey")',
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
     ],
   },
   {
@@ -135,336 +165,57 @@ var PL400_TEST_CASES = [
     scenario: 'Contoso Pharmaceuticals case study.',
     questions: [
       {
-        id: 9069,
-        text: 'Need to attach a PDF copy of a doctor\'s medical license to each row in a custom Doctors table.',
+        id: 9025,
+        text: 'You need to create an application to deploy to other pharmacies.\n\nWhat should you do?',
         type: 'single',
         choices: [
-          'Navigate to Table options and enable attachments'
+          'Navigate to Customize the System and export everything to a managed solution.',
+          'Create packages for Package Deployer.',
+          'Create customizations with metadata in Organization Services.',
+          'Write a Web API to move customizations.',
         ],
-        correct: [0],
-        explanation: 'Attachments are enabled at table level.',
+        correct: [1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9070,
-        text: 'Configure Package Deployer package that includes custom code and sample data.',
-        type: 'multiple',
+        id: 9026,
+        text: 'You need to create an application that can be deployed to other pharmacies without allowing changes and ensuring it is error free across different environments.\n\nWhat should you do?',
+        type: 'single',
         choices: [
-          'File that you must edit to include custom code → PackageTemplate.cs',
-          'File to edit to include sample data → ImportConfig.xml',
-          'Value for the Copy to Output Directory setting → Copy Always'
+          'Recreate customizations in a new environment.',
+          'Create packages for Package Deployer.',
+          'Create customizations with metadata in Organization Services.',
+          'Clone the solution.',
         ],
-        correct: [0, 1, 2],
-        explanation: 'PackageTemplate.cs hosts custom code. ImportConfig.xml controls sample data/solution content. Copy Always ensures package files are present at build output.',
+        correct: [1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9027,
+        text: 'You need to create an application to deploy to other pharmacies.\n\nWhat should you do?',
+        type: 'single',
+        choices: [
+          'Clone the solution.',
+          'Create packages for Package Deployer.',
+          'Recreate customizations in a new environment.',
+          'Navigate to Customize the System and export everything to a managed solution.',
+        ],
+        correct: [3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
         id: 9091,
-        text: 'Contoso Pharmaceuticals case study. Assign the minimum environmental security role to each user type.',
+        text: 'You need to assign the minimum environmental security role to the appropriate users.\n\nAvailable security roles:\n- System Administrator\n- System Customizer\n- Basic User\n- Environment Maker\n\nUsers:\n- UserA\n- UserB\n- UserC\n- All employees',
         type: 'multiple',
         choices: [
-          'UserA → Environment Maker',
-          'UserB → System Administrator',
-          'UserC → System Customizer',
-          'All employees → Basic User'
-        ],
-        correct: [0, 1, 2, 3],
-        explanation: 'Matches the permissions described: maker, full owner/admin, customizer, and minimal end-user access.',
-      },
-      {
-        id: 9381,
-        text: 'Roles mínimos para customizar system, ver system jobs e ver todos os dados.',
-        type: 'multiple',
-        choices: [
-          'Create customizations in the system → System Customizer only',
-          'View all system job entities → System Administrator only',
-          'View all data stored in system entities → System Administrator only'
-        ],
-        correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9387,
-        text: 'Processos: criar Slack notification, mudar priority field, garantir informação em leads.',
-        type: 'multiple',
-        choices: [
-          'Create a Slack notification from a lead → Power Automate',
-          'Change the priority field → Business rule',
-          'Ensure appropriate information is added to leads → Business process flow'
-        ],
-        correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9415,
-        text: 'Configure the table with the appropriate types.',
-        type: 'multiple',
-        choices: [
-          'Driver’s name field on customer record → Lookup',
-          'Auto-populate Retail data field → Calculated',
-          'Doctor’s name field in Doctor’s entity → Text'
-        ],
-        correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9416,
-        text: 'Map environment management security roles.',
-        type: 'multiple',
-        choices: [
-          'UserA → Environment Maker',
-          'UserB → System Administrator',
-          'User C → System Customizer',
-          'All employees → Common Data Service User'
+          'UserA -> Environment Maker',
+          'UserB -> System Administrator',
+          'UserC -> System Customizer',
+          'All employees -> Basic User',
         ],
         correct: [0, 1, 2, 3],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
-      {
-        id: 9418,
-        text: 'Set up security to meet requirements.',
-        type: 'multiple',
-        choices: [
-          'supervisors → Field level security',
-          'salespeople → Security roles',
-          'developers → Security roles'
-        ],
-        correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9420,
-        text: 'Assign security roles to groups of users.',
-        type: 'multiple',
-        choices: [
-          'Manager → System Administrator',
-          'Sales representative → Basic User'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      }
-    ],
-  },
-  {
-    key: 'northwind_electric_cars',
-    label: 'Northwind Electric Cars',
-    description: 'Northwind Electric Cars case study',
-    scenario: 'Northwind Electric Cars case study.',
-    questions: [
-      {
-        id: 9407,
-        text: 'Implement driving record check functionality.',
-        type: 'multiple',
-        choices: [
-          'Trigger a driving record check → After the address validation field is saved to Dataverse',
-          'Perform a driving record check → Cloud flow'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9409,
-        text: 'Configure address validation API.',
-        type: 'multiple',
-        choices: [
-          'Address validation message → northwind_ValidateAddress',
-          'Execution mode → Synchronous'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9410,
-        text: 'Design functionality to process background check results.',
-        type: 'multiple',
-        choices: [
-          'Select an implementation pattern → Event-based',
-          'Apply stage changes to Dataverse → Update'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9412,
-        text: 'Integrate with address validation API and evaluate statements.',
-        type: 'multiple',
-        choices: [
-          'You must replace ACTIONNAME in line 427 with northwind_ValidateAddress. → Yes',
-          'Calling the address validation API from the submit action eliminates the error reported by users. → Yes'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      }
-    ],
-  },
-  {
-    key: 'proseware',
-    label: 'Proseware',
-    description: 'Proseware case study',
-    scenario: 'Proseware case study.',
-    questions: [
-      {
-        id: 9088,
-        text: 'Proseware recruiting case study. Need to store designations/certifications for candidates and support multiple designations per contact.',
-        type: 'single',
-        choices: [
-          'Create a new table that has an N:N relationship with the Contact table'
-        ],
-        correct: [0],
-        explanation: 'A many-to-many structure supports multiple designations per candidate and reuse of designation records across candidates.',
-      },
-      {
-        id: 9089,
-        text: 'Proseware case study. Need to stop a field used by a PCF control from updating the Dataverse record.',
-        type: 'multiple',
-        choices: [
-          'Make the field read-only',
-          'Call the setSubmitMode(\'never\') function on the field'
-        ],
-        correct: [0, 1],
-        explanation: 'Read-only prevents edits; setSubmitMode(\'never\') stops the field from being submitted on save.',
-      },
-      {
-        id: 9090,
-        text: 'Proseware case study. Need to track referrals independently of completed applications and support multiple referrals per candidate.',
-        type: 'single',
-        choices: [
-          'Create a new Referral table with required lookup columns to the Contact, SystemUser, and JobPosting tables'
-        ],
-        correct: [0],
-        explanation: 'This decouples referrals from application completion and supports multiple referrals per candidate.',
-      },
-      {
-        id: 9141,
-        text: 'Case study: determine whether a FetchXML query meets requirements for counting interviews / recommendations.',
-        type: 'single',
-        choices: [
-          'Yes; Yes; No'
-        ],
-        correct: [0],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9247,
-        text: 'Configure manifest elements for the PCF control used to display local time.',
-        type: 'multiple',
-        choices: [
-          'Property → of-type="DateAndTime.DateAndTime"',
-          'Type-Group → <type>Whole.None</type>'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9248,
-        text: 'Resolve issue with the new command button where the context input parameter is null.',
-        type: 'single',
-        choices: [
-          'Pass the value PrimaryControl to the function in the action definition.'
-        ],
-        correct: [0],
-        explanation: 'Editorial note: this differs from the site’s suggested answer (C). For a ribbon/command button scenario, passing PrimaryControl in the command definition is the stronger technical fit.',
-      },
-      {
-        id: 9249,
-        text: 'Implement ribbon display rules to control availability for the scoring command button.',
-        type: 'multiple',
-        choices: [
-          'Configure button visibility for recruiters → CustomRule',
-          'Configure visibility for the button based on the mode for the form → FormStateRule'
-        ],
-        correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
-      },
-      {
-        id: 9250,
-        text: 'Configure the PCF control to display team members for interview scheduling.',
-        type: 'single',
-        choices: [
-          'Inputs needed are: - identifier for the hiring manager - time-zone offset for the job candidate This allows retrieval of direct reports and ordering by time-zone proximity to the candidate.'
-        ],
-        correct: [0],
-        explanation: 'Inputs needed are: - identifier for the hiring manager - time-zone offset for the job candidate This allows retrieval of direct reports and ordering by time-zone proximity to the candidate.',
-      },
-      {
-        id: 9287,
-        text: 'Case study question from the source material.',
-        type: 'single',
-        choices: [
-          'Manual review recommended.'
-        ],
-        correct: [0],
-        explanation: 'Manual review recommended.',
-      },
-      {
-        id: 9288,
-        text: 'Case study question from the source material.',
-        type: 'single',
-        choices: [
-          'Manual review recommended.'
-        ],
-        correct: [0],
-        explanation: 'Manual review recommended.',
-      },
-      {
-        id: 9289,
-        text: 'Case study question from the source material.',
-        type: 'single',
-        choices: [
-          'Manual review recommended.'
-        ],
-        correct: [0],
-        explanation: 'Manual review recommended.',
-      },
-      {
-        id: 9290,
-        text: 'Case study question from the source material.',
-        type: 'single',
-        choices: [
-          'Manual review recommended.'
-        ],
-        correct: [0],
-        explanation: 'Manual review recommended.',
-      },
-      {
-        id: 9291,
-        text: 'Case study question from the source material.',
-        type: 'single',
-        choices: [
-          'Manual review recommended.'
-        ],
-        correct: [0],
-        explanation: 'Manual review recommended.',
-      },
-      {
-        id: 9298,
-        text: 'Determine the root cause of the issue reported by interviewers not receiving notifications when interview records are created for an existing person of interest.',
-        type: 'single',
-        choices: [
-          'The plug-in used to synchronize the Person of Interest field from Contact to Interview was not triggered.'
-        ],
-        correct: [0],
-        explanation: 'Editorial note: this differs from the site’s suggested answer (B). The practical failure is that synchronization does not run in the creation scenario, so the Interview record does not reflect Person of Interest and downstream notification logic is not reached.',
-      },
-      {
-        id: 9299,
-        text: 'Plug-in code retrieves contact fullname, finds recruiters from active applications, and sends emails.',
-        type: 'single',
-        choices: [
-          '- You can use data from the contact’s name without explicitly retrieving the value from the fullname column. -> No - You can use the same plug-in to send notifications to interviewers. -> Yes - Recruiters only receive a single email notification per applicant. -> No'
-        ],
-        correct: [0],
-        explanation: 'The code explicitly retrieves fullname, can be adapted for other recipients, and may send multiple emails depending on the recruiter/application records returned.',
-      },
-      {
-        id: 9300,
-        text: 'Implement scoring for all individuals and for a specific individual.',
-        type: 'multiple',
-        choices: [
-          'Initiate process for all individuals → Custom process action and plug-in',
-          'Calculate for a specific individual → JavaScript code'
-        ],
-        correct: [0, 1],
-        explanation: 'The global process should run from a reusable server-side/action entry point, while the specific individual calculation is triggered by the form command/button.',
-      }
     ],
   },
   {
@@ -475,213 +226,341 @@ var PL400_TEST_CASES = [
     questions: [
       {
         id: 9092,
-        text: 'Northwind case study. A solution containing a Power Automate flow fails to import because a required component is missing.',
+        text: 'You need to determine which component to add to the solution to resolve the account records import error.\n\nWhich component should you add?',
         type: 'single',
         choices: [
-          'custom connector'
+          'connection',
+          'service endpoint',
+          'custom connector',
+          'Account table',
         ],
-        correct: [0],
-        explanation: 'The flow depends on the custom connector that exposes the external Web API.',
+        correct: [2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9161,
-        text: 'Start of a new case study. Background and requirements were captured, but the first answer was not reliably extracted.',
+        id: 9162,
+        text: 'Northwind Traders exposes a RESTful Web API through an Azure Function and plans to create a custom connector. The requirements emphasize low-code integration, automatic processing, and Power Automate use by researchers.\n\nYou need to choose a technology to access the Web API.\n\nWhich technology should you select?\n\nOPTIONS:',
         type: 'single',
         choices: [
-          'Case study de arranque; primeira resposta não foi extraída com segurança.'
+          'Canvas app that uses the custom connector',
+          'Plug-in that contacts the Web API',
+          'Power Automate flow that uses the custom connector',
+          'Webhook that contacts the Web API',
         ],
-        correct: [0],
-        explanation: 'Case study de arranque; primeira resposta não foi extraída com segurança.',
+        correct: [2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
         id: 9206,
-        text: 'Northwind case study. Configure a Dataverse trigger and action in Power Automate so researchers can update account records with data from the Web API even without edit privileges.',
+        text: 'Researchers must be able to update account records with data from a Web API through Power Automate, even if they do not have edit privileges on the record.\n\nWhat should you configure for each trigger and action requirement?\n\nAVAILABLE VALUES:\nFor \'When a row is added, modified, or deleted trigger with Change Type\':\n- Added\n- Modified\n- Added or Modified\n\nFor \'Update a row connection type\':\n- API key\n- User account\n- Service principal',
         type: 'multiple',
         choices: [
-          'Change Type → Added or Modified',
-          'Update a row connection type → Service principal'
+          'Change Type -> Added or Modified',
+          'Update a row connection type -> Service principal',
         ],
         correct: [0, 1],
-        explanation: 'Validated in chat from user-provided clearer images.',
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9207,
+        text: 'Microsoft Entra ID groups are used to manage environment and team-level permissions. Users encounter access-related issues while testing a model-driven app. Use the principle of least privilege.\n\nWhat should you assign to resolve each issue?\n\nAVAILABLE RESOLUTIONS:\n- Microsoft Power Platform\n- Security role\n- Microsoft Entra ID group\n- Team',
+        type: 'multiple',
+        choices: [
+          'Unable to access a single environment -> Microsoft Entra ID group',
+          'Unable to update Account rows -> Security role',
+          'Unable to access rows owned by the human resources team -> Team',
+          'Unable to create a sandbox environment -> Microsoft Power Platform',
+        ],
+        correct: [0, 1, 2, 3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9208,
+        text: 'A cloud flow uses a List rows action against the Accounts table, which contains more than 15,000 rows. The flow must handle many records and also return data from related contact records.\n\nWhich properties should you configure?\n\nAVAILABLE PROPERTIES:\n- Filter rows\n- Expand query\n- Skip token\n- Select columns',
+        type: 'multiple',
+        choices: [
+          'Manage a large number of records -> Skip token',
+          'Return information from related contact records -> Expand query',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
         id: 9209,
-        text: 'Northwind case study. Implement a reusable solution to encapsulate parameterized Dataverse queries.',
+        text: 'Researchers want a reusable solution that encapsulates a set of parameterized Dataverse queries so those steps can be reused across different Power Automate flows.\n\nWhich three actions should you perform in sequence?\n\nAVAILABLE ACTIONS:\n- Create a real-time workflow that uses a custom workflow activity to perform the Dataverse queries.\n- Run the custom process action by using the Dataverse connector.\n- Create a custom process action that uses a custom workflow activity to perform the Dataverse queries.\n- Create a custom process action that uses a plug-in to perform the Dataverse queries.\n- Run the real-time workflow by using the Dataverse connector.\n- Define the input parameters for the Dataverse queries.',
         type: 'multiple',
         choices: [
-          'Create a custom process action that uses a custom workflow activity to perform the Dataverse queries',
-          'Define the input parameters for the Dataverse queries',
-          'Run the real-time workflow by using the Dataverse connector'
+          'Create a custom process action that uses a custom workflow activity to perform the Dataverse queries.',
+          'Define the input parameters for the Dataverse queries.',
+          'Run the real-time workflow by using the Dataverse connector.',
         ],
         correct: [0, 1, 2],
-        explanation: 'Validated in chat from user-provided clearer images. Note editorial: wording is slightly awkward because the source mixes custom process action and real-time workflow terminology.',
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
         id: 9251,
-        text: 'Configure the row filter on the Dataverse trigger so only records with DataId are processed.',
+        text: 'Only account records that contain a DataId should be updated by the Web API.\n\nYou need to configure the row filter on the Dataverse trigger.\n\nWhich filter should you use?\n\nOPTIONS:',
         type: 'single',
         choices: [
-          'new_dataid ne null'
+          'not contains(new_dataid, "")',
+          'new_dataid eq null',
+          'DataId ne null',
+          'new_dataid ne null',
         ],
-        correct: [0],
-        explanation: 'Matches the column name used in the case study and filters only rows with a non-null DataId.',
+        correct: [3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
         id: 9252,
-        text: 'Ensure data returned from the Web API corresponds to the correct environment.',
+        text: 'The solution must ensure that the data returned from the Web API corresponds to the correct environment without hardcoding environment values.\n\nWhat should you use?\n\nOPTIONS:',
         type: 'single',
         choices: [
-          'environment variables'
+          'system settings',
+          'plug-in secure configurations',
+          'records in a new configuration table',
+          'environment variables',
         ],
-        correct: [0],
-        explanation: 'Environment variables let the connector/solution use environment-specific values without hardcoding.',
+        correct: [3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
         id: 9253,
-        text: 'Configure the custom connector to incorporate the environment name and DataId in the Web API URL.',
+        text: 'You need to configure the custom connector so the Web API URL dynamically includes the environment name and the DataId.\n\nWhich four actions should you perform in sequence?\n\nACTIONS:\n- Set the operation to dataservice.\n- Create a policy template that uses the Route request template.\n- Set the subdomain of the URL template to: dataservice-@connectionParameters(\'EnvironmentName\')\n- Set the path of the URL template path to: enrich/@queryParameters(\'DataId\')\n- Create a policy template that uses the Set host URL template.\n- Set the operation to enrich.',
         type: 'multiple',
         choices: [
           'Create a policy template that uses the Set host URL template.',
           'Set the operation to dataservice.',
           'Set the subdomain of the URL template to: dataservice-@connectionParameters(\'EnvironmentName\')',
-          'Set the path of the URL template path to: enrich/@queryParameters(\'DataId\')'
+          'Set the path of the URL template path to: enrich/@queryParameters(\'DataId\')',
         ],
         correct: [0, 1, 2, 3],
-        explanation: 'This matches the answer-area screenshot provided in chat and the case-study requirement to compose the URL dynamically.',
-      }
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9260,
+        text: 'A custom connector is used to call a Web API. The connector must provide visual hints for non-developers.\n\nYou need to implement visual hints in the custom connector.\n\nWhat should you do? Each correct answer presents a complete solution.\n\nOPTIONS:',
+        type: 'single',
+        choices: [
+          'In the custom connector, update the name of the policy template.',
+          'Extend the Open API definition of the Web API for the EnvironmentName parameter.',
+          'Extend the Open API definition of the Web API for the DataId parameter.',
+          'In the custom connector, update the description for the DataId parameter.',
+        ],
+        correct: [1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9301,
+        text: 'Northwind Traders uses an Azure Function REST API and must expose it through a custom connector in Microsoft Power Platform. You need to configure security for both the Azure Function and the custom connector.\n\nWhich security should you use for each item?\n\nOPTIONS:\n- Azure Function: Anonymous / Function key / Azure Active Directory\n- Custom connector: API Key / OAuth 2.0 / Basic authentication',
+        type: 'multiple',
+        choices: [
+          'Azure Function -> Function key',
+          'Custom connector -> OAuth 2.0',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9302,
+        text: 'Northwind Traders must configure the Web API and then create the custom connector for it. The connector definition must be generated using a low-code technology.\n\nWhich action should you perform for each step?\n\nOPTIONS:\n- Configure the Web API: Import a WSDL file / Add an OpenAPI definition / Import a Postman collection\n- Create the custom connector: Import a solution / Import an OpenAPI file / Import a Postman collection',
+        type: 'multiple',
+        choices: [
+          'Configure the Web API -> Add an OpenAPI definition',
+          'Create the custom connector -> Import a Postman collection',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9303,
+        text: 'You are developing a Power Apps app that interacts with an ERP system. Users create quotes for customers. The solution must display an error if there is no account associated with a quote and prevent changes to the quote, and must synchronize quotes with the external ERP system.\n\nWhich pipeline stages should you use for each requirement?\n\nOPTIONS:\nPipeline stages:\n- MainOperation\n- PostOperation\n- PreOperation\n- PreValidation\n\nRequirements:\n- Display an error message if there is no account associated with a quote and prevent changes to the quote.\n- Synchronize quotes with the external ERP system.',
+        type: 'multiple',
+        choices: [
+          'Display an error message if there is no account associated with a quote and prevent changes to the quote. -> PreValidation',
+          'Synchronize quotes with the external ERP system. -> MainOperation',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9304,
+        text: 'A tester connects to the production instance of the Web API using a DataId that should return data, but receives an error stating that the remote name could not be resolved.\n\nWhat is the most likely cause of the issue?\n\nOPTIONS:',
+        type: 'single',
+        choices: [
+          'The web service lacks data for the record.',
+          'There is an authentication error.',
+          'The request timed out.',
+          'The hostname in the URL is missing a valid value.',
+        ],
+        correct: [3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9346,
+        text: 'Northwind Traders uses Microsoft Dynamics 365 Sales and an Azure Function exposed through a custom connector. A tester gets a "remote name could not be resolved" error against production, and a solution import in test is failing because of a missing component. You need to configure a Power Automate flow to update account records by using the response returned from the Web API.\n\nWhich three actions should you perform in sequence?\n\nOPTIONS:\n- Add an initialize variable step and set the value to the response code from the custom connector.\n- Add a condition step to check if the variable value equals 404.\n- Add a condition step to check if the variable value equals 200.\n- Add a terminate step and set the status to failed.\n- Add a Dataverse update record step to update the Dataverse account record.\n- Add initialize variable step and set the value to the DataId from the Dataverse account record.',
+        type: 'multiple',
+        choices: [
+          'Add an initialize variable step and set the value to the response code from the custom connector.',
+          'Add a condition step to check if the variable value equals 404.',
+          'Add a terminate step and set the status to failed.',
+        ],
+        correct: [0, 1, 2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
     ],
   },
   {
-    key: 'city_power_light',
-    label: 'City Power & Light',
-    description: 'City Power & Light case study',
-    scenario: 'City Power & Light case study.',
+    key: 'proseware',
+    label: 'Proseware',
+    description: 'Proseware case study',
+    scenario: 'Proseware case study.',
     questions: [
       {
-        id: 9036,
-        text: 'City Power & Light case study. Data model design steps for protecting PII on Contact while enabling the required app design.',
+        id: 9088,
+        text: 'You need to store designations and certifications.\n\nWhat should you do?',
+        type: 'single',
+        choices: [
+          'Create a new Lookup column on the Contact table.',
+          'Create a new table that has an N:N relationship with the Contact table.',
+          'Create a new table that has an N:1 relationship with the Contact table.',
+          'Create a new Choices column on the Contact table.',
+        ],
+        correct: [1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9089,
+        text: 'You need to prevent the field used by the PCF control from updating the record.\n\nWhat are two possible ways to achieve the goal? Each correct answer presents a complete solution.',
         type: 'multiple',
         choices: [
-          'Select the Contact table',
-          'Modify a column',
-          'Enable column security',
-          'Create column security profile'
+          'Create a business rule to clear the field value.',
+          'Make the field read-only.',
+          'Call the setSubmitMode(\'never\') function on the field.',
+          'Disable existing event handlers on the field.',
         ],
-        correct: [0, 1, 2, 3],
-        explanation: 'Confirmed from the screenshot you later sent for Q36.',
+        correct: [1, 2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9037,
-        text: 'Planning Hub / Power Platform case study question.',
+        id: 9090,
+        text: 'You need to track referrals.\n\nWhat should you do?',
         type: 'single',
         choices: [
-          'Create application users in the target environment / use the recommended admin configuration shown by the suggested answer'
+          'Add a referral source field to the Application table.',
+          'Create a new Referral table with required lookup columns to the Contact, SystemUser, and Application tables.',
+          'Add a second lookup column to SystemUser for manager referrals to the Application table.',
+          'Create a new Referral table with required lookup columns to the Contact, SystemUser, and JobPosting tables.',
         ],
-        correct: [0],
-        explanation: 'This one should be polished later from the original page, but the answer letter from OCR is C.',
+        correct: [3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9038,
-        text: 'Another City Power & Light case-study item.',
+        id: 9160,
+        text: 'Proseware uses a model-driven recruiting application.\n\nA scoring process identifies applicants who are "persons of interest" based on historical interactions. The design requires:\n- totals and scores to be stored in numeric fields,\n- the least storage-heavy schema choice that still meets the requirement,\n- recalculation when historical data changes.\n\nYou need to configure the columns used to store scores and totals.\n\nWhich configurations should you use? To answer, drag the appropriate configurations to the correct columns.\n\nAVAILABLE CONFIGURATIONS:\n- Whole number - code\n- Whole number - rollup\n- Whole number - calculation\n\nCOLUMNS:\n1. Total Score\n2. Number of designations and certifications',
+        type: 'multiple',
+        choices: [
+          'Total Score -> Whole number - calculation',
+          'Number of designations and certifications -> Whole number - rollup',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9161,
+        text: 'Proseware uses a model-driven recruiting application. Recruiters score candidates and need FetchXML that counts interviews with no recommendation.\n\nYou create the following FetchXML query to determine the number of interviews where there are no recommendations for an applicant.\n\nFor each statement, select Yes or No.\n\nSTATEMENTS:\n1. The query meets the requirements for retrieving the count of interviews without recommendations.\n2. You can modify the query to return counts of interviews with and without recommendations.\n3. The query allows scheduled interviews for job applications when there are no recommendations for the job applicant.',
+        type: 'multiple',
+        choices: [
+          'Yes',
+          'Yes',
+          'No',
+        ],
+        correct: [0, 1, 2],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9247,
+        text: 'A PCF control is used on the Job Application form to display the candidate\'s local time. You need to configure the manifest elements for the control that displays local time.\n\nWhich values should you use?\n\nAVAILABLE VALUES:\nFor Property:\n- of-type="Lookup.Simple"\n- of-type="Whole.TimeZone"\n- of-type="DateAndTime.DateAndTime"\n\nFor Type-Group:\n- <type>Whole.None</type>\n- <type>SingleLine.Text</type>\n- <type>DateAndTime.DateAndTime</type>',
+        type: 'multiple',
+        choices: [
+          'Property -> of-type="DateAndTime.DateAndTime"',
+          'Type-Group -> <type>Whole.None</type>',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9248,
+        text: 'Recruiters report that the scoring command button is not working. You debug the code and observe that the context input parameter is null.\n\nYou need to resolve the issue with the new command button.\n\nWhat should you do?\n\nOPTIONS:',
         type: 'single',
         choices: [
-          'Use the recommended solution indicated by the suggested answer'
+          'Pass ExecutionContext to the function in the action definition.',
+          'Pass the value SelectedControl to the function in the action definition.',
+          'Select the Pass execution context as first parameter option on the event registration form.',
+          'Pass the value PrimaryControl to the function in the action definition.',
+        ],
+        correct: [3],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9249,
+        text: 'The scoring command button must be visible only for recruiters and only when the contact form is in Update mode.\n\nWhich rule types should you use?\n\nAVAILABLE VALUES:\nFor recruiter visibility:\n- CustomRule\n- EntityPrivilegeRule\n- EntityPropertyRule\n\nFor form mode visibility:\n- FormTypeRule\n- FormStateRule\n- FormEntityContextRule',
+        type: 'multiple',
+        choices: [
+          'recruiters visibility -> CustomRule',
+          'form mode visibility -> FormStateRule',
+        ],
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9250,
+        text: 'A PCF control must display senior team members who report to a hiring manager and sort them by time-zone proximity to the applicant.\n\nWhich two inputs should you use? Each correct answer presents part of the solution.\n\nOPTIONS:',
+        type: 'single',
+        choices: [
+          'identifier for the hiring manager',
+          'time-zone offset for the job candidate',
+          'identifier for the job posting',
+          'time-zone offset for the hiring manager',
+          'identifier for the job candidate',
         ],
         correct: [0],
         explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9104,
-        text: 'City Power & Light case study. Need to deploy the correct Planning Hub solution and remove a column after deployment.',
+        id: 9298,
+        text: 'You need to determine the cause for the issue reported by the interviewers.\n\nWhat is the root cause of the issue?\n\nOPTIONS:',
+        type: 'single',
+        choices: [
+          'There was an error in the event pipeline and the entire transaction was rolled back.',
+          'There is no plug-in registered to run when an interview record is created.',
+          'The plug-in used to synchronize the Person of Interest field from Contact to Interview was not triggered.',
+        ],
+        correct: [1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+      },
+      {
+        id: 9299,
+        text: 'You develop the following code for the plug-in that sends email notifications to recruiters:\n- Retrieve the current contact and its fullname.\n- Query active application records for that contact.\n- Read recruiter assignments from those applications.\n- Send an email to each recruiter returned.\n\nFor each statement, select Yes if the statement is true. Otherwise, select No.\n\nSTATEMENTS:\n1. You can use data from the contact\'s name without explicitly retrieving the value from the fullname column.\n2. You can use the same plug-in to send notifications to interviewers.\n3. Recruiters only receive a single email notification per applicant.',
         type: 'multiple',
         choices: [
-          'Solution to deploy → Claim submission portal',
-          'How to export → Export the unmanaged solution as managed',
-          'Remove the column after the deployment → Upgrade'
+          'No',
+          'Yes',
+          'No',
         ],
         correct: [0, 1, 2],
-        explanation: 'Managed export is the right production artifact; component removal is applied through solution upgrade.',
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
       {
-        id: 9105,
-        text: 'City Power & Light case study. Funding application issue loads information incorrectly to the test system after deployment.',
-        type: 'single',
-        choices: [
-          'environment variable'
-        ],
-        correct: [0],
-        explanation: 'Environment variables are the correct way to separate environment-specific configuration like endpoints or keys.',
-      },
-      {
-        id: 9210,
-        text: 'City Power & Light case study. Build automation for the Planning Hub application.',
+        id: 9300,
+        text: 'You need to implement scoring.\n\nWhich methods should you use?\n\nOPTIONS:\nMethods:\n- JavaScript code\n- Power Automate flow\n- Custom process action and plug-in\n\nActions:\n- Initiate process for all individuals.\n- Calculate for a specific individual.',
         type: 'multiple',
         choices: [
-          'Retrieve data → Excel Online for Business',
-          'Approve the submission in Microsoft Teams → Approvals',
-          'Record the result of the API upload → Dataverse'
+          'Initiate process for all individuals. -> Custom process action and plug-in',
+          'Calculate for a specific individual. -> JavaScript code',
         ],
-        correct: [0, 1, 2],
-        explanation: 'Validated in chat from user-provided clearer images.',
+        correct: [0, 1],
+        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
       },
-      {
-        id: 9303,
-        text: 'Questão ligada ao case study do bloco 301-320.',
-        type: 'single',
-        choices: [
-          'Conteúdo visível nas páginas renderizadas, mas sem extração suficientemente limpa para fixar resposta com confiança alta.'
-        ],
-        correct: [0],
-        explanation: 'Conteúdo visível nas páginas renderizadas, mas sem extração suficientemente limpa para fixar resposta com confiança alta.',
-      },
-      {
-        id: 9304,
-        text: 'Questão ligada ao mesmo case study.',
-        type: 'single',
-        choices: [
-          'Necessita confirmação manual no material-source antes de publicação final.'
-        ],
-        correct: [0],
-        explanation: 'Necessita confirmação manual no material-source antes de publicação final.',
-      },
-      {
-        id: 9355,
-        text: 'City Power & Light eligibility assessment issue.',
-        type: 'single',
-        choices: [
-          'The rendered source page marks suggested answer B.'
-        ],
-        correct: [0],
-        explanation: 'The rendered source page marks suggested answer B.',
-      }
     ],
   },
-  {
-    key: 'common_voice',
-    label: 'Common Voice',
-    description: 'Common Voice case study',
-    scenario: 'Common Voice case study.',
-    questions: [
-      {
-        id: 9026,
-        text: 'Common Voice style case study from OCR. Need recommended app type for the described scenario.',
-        type: 'single',
-        choices: [
-          'Canvas application for the Sales function'
-        ],
-        correct: [0],
-        explanation: 'Derived from the OCR suggested answer. Revisit wording when polishing the final publication version.',
-      },
-      {
-        id: 9027,
-        text: 'Same case study sequence; choose the right approach for another requirement.',
-        type: 'single',
-        choices: [
-          'Use a plug-in / customization-based approach as indicated by the suggested answer'
-        ],
-        correct: [0],
-        explanation: 'This item should be normalized in a later cleanup pass because OCR on the options is noisy.',
-      }
-    ],
-  }
 ];
