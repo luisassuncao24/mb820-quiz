@@ -172,9 +172,10 @@ var pl400Questions3 = [
       'Enable field security in the Approval field',
       'Create a new field security profile',
       'Set the field permissions for the new field to enable read, update, and create, and add the sales manager as a member of the field security profile',
+      'Create an access team template and define the access rights for the Opportunity entity',
     ],
     correct: [0, 1, 2],
-    explanation: 'To restrict field access to specific users: 1) Enable field security on the Approval field, 2) Create a field security profile, 3) Set read/update/create permissions and add sales managers as members. Access team templates control record-level sharing, not field-level security. Auditing tracks changes but does not restrict access. Change tracking is for data synchronization.',
+    explanation: 'To restrict field access to specific users: 1) Enable field security on the Approval field to turn on column-level security, 2) Create a field security profile to define who can access secured fields, 3) Set read/update/create permissions and add sales managers as members of the profile. Access team templates (incorrect option) control record-level sharing with other users, not field-level security — they grant access to entire records, not individual columns.',
   },
   {
     id: 3067,
