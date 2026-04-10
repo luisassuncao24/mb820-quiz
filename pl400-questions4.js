@@ -10,7 +10,7 @@ var pl400Questions4 = [
       'an asynchronous plug-in',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'A webhook connected to an Azure Function is the correct choice because Azure Functions can run for extended periods (up to 10 minutes on Consumption plan, longer on Premium), handling the 6-minute processing requirement. Asynchronous workflows and plug-ins have a 2-minute timeout limit in Dataverse, making them unsuitable. Real-time workflows are synchronous and would block the user interface, also with strict time limits. Azure Functions provide the scalability and timeout flexibility needed for complex, long-running integrations.',
   },
   {
     id: 4010,
@@ -24,7 +24,7 @@ var pl400Questions4 = [
       'Portal settings',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Content snippets, Web pages, and Web templates are the three entities in Power Pages (formerly Power Apps portals) that support Liquid code. Liquid is a templating language that allows dynamic content rendering. Page templates define the layout but reference Web templates for actual Liquid processing. Portal settings store configuration values but do not execute Liquid code directly.',
   },
   {
     id: 4011,
@@ -36,7 +36,7 @@ var pl400Questions4 = [
       'Register the skill bot in Power Virtual Agents',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'To incorporate an Azure Bot Framework skill into Power Virtual Agents, you must: (1) Register the skill bot in Azure Active Directory to establish identity and authentication, (2) Create a manifest for the skill bot that describes its capabilities and endpoints, and (3) Register the skill bot in Power Virtual Agents using the manifest. The homework bot does not need separate registration as it is the consumer, not the skill being added.',
   },
   {
     id: 4015,
@@ -48,7 +48,7 @@ var pl400Questions4 = [
       '3 -> Virtual entity',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Custom connectors support integer primary keys and can perform both read and update operations on external data. Virtual entities are the correct choice when data must be available to all Dataverse clients (model-driven apps, canvas apps, Power Automate, etc.) because they integrate external data directly into Dataverse as if it were native data. Virtual entities require GUID-based alternate keys but can map from integer IDs, while custom connectors are limited to specific app contexts.',
   },
   {
     id: 4019,
@@ -60,7 +60,7 @@ var pl400Questions4 = [
       '3 -> Power Automate',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Power Pages is used to embed and deploy the bot on the website. Power Virtual Agents creates Bot Framework skills that define the bot\'s conversational capabilities and topic handling. Power Automate creates the support request automatically through a flow triggered by the bot, enabling automation without human interaction. Power Apps is not needed here as the requirements are specifically about bot deployment and automation.',
   },
   {
     id: 4020,
@@ -73,7 +73,7 @@ var pl400Questions4 = [
       'Set query string parameter',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The "Set host URL" policy template allows you to dynamically set the base URL (including subdomain) when creating a connection. This is ideal for multi-region deployments where the domain remains constant but subdomains differ. "Set HTTP header" adds custom headers but doesn\'t modify the URL. "Route request" redirects requests but doesn\'t allow user input for the URL. "Set query string parameter" modifies parameters, not the host URL itself.',
   },
   {
     id: 4023,
@@ -86,7 +86,7 @@ var pl400Questions4 = [
       'Ask User1 to sign in to the model-driven app.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'When User1 signs into the model-driven app, they will be automatically added to the Azure AD security group team. Azure AD group teams use just-in-time membership synchronization—users appear in the Team Members subgrid only after they access the app for the first time. Changing to Dynamic User membership or creating Owner teams is unnecessary. The membership type change is also not required since the issue is simply that User1 hasn\'t accessed the app yet.',
   },
   {
     id: 4024,
@@ -97,7 +97,7 @@ var pl400Questions4 = [
       '2 -> Configure an out-of-box feature',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Both requirements can be met with out-of-box features. Calculating payments based on financing years can use a calculated field or rollup field without code. The pop-up reminder before saving can be implemented using a Business Rule with the "Show error message" action, which displays validation messages without requiring JavaScript customization. These built-in features should always be preferred over custom code per the requirement to use out-of-box features first.',
   },
   {
     id: 4028,
@@ -110,7 +110,7 @@ var pl400Questions4 = [
       'Add the code to the plug-in to query the data from Dataverse by using the API call based on the record ID.',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Registering a pre-image using the Plug-in Registration Tool and reading from PreEntityImages collection provides access to the record\'s values before the update operation. This is the proper way to compare pre-update and post-update values. InputParameters contains the data being submitted (new values), not the original values. PostEntityImages would only show values after the operation completes. Querying Dataverse directly would work but is inefficient and adds unnecessary database calls when images are designed for this exact purpose.',
   },
   {
     id: 4034,
@@ -123,7 +123,7 @@ var pl400Questions4 = [
       'Custom Processing Step to None',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Setting "Custom Processing Step Type" to "None" prevents anyone from adding plug-in steps to the Custom API, ensuring the business logic cannot be modified or canceled by custom code. "Execute Privilege Name" controls who can call the API, not customization. "Enabled for Workflow" controls availability in workflows. "Binding Type" determines how the API is associated with entities. Only the Custom Processing Step Type setting prevents modification of the API\'s behavior.',
   },
   {
     id: 4040,
@@ -136,7 +136,7 @@ var pl400Questions4 = [
       'condition',
     ],
     correct: [1, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The link-entity element is required to join to a related table, and the condition element filters the data from that related table. The attribute element specifies which columns to return but doesn\'t filter data. The alias element provides alternative names for columns but doesn\'t perform joins or filtering. FetchXML requires link-entity for relationships and condition for applying filters to return filtered data from related tables.',
   },
   {
     id: 4041,
@@ -149,7 +149,7 @@ var pl400Questions4 = [
       'Ensure security role privileges are set to User level.',
     ],
     correct: [1, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The solution involves creating a security role for BusA users in the parent business unit with Business Unit level privileges (ensures they only see their own BU records), and ensuring privileges are set to User level (most restrictive, seeing only owned records). Turning off cross-business unit record ownership doesn\'t address the role assignment issue. Moving users and using Parent:Child privileges would expand access rather than restrict it. The issue is that BusA users have roles from BusB and BusC, which must be removed or properly scoped.',
   },
   {
     id: 4054,
@@ -162,7 +162,7 @@ var pl400Questions4 = [
       'Build the package',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The correct sequence for deploying solutions with Package Deployer is: (1) Create a Dynamics 365 Package project in Visual Studio to establish the project structure, (2) Add solution and data files to the PkgFolder, (3) Define the solution and data files in ImportConfig.xml to specify import order and settings, (4) Build the package. The Package Deployer tool and Solution Packager are used after building, not during the preparation phase described in this question.',
   },
   {
     id: 4060,
@@ -174,7 +174,7 @@ var pl400Questions4 = [
       'Sales representatives and new hires in the same territory share access to sales records -> Record-level security',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Role-based security (security roles with Business Unit scope) allows sales managers to view records within their business unit. Field-level security profiles restrict specific field access (like sales probability) to designated users regardless of record access. Record-level security (sharing or teams) enables users in the same territory to share access to specific records. Each security layer serves a different purpose: roles control table access, field security controls column visibility, and record-level controls individual record sharing.',
   },
   {
     id: 4065,
@@ -187,7 +187,7 @@ var pl400Questions4 = [
       'In the production instance, import solutions with the same version number or higher when updating solutions.',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Exporting solutions as managed and importing them is the standard ALM practice for moving to production. Clone a Patch creates an incremental solution containing only changes, useful for smaller updates. Exporting all managed solutions doesn\'t work because development environments typically contain unmanaged solutions. Importing with the same or higher version number is a requirement for updates but doesn\'t describe how to move solutions—it\'s about version compatibility during import.',
   },
   {
     id: 4068,
@@ -199,7 +199,7 @@ var pl400Questions4 = [
       'Register New Image (PreImage including accountnumber)',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The correct sequence is: (1) Register New Assembly to deploy the plug-in DLL to Dataverse, (2) Register New Step with Update message on Account entity in PreOperation stage to intercept updates before they\'re committed, (3) Register PreImage including accountnumber to access the current value before the update occurs. PreOperation allows modifying values before database commit. A PreImage provides access to existing field values to check if accountnumber was provided by the user.',
   },
   {
     id: 4073,
@@ -210,7 +210,7 @@ var pl400Questions4 = [
       'Error on the web resource code -> The code uses the following rule: web-use-strict-mode',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Solution checker reports errors for one solution because that solution contains a canvas app with errors—solution checker validates canvas apps. The JavaScript code violation is web-use-strict-mode because the code uses "==" instead of "===" for comparison (if (acctnumber == "abc")), which violates strict mode comparison rules. web-avoid-eval relates to eval() usage, web-remove-debug-script relates to debug statements, and web-avoid-modals relates to alert/confirm dialogs.',
   },
   {
     id: 4074,
@@ -223,7 +223,7 @@ var pl400Questions4 = [
       'Create a plug-in that uses the CalculateRollupFieldRequest method for the rollup field and trigger it on Create of the policy entity.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Creating a plug-in that uses CalculateRollupFieldRequest and triggering it on the Create event of the policy entity ensures immediate rollup recalculation. Rollup fields normally recalculate hourly via system jobs. Creating new fields with workflows or calculated fields doesn\'t leverage the existing rollup field infrastructure. Changing the system job frequency to 5 minutes would improve timeliness but still isn\'t immediate. The CalculateRollupFieldRequest method forces immediate recalculation of a specific rollup field.',
   },
   {
     id: 4079,
@@ -235,7 +235,7 @@ var pl400Questions4 = [
       'Power Automate flows which have been saved after the update -> Production',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Canvas app sessions that were already open during the update continue using the Development URL because environment variable values are cached at session start. New canvas app sessions launched after the update get the Production URL because they read the current environment variable value. Power Automate flows that have been saved after the update use the Production URL because flows resolve environment variables when saved or when the flow definition is loaded.',
   },
   {
     id: 4084,
@@ -247,7 +247,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (No): The Retrieve method requires a GUID for the record ID, but accountId is passed as a string parameter without conversion to GUID. Statement 2 (No): The plug-in triggered on numberofemployees update will NOT execute because the code only updates customersizecode—the numberofemployees field is read but not modified. Statement 3 (No): GetAttributeValue<int> returns 0 (default) for null integer values, not an exception, so the comparison >100 will evaluate to false safely.',
   },
   {
     id: 4085,
@@ -257,9 +257,10 @@ var pl400Questions4 = [
       'odata.nextLink',
       'odata.context',
       'odata.deltaLink',
+      'odata.maxpagesize',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The odata.deltaLink is returned in responses when you use change tracking (Prefer: odata.track-changes header) to retrieve only changed records. odata.nextLink is used for pagination to get the next page of results. odata.context provides metadata about the response structure. odata.maxpagesize controls how many records are returned per page. For retrieving changes/delta data from a table, you need the deltaLink from a previous response.',
   },
   {
     id: 4101,
@@ -270,7 +271,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Publishing to AppSource makes the connector publicly available to all Microsoft customers, not just users in the tenant. For a single-tenant app that must be visible only to tenant users, you should export the connector as part of a solution and import it into the production environment. AppSource is for ISVs distributing connectors broadly, which violates the requirement for tenant-only visibility.',
   },
   {
     id: 4103,
@@ -281,7 +282,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Postman is used for API testing and can import/export API definitions, but it cannot deploy custom connectors to Power Platform environments. Custom connectors must be exported as part of a solution from the source environment and imported into the target environment, or recreated using the connector definition. Postman has no integration with Power Platform for connector deployment.',
   },
   {
     id: 4121,
@@ -294,7 +295,7 @@ var pl400Questions4 = [
       'Set Allow Customizations to No.',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Setting "Is Private" to Yes prevents the Custom API from appearing in code generation tools like CrmSvcUtil and early-bound class generators. This hides the API from external discovery while still allowing it to function. "Is Function" determines if it\'s a function vs action (GET vs POST). "Allowed Custom Processing Step Type" controls plug-in extensibility. "Allow Customizations" isn\'t a Custom API property that affects code generation visibility.',
   },
   {
     id: 4132,
@@ -307,7 +308,7 @@ var pl400Questions4 = [
       'Add all users in the department to the TestSG security group.',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The scenarios map to: (1) Test environment access requires both the security group (TestSG) to limit environment access AND the app security role for app functionality. (2) Only the manager can access production by assigning them the app security role (production isn\'t restricted by TestSG). (3) Test users access production app by being assigned the app security role. (4) Purchasing users access test environment by being added to TestSG. Environment security groups control who can access the environment; security roles control what they can do.',
   },
   {
     id: 4142,
@@ -320,7 +321,7 @@ var pl400Questions4 = [
       '`var data = { "name": "Contoso account", "primarycontactid": "/contacts(991bf2fd-d40c-4752-9984-26b7c0455b69)" };`',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The correct syntax to set a lookup field when creating a record uses either the object format with logicalname and id properties, or the @odata.bind annotation with the entity set path. Option A uses the object format correctly. Option B\'s @odata.bind syntax is also valid but wasn\'t selected as the primary answer. @odata.context is for metadata, not binding. Simply assigning a path string without @odata.bind doesn\'t work for lookup associations.',
   },
   {
     id: 4143,
@@ -332,7 +333,7 @@ var pl400Questions4 = [
       'Enable Rule',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Display Rules control whether a button appears (visibility) based on conditions like record state or user privileges. Making the button appear for existing records and when the user has Write privilege both use Display Rules. Enable Rules control whether a visible button is clickable/usable. Preventing use in Bulk Edit mode uses an Enable Rule because the button may still be visible but should be disabled in that context. Actions define what happens when clicked, not visibility/availability.',
   },
   {
     id: 4158,
@@ -347,7 +348,7 @@ var pl400Questions4 = [
       'Import the solution into the system and publish.',
     ],
     correct: [0, 1, 2, 3, 4, 5],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The sequence is: (1) Add a control to the Lead form using form designer, (2) Export the business process flow and Lead form as separate solutions, (3) Copy the control description FormulaID from the Lead form\'s exported solution, (4) Paste the FormulaID into the business process flow\'s Solution.xml at the correct stage, (5) Import the solution and publish. Custom controls on BPF stages require manual XML editing because the form designer doesn\'t directly support adding custom controls to BPF stages.',
   },
   {
     id: 4169,
@@ -360,7 +361,7 @@ var pl400Questions4 = [
       'Azure Databricks',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Azure Functions can run for extended periods (up to 10 minutes on Consumption plan, unlimited on Premium/Dedicated plans), solving the 5-minute timeout issue. Azure Event Hub is for high-volume event streaming, not computation. Azure Data Factory is for data integration/ETL pipelines, not real-time calculations. Azure Databricks is for big data analytics, which is overkill for this scenario. Functions provide serverless compute that can handle complex calculations without the time constraints of Dataverse plug-ins.',
   },
   {
     id: 4170,
@@ -372,7 +373,7 @@ var pl400Questions4 = [
       'Have the user reproduce the issue.',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The correct sequence for using Monitor to troubleshoot another user\'s issue is: (1) Create a new Monitor session for the app to establish the monitoring connection, (2) Use the Invite option to select and invite the user to be monitored (this generates a link for them), (3) Have the user reproduce the issue while being monitored. "Connect user" option is for connecting to your own sessions. Having the user create their own session wouldn\'t allow you to see their diagnostics.',
   },
   {
     id: 4171,
@@ -383,7 +384,7 @@ var pl400Questions4 = [
       'Unexpected form save behavior -> &flags=DisableFormHandlers=true',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The &ribbondebug=true parameter displays detailed information about command bar buttons, including why rules evaluate to show/hide or enable/disable buttons—perfect for debugging visibility issues. The &flags=DisableFormHandlers=true parameter disables all JavaScript event handlers (OnLoad, OnSave, OnChange), allowing you to test if the unexpected save behavior is caused by custom JavaScript. &navbar and &extraqs control navigation and query strings, not debugging.',
   },
   {
     id: 4186,
@@ -396,7 +397,7 @@ var pl400Questions4 = [
       'Share the environment by giving permissions to the users.',
     ],
     correct: [1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'For a Power Automate flow using a custom connector to work for other users, you must share both the custom connector AND the flow with those users. Sharing the custom connector allows users to create connections to the proprietary database. Sharing the flow allows users to run it. Sharing a view or environment permissions doesn\'t grant access to custom connectors or flows. Users need explicit sharing of both components to use the flow successfully.',
   },
   {
     id: 4193,
@@ -409,7 +410,7 @@ var pl400Questions4 = [
       'Import customizations into the Microsoft Dataverse environment.',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The sequence for adding custom controls to a BPF stage is: (1) Configure custom controls on a related table form first (the BPF references forms), (2) Generate and export the business process flow form to get the FormXML, (3) Copy the custom control configurations from the table form XML, (4) Import customizations back into Dataverse. Creating FormXML directly or modifying default solution columns doesn\'t address the BPF control configuration requirement.',
   },
   {
     id: 4199,
@@ -422,7 +423,7 @@ var pl400Questions4 = [
       'Open the business process flow and associate the flow with the user security roles by using the Edit security button on the command bar.',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'In the app designer, you must explicitly add the business process flow to the app for it to appear to users. Even with proper security role permissions (Create, Read, Write on the BPF), the BPF won\'t display if it\'s not included in the app definition. The Run Flows privilege is for Power Automate cloud flows, not BPFs. Organization Read on Process table provides visibility to process definitions but doesn\'t add them to apps. Edit security on the BPF controls permissions, not app inclusion.',
   },
   {
     id: 4200,
@@ -435,7 +436,7 @@ var pl400Questions4 = [
       'Create new fields on the customer entity for insurance exposure and risk. Write a plug-in that is triggered whenever a new policy is created.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Creating a plug-in triggered on policy creation that writes directly to new fields for insurance exposure and risk is the immediate solution. Rollup fields calculate asynchronously on a schedule, so they won\'t update immediately. Calculated fields compute in real-time but aggregate from related records using rollup mechanics. Changing the system job frequency to 5 minutes improves timeliness but still isn\'t immediate. A plug-in provides synchronous, immediate calculation when a policy is created.',
   },
   {
     id: 4203,
@@ -446,7 +447,7 @@ var pl400Questions4 = [
       'Opportunity over one million dollars -> Business rules',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Power Automate cloud flow is required for sending emails because it can integrate with email connectors and trigger on record changes, meeting the $50,000 requirement with minimal code. Business rules can show/hide fields based on conditions without code, perfect for displaying the Sponsor field when value exceeds $1M. JavaScript and Power Virtual Agent would work but require more code than the low-code alternatives. The requirement specifically states to minimize code.',
   },
   {
     id: 4211,
@@ -459,7 +460,7 @@ var pl400Questions4 = [
       'Xrm.WebApi.online.execute()',
     ],
     correct: [2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'To call an action (like sending email) from JavaScript, use Xrm.WebApi.online.execute() for a single action request or createRecord() if you\'re creating an email activity record. execute() is designed for calling actions and functions. executeMultiple() is for batch operations, not single action calls. updateRecord() modifies existing records and can\'t invoke actions. The SendEmail action can be called via execute() or you can create an email record with createRecord() and set the status to send.',
   },
   {
     id: 4212,
@@ -473,7 +474,7 @@ var pl400Questions4 = [
       'https://dev.crm.dynamics.com/api/discovery/v9.1/instances(UniqueName=\'myorg\')',
     ],
     correct: [2, 4],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The regional discovery service URLs (dev.crm.dynamics.com for North America) with /api/discovery/v9.1/instances can list all instances the user has access to. The UniqueName parameter filters to a specific organization. The global discovery URL (globaldisco.crm.dynamics.com) is for multi-region discovery but requires different authentication. Organization-specific URLs like myorg.api.crm.dynamics.com access data, not instance listings. disco.crm.dynamics.com is deprecated.',
   },
   {
     id: 4220,
@@ -486,7 +487,7 @@ var pl400Questions4 = [
       'Kerberos authentication',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Microsoft Authentication Library (MSAL) is the recommended library for OAuth 2.0 authentication with Azure AD/Microsoft Entra ID for single-page web applications connecting to Dataverse. WCF is for SOAP-based services, not OAuth. CORS is a browser security feature that allows cross-origin requests but doesn\'t handle authentication. Kerberos is for Windows domain authentication, not web-based OAuth flows. MSAL handles token acquisition, caching, and refresh for modern web apps.',
   },
   {
     id: 4226,
@@ -499,7 +500,7 @@ var pl400Questions4 = [
       'Edit IISU.Config to export the ribbon definitions.',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Ribbon Workbench is the tool for adding custom buttons to model-driven app forms and command bars that execute JavaScript functions. Editing the SiteMap controls navigation structure, not form buttons. Editing form XML directly doesn\'t add command bar buttons (those are in RibbonDiffXml). IIS.Config is for web server configuration and has nothing to do with Dynamics 365/Power Platform ribbon customizations.',
   },
   {
     id: 4228,
@@ -510,7 +511,7 @@ var pl400Questions4 = [
       'Segment 2 -> Adds an event handler to enable a function named TestFunction to run when a business process flow stage changes.',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Segment 1 uses setVisible(false) on a form control which hides only the control in the body of the form—BPF controls are separate from form body controls. Segment 2 uses formContext.data.process.addOnStageChange(TestFunction) which adds an event handler that fires when the BPF stage changes (user advances or moves back). addOnStageSelected fires on stage click, addOnProcessStatusChange fires on process status change (active/finished).',
   },
   {
     id: 4237,
@@ -522,7 +523,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (Yes): When primarycontactid is populated, the code retrieves the contact and updates its telephone1 to match the account\'s phone. Statement 2 (No): When primarycontactid is not populated, contact[0] will be undefined causing an error, but it won\'t show "Not updated"—it will throw a JavaScript error before reaching the update. Statement 3 (No): If telephone1 is removed (becomes null), the code returns early due to the null check at the beginning, so no update occurs.',
   },
   {
     id: 4239,
@@ -535,7 +536,7 @@ var pl400Questions4 = [
       'odata.nextLink',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'For retrieving changes from a Dataverse table (change tracking/delta queries), you must use the "Prefer: odata.track-changes" header in your initial request. The response will include an odata.deltaLink that you use in subsequent requests to get only changed records. odata.context provides metadata. odata.nextLink is for pagination. odata.deltaLink is returned in the response, not sent in the request header.',
   },
   {
     id: 4245,
@@ -547,7 +548,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (No): The code returns early when parentcustomerid is null, so telephone1 on the form is not explicitly set to null—it remains unchanged. Statement 2 (No): The code incorrectly uses parent[0].name as the entity name in retrieveRecord, but .name contains the display name, not the logical name (account/contact)—this will fail. Statement 3 (No): If the retrieved record\'s telephone1 is null, the code sets the form\'s telephone1 to null, but the statement asks about a different scenario.',
   },
   {
     id: 4246,
@@ -559,7 +560,7 @@ var pl400Questions4 = [
       'tab action -> setVisible(false)',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'To check if a field has no value, compare the getValue() result to null. The getValue() function returns the field\'s current value, while getVisible() returns visibility state, getObject() isn\'t a standard method, and getName() returns the field name. To hide the tab when no class type is selected, use setVisible(false) on the tab. setDisabled controls editability, not visibility.',
   },
   {
     id: 4258,
@@ -571,7 +572,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (Yes): preventDefault() cancels the normal save operation—the form won\'t save until formContext.data.save() is explicitly called. Statement 2 (No): The code checks isOnHold (not credithold directly) and only shows the confirm dialog if true, but the async retrieval may not complete before evaluation. Statement 3 (No): When credithold is false, the record won\'t save because preventDefault() already canceled the save and there\'s no explicit save() call in the false path.',
   },
   {
     id: 4259,
@@ -584,7 +585,7 @@ var pl400Questions4 = [
       'Set the is Private property of the custom API to False.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Setting "Is Private" to False makes the Custom API visible in $metadata and accessible via code generation tools. When Is Private is True (the default for solution-aware APIs), the API is hidden from metadata endpoints and won\'t appear in generated code classes. Adding request/response properties doesn\'t affect visibility. Enabling for Workflow controls Power Automate availability, not metadata visibility.',
   },
   {
     id: 4261,
@@ -595,7 +596,7 @@ var pl400Questions4 = [
       'Header = Prefer: return=representation',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'PATCH is the HTTP method for updating existing records in Dataverse Web API. GET retrieves data, POST creates new records. The "Prefer: return=representation" header tells the API to return the updated record in the response body, which is useful when you need the resulting data after the update. If-None-Match headers are for conditional requests and MSCRM.SuppressDuplicateDetection is for create operations.',
   },
   {
     id: 4265,
@@ -608,7 +609,7 @@ var pl400Questions4 = [
       'Format and update the correct column.',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The sequence for handling OnChange events is: (1) Get the execution context passed to the function (required to access form data), (2) Use getEventSource() method to identify which column triggered the OnChange event (returns the attribute object), (3) Format and update the correct column based on the event source. getEventArgs() provides event arguments, not the source column. Global context provides organization/user info, not event-specific data.',
   },
   {
     id: 4268,
@@ -619,7 +620,7 @@ var pl400Questions4 = [
       'Upsert only to create new records = If-None-Match: *',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'For standard upsert (create or update), omit conditional headers or use If-None-Match: null, which allows the operation to succeed whether the record exists or not. If-None-Match: * tells the API to only succeed if the record does NOT exist, making it a create-only upsert that fails if the record already exists. If-Match: * does the opposite—update only if the record exists.',
   },
   {
     id: 4270,
@@ -630,7 +631,7 @@ var pl400Questions4 = [
       'Japan = 0 0 19 * * 0-4',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Azure Functions use UTC time internally. For US (UTC-7) to run at 4:00 AM local, convert to UTC: 4 AM + 7 hours = 11:00 UTC, so "0 0 11 * * 1-5" (weekdays Mon-Fri). For Japan (UTC+9) to run at 4:00 AM local, convert to UTC: 4 AM - 9 hours = 19:00 UTC the previous day. Since Japan is ahead, weekdays become 0-4 (Sun-Thu in UTC) to cover Mon-Fri locally. Format: seconds minutes hours day month day-of-week.',
   },
   {
     id: 4283,
@@ -644,7 +645,7 @@ var pl400Questions4 = [
       'Install the plug-in profiler.',
     ],
     correct: [0, 3, 4],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'To debug a Dataverse plug-in: (1) Install the plug-in profiler through the Plug-in Registration Tool, (2) Highlight the plug-in step and select Debug to prepare for profiling, (3) Attach Visual Studio debugger to the w3wp.exe process (IIS worker process). Then trigger the plug-in, capture the profile, and replay it locally. Copying .pdb files to server isn\'t needed for cloud debugging. Start Profiling and installing the profiler are similar steps in the process.',
   },
   {
     id: 4292,
@@ -655,7 +656,7 @@ var pl400Questions4 = [
       'Update a column for an existing row. -> PATCH',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'POST is the HTTP method for creating new resources, including creating columns (metadata) in Dataverse tables. PATCH is for updating existing resources, including updating specific column values on existing rows. GET retrieves data without modifying it. ACCEPT is not an HTTP method—it\'s a header that specifies expected response format.',
   },
   {
     id: 4293,
@@ -667,7 +668,7 @@ var pl400Questions4 = [
       'Yes',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (No): Using ColumnSet(true) retrieves ALL columns which hurts performance; retrieving only needed columns (lastname, custom_field1) is better. Statement 2 (Yes): Plug-in images capture the entity state at step registration time, eliminating the need to call Retrieve separately. Statement 3 (Yes): Registering in pre-operation allows direct modification of the Target entity in InputParameters, which gets committed with the transaction—no separate Update call needed.',
   },
   {
     id: 4318,
@@ -678,7 +679,7 @@ var pl400Questions4 = [
       'Record ID to update -> From the trigger',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The "Manually trigger a flow" trigger (also called instant flow from model-driven app) allows users to initiate the flow from a record and prompts for input (the credit increase amount). The record ID comes directly from the trigger since the flow is initiated from a specific customer record. Using "When a Dataverse record is selected" is similar but doesn\'t allow input prompts. A variable or List rows step would add unnecessary steps.',
   },
   {
     id: 4319,
@@ -691,7 +692,7 @@ var pl400Questions4 = [
       'Ensure all users have the Act on Behalf of Another User permission assigned to one of their security roles.',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Initiating IOrganizationService by passing a specific user\'s ID runs the plug-in in that user\'s context, allowing operations the calling user might not have permission for. This follows least privilege because only the service account needs the elevated permissions, not all users. Granting Environment Maker or Act on Behalf of Another User to all users would give excessive permissions. Setting "Run in User\'s Context" to Calling User would fail for users without create permissions.',
   },
   {
     id: 4322,
@@ -702,7 +703,7 @@ var pl400Questions4 = [
       'OnSave -> B. OnChange events for the columns involved in the calculations',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'For OnLoad optimization: Use TabStateChange events on tabs B and C (not A since it\'s default/visible) to load data only when users expand those tabs, reducing initial load time. For OnSave optimization: Move calculations to OnChange events on relevant columns so values are calculated incrementally as users make changes, rather than all at once during save. This distributes the work and allows immediate validation feedback.',
   },
   {
     id: 4324,
@@ -714,7 +715,7 @@ var pl400Questions4 = [
       'Azure Service Bus',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Webhooks provide synchronous HTTP calls to third-party Web APIs for immediate responses. Azure Event Hub handles high-throughput scenarios with millions of events and peak loads, ideal for the Azure-hosted website. Azure Service Bus provides reliable messaging to multiple subscribers (on-premises and cloud) with features like queues and topics for notifying multiple systems of address changes. Without VPNs, Service Bus relay or hybrid connections enable on-premises communication.',
   },
   {
     id: 4326,
@@ -725,7 +726,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Yes, this solution meets the requirements. Azure Service Bus queue provides message persistence, so if the Azure Function or other system is unavailable, messages are retained until processed—preventing data loss. The async post-operation plug-in sends data after record creation. The Azure Function processes messages from the queue to update the external system. This architecture provides loose coupling and fault tolerance.',
   },
   {
     id: 4331,
@@ -736,7 +737,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Yes, this solution meets all requirements. The Service Bus queue provides durable message storage for availability gaps beyond a few seconds. The async post-operation registration ensures data is only sent after successful record creation. The Azure Function processes queue messages to update the external system. This is the same scenario as 4326, confirming the pattern for reliable one-way Dataverse integration.',
   },
   {
     id: 4340,
@@ -748,7 +749,7 @@ var pl400Questions4 = [
       'Deploy -> pac pcf push --publisher-prefix',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The PAC CLI workflow for PCF components: (1) "pac solution init" packages the component into a solution with publisher info, (2) "pac auth create" establishes authenticated connection to the target environment, (3) "pac pcf push" deploys the component directly to the connected environment. pac solution add-reference adds component references to an existing solution but isn\'t needed for direct deployment with pcf push.',
   },
   {
     id: 4342,
@@ -758,9 +759,10 @@ var pl400Questions4 = [
       'Prefer: odata.track-changes',
       'Prefer: odata.allow-entityreferences',
       'Prefer: odata.include-annotations',
+      'Prefer: odata.maxpagesize=50',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The "Prefer: odata.track-changes" header enables change tracking (delta queries) so subsequent requests return only data that changed since the last sync. This prevents re-synchronizing unchanged data. odata.allow-entityreferences returns entity references instead of full records. odata.include-annotations includes additional metadata. odata.maxpagesize controls pagination. Only track-changes enables delta synchronization.',
   },
   {
     id: 4349,
@@ -771,7 +773,7 @@ var pl400Questions4 = [
       'No',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Yes, throwing InvalidPluginExecutionException displays the exception message to the user in the form interface. This is the supported way to show validation error messages from synchronous plug-ins. The message appears in a dialog box on the form, allowing users to understand and correct the issue. Using other exception types or logging methods won\'t display user-friendly messages on the form.',
   },
   {
     id: 4367,
@@ -784,7 +786,7 @@ var pl400Questions4 = [
       'generic OAuth authentication',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Generic OAuth is the appropriate authentication method for custom connectors connecting to cloud-based ERP systems. OAuth provides secure token-based authentication without exposing credentials. Two-factor and biometric authentication are user authentication methods, not API authentication. Windows Active Directory is for on-premises domain authentication, not cloud API connections. Custom connectors support OAuth 2.0 for secure third-party API integration.',
   },
   {
     id: 4368,
@@ -797,7 +799,7 @@ var pl400Questions4 = [
       'IServiceEndpointPlugin',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'IPluginExecutionContext provides access to the execution context including PreEntityImages and PostEntityImages needed to get the previous Credit Limit value. IServiceEndpointNotificationService is for posting to Azure Service Bus. IServiceEndpointPlugin is the interface for Service Bus integration, but you still need IPluginExecutionContext to access entity data. IWebHttpServiceEndpointPlugin doesn\'t exist in Dataverse SDK.',
   },
   {
     id: 4369,
@@ -810,7 +812,7 @@ var pl400Questions4 = [
       'Retrieve records by using custom column values. -> Plug-in',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'UpsertRequest handles both create and update operations based on whether the record exists, using either the primary key (GUID) or alternate keys (custom columns). Alternate keys enforce uniqueness on column combinations and enable retrieving records by those values. A plug-in would require custom code for logic that UpsertRequest and Alternate Keys handle natively. Workflow extensions are for background processes, not data operations.',
   },
   {
     id: 4376,
@@ -823,7 +825,7 @@ var pl400Questions4 = [
       'Create a plug-in that uses the CalculateRollupFieldRequest method for the rollup field. Configure a step on the Create event for the policy entity for this plug-in.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'A plug-in using CalculateRollupFieldRequest method triggered on policy creation immediately recalculates the rollup field. This is the only way to get immediate results since rollup fields calculate asynchronously on a schedule (default hourly). Calculated fields have the same limitation for aggregating related records. Changing job frequency improves timeliness but isn\'t immediate. Using Update method would require manually calculating the aggregation.',
   },
   {
     id: 4378,
@@ -835,7 +837,7 @@ var pl400Questions4 = [
       'Display the notification -> Onload script',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Power Automate flow sends emails on triggers (lead creation/update with value conditions) without code. Business rules can show/hide fields (Sponsor) based on conditions like estimated value >$1M. OnLoad script is needed for displaying persistent notifications while the record is open because business rules can\'t create notifications, and Power Automate runs server-side, not in the form UI. This minimizes code by using low-code tools where possible.',
   },
   {
     id: 4382,
@@ -847,7 +849,7 @@ var pl400Questions4 = [
       'The ID card is printed -> PostOperation',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'PreValidation is the earliest stage, ideal for validation checks like mandatory drug screening—if validation fails, the operation is rejected before any processing. PreOperation runs before the database transaction commits, perfect for storing approver information that must be saved with the record. PostOperation runs after the transaction commits, appropriate for follow-up actions like printing ID cards that should only happen after successful record creation.',
   },
   {
     id: 4384,
@@ -859,7 +861,7 @@ var pl400Questions4 = [
       'View daily registrations -> Use a native application function.',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Full registration records from the external system require a custom connector since there\'s no existing connector for that proprietary data. Customer names (likely from Dynamics/Dataverse) can use an AppSource connector like the Dynamics 365 connector. Daily registrations using date-based views are native Power Apps functionality using galleries and filters without external connections. Match connectors to data sources appropriately.',
   },
   {
     id: 4387,
@@ -871,7 +873,7 @@ var pl400Questions4 = [
       'Ensure appropriate information is added to leads. -> Business process flow',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Power Automate integrates with Slack connectors to send notifications when leads are created/updated. Business rules can change field values based on conditions without code (e.g., set priority based on lead source). Business process flows guide users through stages ensuring required information is captured at each step—ideal for ensuring completeness. Each tool serves its specific purpose with minimal code.',
   },
   {
     id: 4393,
@@ -882,7 +884,7 @@ var pl400Questions4 = [
       'Add email button for registration form. -> Use Ribbon Workbench.',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Adding &ribbondebug=true to the URL shows detailed information about why command bar buttons are visible/hidden/enabled/disabled, helping diagnose rendering issues with New and Save buttons. Ribbon Workbench is the tool for customizing command bars, including adding new buttons like an email button. Exporting XML and modifying XSD files are lower-level approaches not needed when Ribbon Workbench provides a visual interface.',
   },
   {
     id: 4397,
@@ -893,7 +895,7 @@ var pl400Questions4 = [
       'All registered users -> $apply=groupby(sport ne null)',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'For new registrations, $select=name,sport returns only the specified columns from accounts. For all registered users grouped by sport, $apply=groupby with the condition filters and groups results. $filter would just filter without grouping. $orderby sorts results. These OData query options allow efficient data retrieval with server-side filtering and aggregation rather than processing large datasets client-side.',
   },
   {
     id: 4403,
@@ -906,6 +908,6 @@ var pl400Questions4 = [
       'a model-driven app based on customer service entities',
     ],
     correct: [0, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'A canvas app provides mobile-friendly, guided inspection workflows with custom forms, offline capability, and camera/signature capture—ideal for technicians in the field. A Power Automate flow maps the collected inspection data to Dynamics 365 Field Service for work order management and tracking. A logic app is for server-side integration, not user-facing. A model-driven app on customer service entities doesn\'t fit field service inspection scenarios.',
   },
 ];
