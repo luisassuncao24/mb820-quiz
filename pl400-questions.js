@@ -357,7 +357,7 @@ var pl400Questions = [
   },
   {
     id: 1174,
-    text: 'Same scenario as Question 173.\n\nSolution: Create a plug-in that runs when the account record is created. Use the Organization service to create the contact record.\n\nDoes the solution meet the goal?\n\nOPTIONS:',
+    text: 'You have two tables, account and contact, with a parent-child relationship. Records in the account table can be created in the UI or from an external system integrated with Dataverse.\n\nWhen a user creates a record in the account table, a default record in the contact table must be created automatically.\n\nYou need to implement a process to create the contact records.\n\nSolution: Create a plug-in that runs when the account record is created. Use the Organization service to create the contact record.\n\nDoes the solution meet the goal?\n\nOPTIONS:',
     type: 'single',
     choices: [
       'Yes',
@@ -368,7 +368,7 @@ var pl400Questions = [
   },
   {
     id: 1176,
-    text: 'Same scenario as Question 173.\n\nSolution: Create a cloud flow that runs when the account record is created. Use the Dataverse connector to create the contact record.\n\nDoes the solution meet the goal?\n\nOPTIONS:',
+    text: 'You have two tables, account and contact, with a parent-child relationship. Records in the account table can be created in the UI or from an external system integrated with Dataverse.\n\nWhen a user creates a record in the account table, a default record in the contact table must be created automatically.\n\nYou need to implement a process to create the contact records.\n\nSolution: Create a cloud flow that runs when the account record is created. Use the Dataverse connector to create the contact record.\n\nDoes the solution meet the goal?\n\nOPTIONS:',
     type: 'single',
     choices: [
       'Yes',

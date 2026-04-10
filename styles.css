@@ -815,6 +815,12 @@ body {
   border: 1px solid #f59e0b;
 }
 
+.diff-advanced {
+  background: #1a0a2e;
+  color: #c4b5fd;
+  border: 1px solid #7c3aed;
+}
+
 .diff-proficient {
   background: #450a0a;
   color: #fca5a5;
@@ -825,6 +831,12 @@ body {
   background: #0c1a3b;
   color: #93c5fd;
   border: 1px solid #2563eb;
+}
+
+.diff-expert {
+  background: #0a1a0a;
+  color: #6ee7b7;
+  border: 1px solid #059669;
 }
 
 /* ── Set-selection subtitle ───────────────────────────────────────────── */
@@ -1146,6 +1158,24 @@ body {
 
 .in-progress-text strong {
   color: #38bdf8;
+}
+
+.reset-inprogress-btn {
+  margin-left: auto;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid #0ea5e9;
+  color: #7dd3fc;
+  font-size: 0.78rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.reset-inprogress-btn:hover {
+  background: #0c2a40;
+  color: #bae6fd;
 }
 
 /* ── Completed badge on set cards ────────────────────────────────────── */

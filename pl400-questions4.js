@@ -335,15 +335,15 @@ var pl400Questions4 = [
   {
     id: 4142,
     text: 'You have the following code:\n\n```javascript\nXrm.WebApi.createRecord("account", data).then(\n  function success(result) {\n    console.log("Success");\n  },\n  function (error) {\n    console.log(error.message);\n  }\n);\n```\n\nYou have a contact record that uses the GUID `991bf2fd-d40c-4752-9984-26b7c0455b69`.\n\nYou need to assign the contact record as the primary contact for an account when you create the account.\n\nWhich two code segments can you use? Each correct answer presents a complete solution.\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       '`var data = { "name": "Contoso account", "primarycontactid": { "logicalname": "contact", "id": "991bf2fd-d40c-4752-9984-26b7c0455b69" } };`',
       '`var data = { "name": "Contoso account", "primarycontactid@odata.bind": "/contacts(991bf2fd-d40c-4752-9984-26b7c0455b69)" };`',
       '`var data = { "name": "Contoso account", "primarycontactid@odata.context": "/contacts(991bf2fd-d40c-4752-9984-26b7c0455b69)" };`',
       '`var data = { "name": "Contoso account", "primarycontactid": "/contacts(991bf2fd-d40c-4752-9984-26b7c0455b69)" };`',
     ],
-    correct: [0],
-    explanation: 'The correct syntax to set a lookup field when creating a record uses either the object format with logicalname and id properties, or the @odata.bind annotation with the entity set path. Option A uses the object format correctly. Option B\'s @odata.bind syntax is also valid but wasn\'t selected as the primary answer. @odata.context is for metadata, not binding. Simply assigning a path string without @odata.bind doesn\'t work for lookup associations.',
+    correct: [0, 1],
+    explanation: 'Two valid approaches exist to set a lookup field when creating a record. Option A uses the object format with logicalname and id properties — a valid way to specify a lookup value in the Web API. Option B uses the @odata.bind annotation with the entity set path — also a fully supported and commonly used syntax for associating records. @odata.context is metadata, not a binding mechanism. Simply assigning a path string without @odata.bind does not work for lookup associations.',
   },
   {
     id: 4143,

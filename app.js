@@ -566,6 +566,24 @@
     } catch (e) { /* ignore */ }
   }
 
+  // Clears only in-progress (unfinished) sessions — completed results are preserved.
+  function clearAllInProgress() {
+    try {
+      QUESTION_SETS.forEach(function (set) {
+        localStorage.removeItem(_prefix + "_quiz_progress_" + set.key);
+        _testCases.forEach(function (tc) {
+          localStorage.removeItem(_prefix + "_combined_" + set.key + "_" + tc.key);
+        });
+      });
+      // Clear random quiz in-progress
+      localStorage.removeItem(_prefix + "_quiz_progress_random");
+      // Clear case study in-progress (but not completed results)
+      _testCases.forEach(function (tc) {
+        localStorage.removeItem(_prefix + "_case_" + tc.key);
+      });
+    } catch (e) { /* ignore */ }
+  }
+
   // Clears all progress (in-progress + completed + combined) for a single quiz set.
   function clearQuizProgress(setKey) {
     try {
@@ -1207,6 +1225,7 @@
     return '<div class="in-progress-banner">' +
       '<span class="in-progress-icon">\u23F8</span>' +
       '<span class="in-progress-text">You have <strong>' + label + '</strong> \u2014 continue where you left off below.</span>' +
+      '<button class="reset-inprogress-btn" id="reset-inprogress-btn">\uD83D\uDDD1\uFE0F Reset In-Progress</button>' +
     '</div>';
   }
 
@@ -1292,7 +1311,9 @@
     const difficultyMeta = {
       beginner:     { icon: "\uD83D\uDFE2", label: "Beginner",     cls: "diff-beginner" },
       intermediate: { icon: "\uD83D\uDFE1", label: "Intermediate", cls: "diff-intermediate" },
+      advanced:     { icon: "\uD83D\uDFE3", label: "Advanced",     cls: "diff-advanced" },
       proficient:   { icon: "\uD83D\uDD34", label: "Proficient",   cls: "diff-proficient" },
+      expert:       { icon: "\uD83D\uDD35", label: "Expert",       cls: "diff-expert" },
       official:     { icon: "\uD83D\uDCCB", label: "Official",     cls: "diff-official" }
     };
 
@@ -1719,6 +1740,21 @@
         } else {
           showModeOverlay(function () { initRandomQuiz(false); });
         }
+      });
+    }
+
+    // Reset In-Progress button (banner)
+    const resetInProgressBtn = document.getElementById("reset-inprogress-btn");
+    if (resetInProgressBtn) {
+      resetInProgressBtn.addEventListener("click", function () {
+        showConfirm(
+          "Reset In-Progress Sessions?",
+          "This will discard all unfinished quiz sessions. Completed results and attempt history will be kept. This cannot be undone.",
+          function () {
+            clearAllInProgress();
+            showSetSelection();
+          }
+        );
       });
     }
 

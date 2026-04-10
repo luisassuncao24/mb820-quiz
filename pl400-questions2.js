@@ -446,7 +446,7 @@ var pl400Questions2 = [
   {
     id: 2149,
     text: 'You are developing a new Power Platform app.\n\nThe checker fails with an error due to missing security roles.\n\nYou need to add security roles to the Power Apps Checker application user.\n\nWhich two security roles should you add? Each correct answer presents part of the solution.\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'Global Discovery Service Role',
       'Export Customizations',
@@ -454,8 +454,8 @@ var pl400Questions2 = [
       'Solution Checker',
       'Resource Manager',
     ],
-    correct: [1],
-    explanation: 'The Export Customizations security role is required for the Power Apps Checker application user because Solution Checker needs to export solutions for analysis. Without this role, the checker cannot export and analyze solution components. Environment Maker grants creation permissions but not export. Global Discovery Service Role is for multi-tenant discovery. Solution Checker and Resource Manager are not standard Dataverse security roles.',
+    correct: [0, 1],
+    explanation: 'The Power Apps Checker application user requires Export Customizations to export solutions for analysis, and Global Discovery Service Role to discover environments across tenants. Without these roles, the checker cannot access and analyze solution components. Environment Maker grants creation permissions but not export. Solution Checker and Resource Manager are not standard Dataverse security roles.',
   },
   {
     id: 2150,

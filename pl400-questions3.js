@@ -316,7 +316,7 @@ var pl400Questions3 = [
   {
     id: 3147,
     text: 'An organization uses Dynamics 365 Sales. You plan to add a custom button to the app ribbon.\n\nYou need to ensure that the button displays only when conditions specified by business rules are met.\n\nWhich two code segments can you use? Each correct answer presents a complete solution.\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       '`gridContext.refresh();`',
       '`formContext.ui.refreshRibbon(refreshAll);`',
@@ -324,8 +324,8 @@ var pl400Questions3 = [
       '`formContext.ui.refreshRibbon();`',
       '`formContext.getControl(arg).refresh();`',
     ],
-    correct: [1],
-    explanation: 'formContext.ui.refreshRibbon(refreshAll) refreshes the ribbon and re-evaluates enable/display rules including custom JavaScript conditions. gridContext.refresh() refreshes grid data, not ribbon state. formContext.data.refresh() reloads form data. formContext.getControl().refresh() refreshes a specific control. These do not trigger ribbon rule re-evaluation.',
+    correct: [1, 3],
+    explanation: 'formContext.ui.refreshRibbon(refreshAll) and formContext.ui.refreshRibbon() both refresh the ribbon and re-evaluate enable/display rules including custom JavaScript conditions. The refreshAll parameter (true/false) controls whether all ribbon rules or only changed rules are re-evaluated, but both overloads trigger the ribbon re-evaluation. gridContext.refresh() refreshes grid data, not ribbon state. formContext.data.refresh() reloads form data. formContext.getControl().refresh() refreshes a specific control.',
   },
   {
     id: 3154,
@@ -357,7 +357,7 @@ var pl400Questions3 = [
   {
     id: 3157,
     text: 'You create and deploy a Power Platform solution that includes synchronous plug-ins.\n\nUsers report performance issues with the solution.\n\nYou need to determine whether a plug-in is the cause of the performance issues.\n\nWhich two tools can you use? Each correct answer presents part of the solution.\n\nOPTIONS:',
-    type: 'single',
+    type: 'multiple',
     choices: [
       'Tracing',
       'Data policies',
@@ -365,8 +365,8 @@ var pl400Questions3 = [
       'ISV Studio',
       'Microsoft Dataverse Analytics',
     ],
-    correct: [0],
-    explanation: 'Tracing in plug-ins (using ITracingService) allows you to log execution details and timing information to diagnose performance issues. Solution checker analyzes code quality but does not provide runtime performance data. Data policies manage data governance. ISV Studio monitors ISV app usage. Dataverse Analytics shows platform-level metrics, not plug-in-specific performance.',
+    correct: [0, 3],
+    explanation: 'Tracing (Plug-in Trace Log via ITracingService) allows you to log execution details and timing information to diagnose plug-in performance issues. ISV Studio provides plug-in performance analytics including execution counts, failure rates, and average execution time for ISV solutions. Solution checker analyzes code quality but does not provide runtime performance data. Data policies manage data governance. Dataverse Analytics shows platform-level metrics, not plug-in-specific performance.',
   },
   {
     id: 3159,
@@ -397,7 +397,7 @@ var pl400Questions3 = [
   },
   {
     id: 3175,
-    text: 'Same scenario as Question 173.\n\nSolution: Create a JavaScript function that runs when the account record form is saved. Use the Web API in the JavaScript function to create the contact record.\n\nDoes the solution meet the goal?\n\nOPTIONS:',
+    text: 'You have two tables, account and contact, with a parent-child relationship. Records in the account table can be created in the UI or from an external system integrated with Dataverse.\n\nWhen a user creates a record in the account table, a default record in the contact table must be created automatically.\n\nYou need to implement a process to create the contact records.\n\nSolution: Create a JavaScript function that runs when the account record form is saved. Use the Web API in the JavaScript function to create the contact record.\n\nDoes the solution meet the goal?\n\nOPTIONS:',
     type: 'single',
     choices: [
       'Yes',
