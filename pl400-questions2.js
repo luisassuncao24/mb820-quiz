@@ -8,7 +8,7 @@ var pl400Questions2 = [
       'Document storage -> Server-based integration',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Server-side synchronization is the correct choice for email integration with Exchange Online in model-driven apps because it enables server-level sync without client-side components. Server-based integration is correct for SharePoint document storage as it enables direct integration between Dataverse and SharePoint Online for document management. Dual-write is used for Finance and Operations apps integration, not for Microsoft 365 services. Power settings is not a valid configuration option for these integrations.',
   },
   {
     id: 2009,
@@ -19,7 +19,7 @@ var pl400Questions2 = [
       '2 -> B. Webform',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Customer self-service portal is the correct template for volunteer registration because it provides self-service capabilities for external users to submit and manage their own data. Webform is correct for managing volunteer registration as it supports multi-step forms with validation across multiple entities, which is needed for complex registration and onboarding processes. Entity form metadata only controls individual form behavior, and Webform step is a component of Webform, not a standalone solution for the complete registration process.',
   },
   {
     id: 2012,
@@ -32,7 +32,7 @@ var pl400Questions2 = [
       'Disk',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Sandbox isolation mode is required for all plug-ins registered in Power Platform online environments. This mode runs plug-ins in an isolated sandbox environment that restricts access to system resources, providing security and stability. None (no isolation) was available for on-premises but is not allowed in online environments. GAC (Global Assembly Cache) and Disk are not valid isolation modes for Dataverse plug-ins - they were concepts from older .NET deployment scenarios.',
   },
   {
     id: 2043,
@@ -45,17 +45,20 @@ var pl400Questions2 = [
       'collAccounts',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The issue is that the formula uses the cached collection (collAccounts) instead of the live Accounts data source. Collections are local snapshots that do not automatically refresh when data changes in Dataverse. The correct formula should use Filter(Sort(Accounts, ...)) to query the live data source directly, ensuring users see current records. Using just collAccounts or Sort(collAccounts, ...) still references stale cached data. Sort(Accounts, ...) without the Filter would include blank account names.',
   },
   {
     id: 2044,
     text: 'You are building a canvas app for a company to display data from a Microsoft SharePoint list named Tasks. The list stores project tasks, including due dates.\n\nA collection named projectTasks is already declared in the app.\n\nThe company maintains over 10,000 tasks across projects.\n\nWhen users navigate to the main screen of the app or manually refresh the list, the main screen must display a list of all tasks that are beyond their due date.\n\nOutbound network calls to SharePoint must be minimized.\n\nYou need to implement the functionality.\n\nAvailable choices:\n- Function 1: ClearCollect / Collect / Filter / Search\n- Collection: projectTasks / Tasks\n- Expression: Filter(Tasks, \'DueDate\' > Now()) / Filter(Tasks, \'DueDate\' < Now()) / Search(Tasks, Text(Now()), \'Due Date\')',
-    type: 'multiple',
+    type: 'single',
     choices: [
       'ClearCollect(projectTasks, Filter(Tasks, \'DueDate\' < Now()))',
+      'Collect(projectTasks, Filter(Tasks, \'DueDate\' > Now()))',
+      'Filter(Tasks, \'DueDate\' < Now())',
+      'Search(Tasks, Text(Now()), \'Due Date\')',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'ClearCollect with Filter is correct because: (1) ClearCollect clears and repopulates the collection in one operation, ensuring fresh data on refresh; (2) Filter(Tasks, DueDate < Now()) correctly identifies overdue tasks where the due date is in the past. Collect would append records instead of replacing them. Filter alone without ClearCollect would not minimize network calls since it queries SharePoint on every use. Search is for text matching, not date comparisons. DueDate > Now() would return future tasks, not overdue ones.',
   },
   {
     id: 2048,
@@ -66,7 +69,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'No - giving organization-level access to opportunities is too broad and violates the principle of least privilege. This would allow users to see ALL opportunities across the entire organization, not just the shared ones they need. The better solution is to use the Share functionality or Access Teams to grant specific users access to individual opportunity records when cross-department collaboration is needed. This maintains security boundaries while enabling necessary collaboration.',
   },
   {
     id: 2053,
@@ -77,7 +80,7 @@ var pl400Questions2 = [
       'Behavior for the assigned action -> Cascade Active',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Configurable Cascading is required because it allows you to specify different cascade behaviors for different actions (assign, share, delete, etc.). Cascade Active is correct for the assign action because it only reassigns active (outstanding) tasks while leaving completed/inactive tasks with their original owner. Parental would cascade all actions uniformly. Cascade All would reassign all tasks regardless of status. Cascade None would not reassign any tasks. Cascade User-Owned only affects records owned by the same user.',
   },
   {
     id: 2057,
@@ -89,7 +92,7 @@ var pl400Questions2 = [
       'Behavior of the relationship between the class history table and the student table -> Referential',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'User or Team ownership allows class records to be owned and managed by specific users/teams at each school. Many-to-one relationship from class history to student means multiple history records can reference one student, which is the correct direction. Referential behavior ensures class history records remain accessible when students transfer (records are not deleted with the parent). Organization ownership would not provide school-level control. Parental behavior would delete history when students are removed.',
   },
   {
     id: 2058,
@@ -102,7 +105,7 @@ var pl400Questions2 = [
       'Yes',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (No): SaveData only stores data locally; it does not automatically sync to Dataverse when reconnecting - you need LoadData and explicit Patch logic on reconnection. Statement 2 (No): The Patch statement creates a new collection for the single patched record, not a collection of unsaved contacts. Statement 3 (No): Patch with no existing record creates new records, not updates. Statement 4 (Yes): The Connection.Connected check and branching logic correctly handles the offline scenario by saving locally when disconnected.',
   },
   {
     id: 2061,
@@ -115,7 +118,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (No): Creating a new field does not resolve the alternate key error - you need to define an alternate key using existing fields. Statement 2 (Yes): Creating an alternate key on accountnumber enables UpsertRequest to match records by that field. Statement 3 (Yes): If the account only has name=Contoso with no matching accountnumber CO-555, Upsert creates a new record since the key field does not match. Statement 4 (No): If an account with accountnumber CO-555 exists, Upsert updates that record rather than creating a new one.',
   },
   {
     id: 2062,
@@ -127,7 +130,7 @@ var pl400Questions2 = [
       'Do not delete associated record -> Referential',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Parental relationship behavior cascades delete operations to related records, so deleting the primary record also deletes associated records. Cascade User Owned behavior only reassigns records owned by the same user when the parent is reassigned - useful for assigning active related records. Referential behavior maintains the lookup reference but does not cascade delete operations, preserving related records when the primary is deleted. Cascade All would reassign all records regardless of ownership.',
   },
   {
     id: 2064,
@@ -138,7 +141,7 @@ var pl400Questions2 = [
       'Select the data type for delivery -> Duration',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'DIFFINMINUTES(Created On, Delivery Time) correctly calculates the time difference between when the package record was created and when it was delivered, giving delivery efficiency in minutes. Duration data type is correct for delivery time as it provides built-in formatting for time spans (hours:minutes). Using Modified On instead of Delivery Time would measure last edit time, not actual delivery. DIFFINHOURS provides less precision. Currency, Phone number, and Customer data types are not appropriate for time duration values.',
   },
   {
     id: 2072,
@@ -155,7 +158,7 @@ var pl400Questions2 = [
       'Create an intersect entity named ContactRegion and create N:1 relationships to Contact and Region.',
     ],
     correct: [3, 5, 7],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Create the Region entity (choice 5) to store region data. Create an intersect entity ContactRegion with N:1 (Many-to-one) relationships to both Contact and Region (choice 7) - this allows storing additional attributes like travel dates on the intersection. Add lookup fields for Contact and Region plus a date field on the ContactRegion form (choice 3). A direct N:N relationship (choice 0) would not allow storing travel dates. 1:N relationships from ContactRegion (choice 1) are backwards - the lookups should point TO Contact and Region.',
   },
   {
     id: 2076,
@@ -168,7 +171,7 @@ var pl400Questions2 = [
       'A copy of the form must be made before adding to the solution.',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The web resources (JavaScript files containing OnLoad and OnSave functions) were not added to the form before adding the form to the solution. When forms reference web resources through events, those web resources become dependencies. If web resources are not properly linked to the form in the solution, the import fails with missing component errors. Exporting as unmanaged would not resolve the dependency issue. Making copies of forms is not required for solution packaging.',
   },
   {
     id: 2078,
@@ -179,7 +182,7 @@ var pl400Questions2 = [
       'Exercise -> Activity table with User or Team ownership',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Fitness programs should be Standard tables with User or Team ownership because they need to be owned by trainers and have specific security requirements. Exercises should be Activity tables with User or Team ownership because activities automatically appear on calendars and timelines, fulfilling the requirement for members to see exercises in their calendars. Organization-owned tables cannot be assigned to individuals. Standard tables for exercises would not provide automatic calendar integration.',
   },
   {
     id: 2080,
@@ -190,7 +193,7 @@ var pl400Questions2 = [
       'Store information about prescription medications -> Virtual',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Standard tables store data directly in Dataverse and are appropriate for doctor information that is managed within the app. Virtual tables are correct for prescription medications that reference an external database because they display external data in real-time without storing it in Dataverse. Activity tables are used for time-based records that appear on timelines (emails, appointments), not for reference data like doctors or medications.',
   },
   {
     id: 2083,
@@ -202,7 +205,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (Yes): The connectionReferenceName "shared_teams" and operationId "PostMessageToConversation" indicate this is a Power Automate flow action using the Teams connector. Statement 2 (No): This is not an authentication error - the error log shows operation parameters, not authentication failure messages. Authentication errors would show different error codes. Statement 3 (No): The groupId parameter IS the Team ID in Microsoft Teams - teams are represented as Microsoft 365 Groups, so groupId identifies the team.',
   },
   {
     id: 2087,
@@ -215,7 +218,7 @@ var pl400Questions2 = [
       'Remove the lookup field to TableA on the TableB form.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'You must first remove the lookup field from the TableB form because the form component has a dependency on the relationship. While the relationship and lookup column must also be removed, the form reference must be addressed first. Removing from Power BI report is not required for table deletion. Removing from the unmanaged solution does not delete the table or remove dependencies. The relationship cannot be removed while form components reference it.',
   },
   {
     id: 2093,
@@ -226,7 +229,7 @@ var pl400Questions2 = [
       'Delete knowing Value1 -> RemoveIf',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'UpdateIf is correct for modifying Value2 when you know Id and Value1 because it updates records matching a condition (multiple criteria). Update requires an exact record reference. RemoveIf is correct for deleting all rows with a specified Value1 because it removes all records matching the condition. Remove only removes a single specific record. Since Value1 may not be unique, you need the conditional functions (UpdateIf/RemoveIf) to handle multiple matching records.',
   },
   {
     id: 2095,
@@ -236,9 +239,10 @@ var pl400Questions2 = [
       'Add missing lookup table records to the solution.',
       'Go to the test environment and manually create missing lookup table records.',
       'Use the Configuration Migration Tool to extract the lookup table data from the development environment and import it to the test environment.',
+      'Export and reimport the managed solution as unmanaged.',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The Configuration Migration Tool is designed to migrate reference/configuration data between environments. The error occurs because the lookup default value references a record that does not exist in the test environment. Adding records to a solution only includes schema, not data. Manually creating records is error-prone and not repeatable. The Configuration Migration Tool properly extracts and imports the actual data records needed for the lookup defaults to function.',
   },
   {
     id: 2098,
@@ -251,7 +255,7 @@ var pl400Questions2 = [
       'Export Solution A as managed from the source environment. Import Solution A to the destination environment.',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The correct order is: (1) Remove the column reference from Solution B view first to eliminate the dependency; (2) Export and import Solution B to apply the view change; (3) Delete the custom_text column in Solution A source; (4) Export and import Solution A to remove the column from destination. You cannot delete a column that is still referenced by other components. Dependencies must be removed before the dependent component can be deleted.',
   },
   {
     id: 2122,
@@ -265,7 +269,7 @@ var pl400Questions2 = [
       'Assign the Environment Maker security role to your user ID.',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The Power Apps Checker application user needs the Environment Maker security role to export solutions that contain model-driven app components. Without this role, Solution Checker cannot export the solution for analysis. Manually exporting first does not help because Solution Checker needs to perform its own export. System Administrator role for your user does not affect the application user permissions. Disabling the checker user would prevent it from working entirely.',
   },
   {
     id: 2123,
@@ -278,7 +282,7 @@ var pl400Questions2 = [
       'entityrecord',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The URL structure is: main.aspx?pagetype=entityrecord&etn=contact&extraqs=... The main.aspx page is the main Dynamics 365 page handler. etn=contact specifies the entity type name. extraqs parameter contains additional query string parameters (URL encoded) to pass data to the form. entityrecord is the pagetype value for opening a single record form. edit.aspx and default.aspx are not valid Dynamics 365 page handlers. entitylist would open a view, not a record form.',
   },
   {
     id: 2129,
@@ -290,7 +294,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (Yes): Modifying security inheritance to enable parent-child business unit inheritance would allow the manager to inherit permissions from the parent business unit. Statement 2 (No): Moving the manager to the root business unit changes their membership but does not automatically grant access to records in child business units. Statement 3 (No): Business Unit level permission only grants access to records within the user\'s own business unit, not across business units. Organization level or security inheritance changes would be needed.',
   },
   {
     id: 2135,
@@ -303,7 +307,7 @@ var pl400Questions2 = [
       'Xrm.Utility.showProgressIndicator(myPoliteMessage)',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Xrm.Utility.showProgressIndicator() displays a blocking progress dialog with a custom message that prevents user interaction until explicitly closed. This is ideal for long-running operations like credit checks where you want to block the UI. openAlertDialog shows a dismissible alert that users can close. openWebResource opens a web resource in a dialog that may be closeable. The progress indicator specifically blocks the app as required by the policy.',
   },
   {
     id: 2137,
@@ -314,7 +318,7 @@ var pl400Questions2 = [
       'The code uses the following rule: web-use-strict-mode.',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Issue 1: Solution Checker cannot analyze solutions containing canvas apps with errors - it fails to complete. Canvas app errors prevent the solution from being properly exported for analysis. Issue 2: The web-use-strict-mode rule flags code that uses == (loose equality) instead of === (strict equality). The code "acctnumber == abc" should use strict equality comparison to avoid type coercion issues. The other rules check for eval(), debugger statements, and modal dialogs respectively.',
   },
   {
     id: 2139,
@@ -325,7 +329,7 @@ var pl400Questions2 = [
       'Quick Create',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'View is correct for Advanced Find because Views define which columns are searchable and how data is displayed in queries. Quick Create forms are correct for displaying estimated duration during time entry because they show related record data from a parent record in a compact, read-only format embedded within another form. Quick View would show data from a related record but is for displaying, not entering time. Connectors are for external data integration.',
   },
   {
     id: 2141,
@@ -338,7 +342,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (No): ExecuteTransactionRequest is atomic - if any request fails, the entire transaction is rolled back. Statement 2 (No): ContinueOnError is not a property of ExecuteTransactionRequest; it exists on ExecuteMultipleRequest. Transactions are all-or-nothing. Statement 3 (Yes): Requests in OrganizationRequestCollection are processed sequentially in the order they were added. Statement 4 (No): The response processing code (lines 19-23) is for logging/output only; contacts are created when Execute() is called, not when responses are read.',
   },
   {
     id: 2144,
@@ -352,7 +356,7 @@ var pl400Questions2 = [
       'From Web Resources, select the JavaScript file for the Account form and then make sure it is incorporated correctly.',
     ],
     correct: [0, 1, 4],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'You must: (1) Open the web resource file and add both image web resources and the custom field to its dependency list - this ensures the solution includes all required components. (2) Navigate through Settings > Customizations > Customize the System to access the solution customization interface. (3) Access Web Resources and verify the JavaScript file is properly configured. Non-Event Dependencies on forms are for fields used by JavaScript but not bound to form events. The form selection step alone does not add dependencies.',
   },
   {
     id: 2145,
@@ -363,7 +367,7 @@ var pl400Questions2 = [
       'Gallery1',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The warning indicates a connection issue, so navigate to Connections to add or fix the connection. Gallery1 is likely the component with the issue because galleries are data-bound controls that require valid connections to display data. App Checker shows formula errors, not connection issues. Solution Checker is for model-driven apps and solutions. Monitor shows runtime behavior, not design-time warnings.',
   },
   {
     id: 2146,
@@ -377,7 +381,7 @@ var pl400Questions2 = [
       'On the Account form.',
     ],
     correct: [0, 3, 4],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Ribbon Workbench allows adding buttons to: (1) Home area for Accounts - the main command bar when viewing the Accounts list; (2) Associated view - the subgrid ribbon when viewing related records; (3) Account form - the command bar on the record form. You cannot add ribbon buttons to the main body of a form (forms use form components, not ribbon items). The main application window does not have entity-specific ribbons - entity buttons belong to their respective areas.',
   },
   {
     id: 2148,
@@ -388,7 +392,7 @@ var pl400Questions2 = [
       'Application runs slowly -> Service Performance in Power Apps Analytics',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Power Apps Checker (App Checker) identifies errors, warnings, and best practice issues in canvas apps including formula errors, accessibility issues, and deprecated function usage. Service Performance in Power Apps Analytics shows performance metrics, load times, and helps identify slow-running operations causing page delays. Solution Checker is for model-driven apps and plug-ins. Site Map validation checks navigation structure. Session details and Service Health show status information but do not diagnose app-specific performance issues.',
   },
   {
     id: 2149,
@@ -402,7 +406,7 @@ var pl400Questions2 = [
       'Resource Manager',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The Export Customizations security role is required for the Power Apps Checker application user because Solution Checker needs to export solutions for analysis. Without this role, the checker cannot export and analyze solution components. Environment Maker grants creation permissions but not export. Global Discovery Service Role is for multi-tenant discovery. Solution Checker and Resource Manager are not standard Dataverse security roles.',
   },
   {
     id: 2150,
@@ -415,7 +419,7 @@ var pl400Questions2 = [
       'OAuth',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'OAuth is the correct authentication method for APIs requiring two-factor authentication because OAuth supports multi-factor authentication flows through identity providers like Azure AD. OAuth delegates authentication to an identity provider that can enforce 2FA. Server-to-server authentication uses certificates or secrets without user interaction and cannot support 2FA. API key-based and Basic authentication are single-factor methods that do not support additional authentication factors.',
   },
   {
     id: 2165,
@@ -426,7 +430,7 @@ var pl400Questions2 = [
       'Error when saving -> OnSave',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'OnReadyStateComplete fires when all form data has loaded and controls are ready, making it the right event to debug for unexpected initial column values. OnSave fires when the user attempts to save, so errors preventing saves should be debugged there. OnLoad fires before data is fully loaded. OnSelection is for grid/subgrid selections. PostSave fires after successful saves and cannot prevent saves.',
   },
   {
     id: 2179,
@@ -439,7 +443,7 @@ var pl400Questions2 = [
       'Yes',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Statement 1 (No): With ReturnResponses = false, successful responses are not returned, so you cannot access the newly-created account IDs. Statement 2 (Yes): Even with ReturnResponses = false, fault responses (errors) are still returned, allowing you to identify which requests failed. Statement 3 (No): With ContinueOnError = true, processing continues after errors rather than stopping at the first error. Statement 4 (Yes): Only fault responses are returned when ReturnResponses = false, so exactly 10 error responses would be returned for 10 failures.',
   },
   {
     id: 2182,
@@ -456,7 +460,7 @@ var pl400Questions2 = [
       'Two automated flows with scope Business Unit, with triggers on Create/Update/Delete on orders and filters on WH1 and WH2.',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Two automated flows with Business Unit scope and triggers on Create/Update/Delete is the best approach because: (1) Automated flows respond immediately to data changes (pushing updates as required); (2) Business Unit scope automatically filters to the respective warehouse without additional filter logic; (3) Two flows, one per business unit, provide separation of concerns. Scheduled flows poll at intervals rather than pushing updates. Organization scope would require filters. Adding explicit filters with Business Unit scope is redundant.',
   },
   {
     id: 2189,
@@ -470,7 +474,7 @@ var pl400Questions2 = [
       'Share the Power Automate flow from the default environment.',
     ],
     correct: [0, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Flows and chatbots must be in the same environment to work together. You need to: (1) Add the flow to a solution in the default environment to make it transportable; (2) Export that solution and import it into Environment1 where the chatbot exists. Simply sharing the flow does not cross environment boundaries. Sending a copy is not a Power Platform feature. Adding to a solution in Environment1 only works if the flow is already there.',
   },
   {
     id: 2192,
@@ -481,7 +485,7 @@ var pl400Questions2 = [
       'Test users cannot add the personal app within Microsoft Teams. -> Change permission for the custom app in Teams',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'For slow app performance in Teams, enable the Preload app setting which loads the app in the background before users access it, improving startup time. For users unable to add the personal app, you need to change the custom app permissions in Teams Admin Center to allow users to upload/install custom apps. The custom app setup policy controls which apps appear by default, not whether users can add them. Downloading or publishing relates to app distribution, not user permissions.',
   },
   {
     id: 2197,
@@ -494,7 +498,7 @@ var pl400Questions2 = [
       'Client secret',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Secret-type environment variables in Power Platform store references to secrets in Azure Key Vault, not the secrets themselves. You must create an Azure Key Vault first and store your API key there. The environment variable then references the Key Vault secret. Application users authenticate apps to Dataverse. Certificates and client secrets are authentication credentials, not secret storage mechanisms. Azure Key Vault provides centralized, secure secret management.',
   },
   {
     id: 2205,
@@ -507,7 +511,7 @@ var pl400Questions2 = [
       'Environment variables',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Environment variables are the best choice because they can be updated by business users through the Power Platform Admin Center without developer tools, and changes apply immediately. Since a connector already exists, you just need to store the API key in a way that is manageable. Unsecure and secure configs are plug-in concepts requiring code deployments. Connection references store connection details but are tied to user authentication, not standalone API keys that need rotation.',
   },
   {
     id: 2223,
@@ -520,7 +524,7 @@ var pl400Questions2 = [
       'Deploy the solution.',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The correct sequence for creating a Power Apps component (PCF control) is: (1) Create a solution to contain the component; (2) Add a solution reference to the project using pac solution add-reference; (3) Build the project and solution using npm run build and msbuild; (4) Deploy the solution using pac solution import or manual import. This follows the standard PCF development lifecycle where you first set up the solution structure, then build, then deploy to the environment.',
   },
   {
     id: 2229,
@@ -533,7 +537,7 @@ var pl400Questions2 = [
       'Add a formula to the LoanAmount field.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'In canvas apps, you add a Power Fx formula to the Fill property of the LoanAmount field using an If statement like: If(Value(LoanAmount.Text) > 5000, Red, Green). This evaluates immediately as users type. Power Automate flows run asynchronously and cannot update UI properties. Business rules are a Dataverse/model-driven app concept, not canvas apps. Field properties alone cannot contain conditional logic - you need formulas for dynamic behavior.',
   },
   {
     id: 2230,
@@ -544,7 +548,7 @@ var pl400Questions2 = [
       'Inner function -> Search',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'SortByColumns is the outer function because it sorts by multiple columns (lastname, then country) with specified sort orders. Search is the inner function because it performs a text search across multiple columns (lastname, emailaddress1, address1_country) matching the search text. Sort only handles single-column sorting. Filter requires exact match conditions, not text search. LookUp returns a single record, not a filtered collection. StartsWith is for prefix matching, not multi-column search.',
   },
   {
     id: 2232,
@@ -555,7 +559,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'No - editing customizations.xml with querystringparameter elements is not required for Xrm.Navigation.openForm. The openForm function accepts a formParameters object that passes data directly to the form without requiring XML modifications. The OnLoad event handler can access these parameters using formContext.data.attributes or executionContext.getFormContext(). Modifying XML for URL parameters is an outdated approach from legacy form navigation.',
   },
   {
     id: 2236,
@@ -568,7 +572,7 @@ var pl400Questions2 = [
       'advanced',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The "internal" visibility parameter hides the operation or parameter from end users in the connector interface - they cannot see or interact with it. "important" makes parameters prominently visible. "none" shows parameters normally without special treatment. "advanced" places parameters in an expandable section but they remain visible to users who expand it. Internal is used for system parameters or values that should be set programmatically without user interaction.',
   },
   {
     id: 2243,
@@ -580,7 +584,7 @@ var pl400Questions2 = [
       'unused segment -> getValue',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'getClient() returns the client type (Web, Mobile, Outlook) - used first to check if running on Mobile. getFormFactor() returns the form factor (0=Unknown, 1=Desktop, 2=Tablet, 3=Phone) - used second to distinguish between tablet and phone within mobile. getValue() is for retrieving field values, not client information. The code first checks if the client is Mobile, then uses getFormFactor() to determine if it is specifically a phone (3) for the phone-specific behavior.',
   },
   {
     id: 2264,
@@ -593,7 +597,7 @@ var pl400Questions2 = [
       'Web resource',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Canvas components are reusable UI components that can be shared across multiple custom pages and canvas apps. When you update the component, changes automatically cascade to all places where the component is used. PCF controls require code deployment and are more complex. Timer control is a specific control, not a reusable component pattern. Web resources do not automatically cascade updates and require manual updates to each page.',
   },
   {
     id: 2267,
@@ -606,7 +610,7 @@ var pl400Questions2 = [
       'Box 4 = Notify',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Confirm (Box 1) displays a confirmation dialog requiring user affirmation before proceeding - meeting the requirement to affirm the action. Patch (Box 2) updates a single column in Dataverse, which is what is needed. Opportunities (Box 3) specifies the target table for the Patch operation. Notify (Box 4) displays a notification message to the user after the operation completes. SubmitForm is for form-based data, not single column updates. Self.Selected.Item and ThisRecord are context references not appropriate for this Patch scenario.',
   },
   {
     id: 2276,
@@ -619,7 +623,7 @@ var pl400Questions2 = [
       'Client secret',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'OAuth 2.0 with client credentials grant enables the public website to authenticate to Dataverse without requiring individual user credentials. The website uses an app registration with client ID and secret to obtain access tokens. AD FS requires user authentication. Azure AD Conditional Access is a policy layer, not an authentication mechanism. Client secret alone is not an authentication method - it is used within OAuth flows.',
   },
   {
     id: 2278,
@@ -632,7 +636,7 @@ var pl400Questions2 = [
       'Claims-based',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'OAuth 2.0 with client credentials grant is correct for anonymous data submission to Dataverse from a public website. It authenticates the application itself rather than individual users. Microsoft 365 authentication requires user sign-in. X.509 certificates can be used within OAuth but are not an authentication method by themselves for Dataverse. Claims-based authentication requires user identity claims from an identity provider.',
   },
   {
     id: 2280,
@@ -645,7 +649,7 @@ var pl400Questions2 = [
       'Box 4 = AsType',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'IsBlank (Box 1) checks if the customer lookup field is empty before processing. IsType (Box 2) determines which table type (Account or Contact) the polymorphic customer lookup references. AsType (Boxes 3 and 4) casts the customer lookup to the specific table type (Account or Contact) to access table-specific fields. This pattern is required for polymorphic lookups that can reference multiple table types.',
   },
   {
     id: 2286,
@@ -658,7 +662,7 @@ var pl400Questions2 = [
       'execution mode -> synchronous',
     ],
     correct: [0, 1, 2, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Message = Create because new travel preferences are being added. Primary entity = Contact because preferences are stored on the Contact record. Secondary entity = Region because the N:N relationship involves the Region entity. Execution mode = Synchronous because the plug-in must display error messages immediately to the user when validation fails - asynchronous execution cannot return errors to the user interface.',
   },
   {
     id: 2291,
@@ -671,7 +675,7 @@ var pl400Questions2 = [
       'Plug-in Registration Tool',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Plug-in Profiler captures the execution context of a plug-in running in Dataverse and allows you to replay it locally in Visual Studio with a debugger attached. This is the standard way to debug plug-ins. Power Platform Tools for Visual Studio is for development, not runtime debugging. Plug-in Registration Tool registers plug-ins but does not debug them. There is no Plug-in dashboard tool for debugging.',
   },
   {
     id: 2307,
@@ -682,7 +686,7 @@ var pl400Questions2 = [
       'Plug-in step event -> PostOperation',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Offline deployment is needed so the plug-in runs on the client for offline scenarios where syncing must not be blocked by exceptions. PostOperation event is correct because the business logic runs after records are updated. The combination ensures that unhandled exceptions do not prevent saves or syncing. Server deployment would block saves on exceptions. PreOperation runs before the operation completes. OnChange is not a valid plug-in step event.',
   },
   {
     id: 2310,
@@ -693,7 +697,7 @@ var pl400Questions2 = [
       'Choices -> OptionSetValueCollection',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'EntityReference is the correct type for lookup columns - it contains the logical name and GUID of the referenced record. OptionSetValueCollection is correct for multi-select choice (choices) columns as it holds multiple OptionSetValue objects. Entity type represents a full record, not a reference. List<OptionSetValue> is not the proper SDK type for choices. String cannot represent lookup or multi-select values properly.',
   },
   {
     id: 2313,
@@ -706,7 +710,7 @@ var pl400Questions2 = [
       'Assign the IOrganizationService object to a member variable.',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Setting KeepAlive to false on HTTP requests helps prevent timeout issues with external web service calls by not holding connections open. This is a recommended practice for plug-ins making external calls. Synchronous registration does not solve timeout issues. Isolation mode = none is not allowed in online environments. Caching IOrganizationService in a member variable is actually a bad practice that can cause issues with connection reuse.',
   },
   {
     id: 2315,
@@ -719,7 +723,7 @@ var pl400Questions2 = [
       'Power Apps (V2)',
     ],
     correct: [2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The Dataverse - When a row is added trigger automatically fires when a new row is created in the specified table, which is exactly what is needed. Power Apps (V2) requires explicit triggering from the app and adds unnecessary complexity. Manually trigger a flow requires user interaction. When an action is performed is for custom process actions (bound/unbound actions), not standard record creation.',
   },
   {
     id: 2321,
@@ -733,7 +737,7 @@ var pl400Questions2 = [
       'Add executionContext.getEventArgs().preventDefault() before the update.',
     ],
     correct: [1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Enable Async OnSave app setting allows asynchronous handlers to complete before the save operation ends. Wrap the update in a promise ensures the async Xrm.WebApi.updateRecord call completes properly. Without these, the OnSave event may complete before the async update finishes, causing inconsistent behavior. preventDefault would stop the save entirely. disableAsyncTimeout extends timeout but does not solve the core promise handling issue.',
   },
   {
     id: 2325,
@@ -744,7 +748,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'No - a synchronous webhook will fail and roll back the Dataverse operation if the Azure Function is unavailable for more than a few seconds, causing data loss. To support unavailability without data loss, you need asynchronous processing with retry capabilities, such as using Azure Service Bus or an asynchronous webhook step that can handle failures gracefully without blocking the main operation.',
   },
   {
     id: 2327,
@@ -755,7 +759,7 @@ var pl400Questions2 = [
       'No',
     ],
     correct: [1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'No - a timer-based polling approach has several issues: (1) If the function is unavailable during a 5-minute window, records created during that window may be missed; (2) Records created at window boundaries may be processed twice or skipped due to timing issues; (3) Polling is inefficient compared to event-driven approaches. The better solution would use Azure Service Bus with retry logic for reliable message delivery.',
   },
   {
     id: 2329,
@@ -766,7 +770,7 @@ var pl400Questions2 = [
       'Event subscription',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Event handler (requirement 1) is the endpoint that receives and processes events - the notification system for the infrastructure team. Event subscription (requirement 2) defines the routing rules that filter events based on criteria like order amount > $5,000 and route them to specific handlers. Event source is where events originate (Azure/Dataverse). Events are the actual messages. Subscriptions with filters route events to handlers.',
   },
   {
     id: 2332,
@@ -777,7 +781,7 @@ var pl400Questions2 = [
       'Add another field -> B. Delete AlternateKey1 and re-create it with all required fields',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Composite alternate keys enforce uniqueness on the combination of all key fields together, not individually. So Account Number + Account Name must be unique as a pair. To add a field to an existing alternate key, you must delete the key and recreate it with all desired fields - alternate keys cannot be modified after creation. Creating a separate key with only the new field would not include it in the original key combination.',
   },
   {
     id: 2363,
@@ -790,7 +794,7 @@ var pl400Questions2 = [
       'password less authentication',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Basic authentication (username and password) is a supported authentication method for custom connectors connecting to cloud-based APIs. Power Platform custom connectors support Basic, API Key, OAuth 2.0, and Windows authentication. Windows Active Directory is for on-premises scenarios. Certificate-based and passwordless authentication are not directly supported authentication types in the custom connector configuration.',
   },
   {
     id: 2365,
@@ -803,7 +807,7 @@ var pl400Questions2 = [
       'two-factor authentication',
     ],
     correct: [0],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Basic authentication using username and password is a supported authentication type for custom connectors. Custom connectors in Power Platform support: No authentication, Basic, API Key, OAuth 2.0, and Windows authentication. Biometric authentication is a device-level authentication method, not supported for API connectors. Two-factor authentication is an additional security layer, not a connector authentication type. Windows Active Directory is for on-premises domain scenarios.',
   },
   {
     id: 2374,
@@ -816,7 +820,7 @@ var pl400Questions2 = [
       'Add columns in each JavaScript file as a dependency.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Adding columns as dependencies in each JavaScript web resource file ensures that when non-developers edit the form, they receive a warning before removing columns that JavaScript code depends on. This prevents accidental breaking changes. Hiding columns does not prevent removal. Business required affects validation, not form customization. Non-event dependencies on the form would need manual maintenance as JavaScript files change.',
   },
   {
     id: 2375,
@@ -829,7 +833,7 @@ var pl400Questions2 = [
       'Add the Command Checker button to the page.',
     ],
     correct: [3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'The ribbondebug=true parameter adds the Command Checker button to the page, which allows you to inspect command bar buttons and their enable/display rules. It does not automatically run Command Checker or Power Apps Checker - you must click the added button to analyze specific commands. This helps troubleshoot why buttons may not be appearing or functioning correctly by showing the command definitions and rule evaluations.',
   },
   {
     id: 2377,
@@ -843,7 +847,7 @@ var pl400Questions2 = [
       'Manage',
     ],
     correct: [1, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'For two-way communication with Azure Service Bus, you need both Listen (to receive messages from the queue/topic) and Send (to send messages to the queue/topic) permissions. System customizer is a Dataverse security role, not a Service Bus permission. Read is not a valid Service Bus permission. Manage permission grants full control including creating/deleting entities, which exceeds what is needed for message processing.',
   },
   {
     id: 2415,
@@ -855,7 +859,7 @@ var pl400Questions2 = [
       'Doctor\'s name field in Doctor\'s entity -> Text',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Doctor\'s name on customer record should be a Lookup to reference the Doctor entity and maintain referential integrity. Auto-populate Refill date should be Calculated to automatically compute the date based on a formula (e.g., prescription date + days supply). Doctor\'s name in the Doctor entity should be Text as it is the primary name field storing the actual name value. Rollup aggregates child records. Option sets are for predefined choices.',
   },
   {
     id: 2421,
@@ -867,7 +871,7 @@ var pl400Questions2 = [
       'Tournament owner -> Lookup',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Division should be Option Set because divisions are a predefined list of choices (e.g., Junior, Senior, Professional). End date should be Date Only for capturing a calendar date without time. Tournament owner should be Lookup to reference a User, Team, or custom Owner entity. Text is too unstructured for divisions. Duration is for time spans, not dates. Unique Identifier is for GUIDs, not display fields.',
   },
   {
     id: 2423,
@@ -878,7 +882,7 @@ var pl400Questions2 = [
       'Code set 2 -> Add the following code at line CS203: request.KeepAlive = false;',
     ],
     correct: [0, 1],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Code set 1: Solution Checker flags queries that retrieve all columns (AllColumns) as a performance issue. Modify code to select only required columns using new ColumnSet("column1", "column2") instead of new ColumnSet(true). Code set 2: Setting request.KeepAlive = false prevents connection pooling issues with external web service calls from plug-ins. KeepAlive = true can cause timeout issues when connections are held open too long.',
   },
   {
     id: 2424,
@@ -892,7 +896,7 @@ var pl400Questions2 = [
       'Create a view with annual revenue sorted lowest value to highest value.',
     ],
     correct: [1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'To create charts, users need: (1) Configure filter fields on the Annual revenue field so it can be used as a filter in charts; (2) Add the Facility field to the account form so the data is available for charting. Fields must be on forms and properly configured with filter capabilities to be usable in chart creation. Quick view forms display related data but do not enable charting. Deleting fields removes them from availability. Views display data but do not enable chart field configuration.',
   },
   {
     id: 2426,
@@ -905,7 +909,7 @@ var pl400Questions2 = [
       'Change LookUp to Search',
     ],
     correct: [0, 3],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'LookUp returns only the first matching record, which can cause issues when multiple records should be found. Changing LookUp to Filter or Search returns all matching records. Filter uses exact matching conditions while Search performs text-based matching across specified columns. Both resolve issues where multiple customer records need to be found rather than just the first match.',
   },
   {
     id: 2427,
@@ -917,7 +921,7 @@ var pl400Questions2 = [
       'number of customers in the store -> data operation',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Outbound text (sending the notification) is an action - the actual work being performed. Nine customers in the store is a condition - the threshold that triggers the notification. Number of customers in the store is a data operation - counting or aggregating the checked-in customers. The flow likely fails because either the condition is not properly evaluating the count, or the data operation is not correctly calculating the number.',
   },
   {
     id: 2429,
@@ -929,6 +933,6 @@ var pl400Questions2 = [
       'Purpose of visit -> Option set',
     ],
     correct: [0, 1, 2],
-    explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+    explanation: 'Flip switch is ideal for binary opt-in/opt-out choices as it provides a clear toggle between two states. Linear gauge displays numeric values visually, perfect for showing the count of store visits. Option set presents a dropdown of predefined choices, appropriate for selecting the purpose of visit from a list. Radial knobs are for continuous value adjustment. Pen control is for signatures. Input masks format text input.',
   },
 ];
