@@ -177,15 +177,14 @@ var pl400Questions5 = [
   {
     id: 5125,
     text: 'Technicians for a company use a model-driven app on their phones to record information about service visits. Users do not have permissions to the Power Apps maker portal to create or update apps.\n\nTechnicians report issues with the model-driven app. You are unable to reproduce the issues in a development environment.\n\nYou need to provide instructions to the technicians to gather more details about the errors.\n\nWhich four actions should be performed in sequence?\n\nACTIONS:\n- Perform the steps to generate the errors and download the results from Monitor.\n- Open the app in a browser on the phone.\n- Open the application in a browser on a laptop computer when they return to the office.\n- Perform the steps to generate the errors while you monitor the technician\'s monitor debug session.\n- Add the following text to the end of the URL for the app: "monitor=true"\n- Open the app on a phone by using Power Apps mobile.',
-    type: 'multiple',
+    type: 'sequence',
     choices: [
-      'CORRECT ANSWER (SEQUENCE):',
       'Open the application in a browser on a laptop computer when they return to the office.',
       'Add the following text to the end of the URL for the app: "monitor=true"',
       'Open the app on a phone by using Power Apps mobile.',
       'Perform the steps to generate the errors while you monitor the technician\'s monitor debug session.',
     ],
-    correct: [0, 1, 2, 3, 4],
+    correct: [0, 1, 2, 3],
     explanation: 'The correct sequence for debugging model-driven app issues remotely: (1) Open the app in a browser on a laptop (Monitor requires a browser, not mobile app), (2) Add "monitor=true" to the URL to enable Monitor session, (3) Open Power Apps mobile on the phone, (4) Perform steps while you monitor the session. Opening in a browser enables Monitor connection. The phone app connects to the same session. This allows real-time debugging without requiring maker portal access.',
   },
   {
@@ -204,15 +203,14 @@ var pl400Questions5 = [
   {
     id: 5152,
     text: 'You are creating an app that connects to Microsoft Dataverse on a nightly basis. You plan to integrate the app with an external system.\n\nThe application must not authenticate by using a Microsoft Azure Active Directory (Azure AD) user account.\n\nYou need to enable the application to authenticate to Dataverse.\n\nWhich actions should you perform in sequence?\n\nACTIONS:\n- Use the Azure AD application id and secret as credentials in the application.\n- Use Dataverse application user username and password as credentials in the application.\n- Assign a security role to the application user in Dataverse.\n- Register the application in Azure AD with appropriate permissions.\n- Create the application user in Dataverse using the Application User form.\n- Grant the Dataverse application user the Access Dynamics 365 as organization users permission in Azure AD.',
-    type: 'multiple',
+    type: 'sequence',
     choices: [
-      'CORRECT ANSWER (SEQUENCE):',
       'Register the application in Azure AD with appropriate permissions.',
       'Create the application user in Dataverse using the Application User form.',
       'Assign a security role to the application user in Dataverse.',
       'Use the Azure AD application id and secret as credentials in the application.',
     ],
-    correct: [0, 1, 2, 3, 4],
+    correct: [0, 1, 2, 3],
     explanation: 'For service-to-service authentication without user credentials: (1) Register the application in Azure AD with Dynamics CRM permissions, (2) Create an application user in Dataverse using the Application User form, (3) Assign appropriate security roles to the application user, (4) Use the Azure AD application ID and client secret in the application. This enables OAuth client credentials flow. Using username/password would violate the requirement to not use Azure AD user accounts.',
   },
   {
@@ -295,7 +293,7 @@ var pl400Questions5 = [
   {
     id: 5191,
     text: 'An organization has a Dynamics 365 Sales environment. In the development environment, you create a business rule named BusinessRule1 on the Account entity. You deploy BusinessRule1 to production as part of a managed solution.\n\nYou need to remove BusinessRule1 from the production environment.\n\nWhich three actions should you perform in sequence?\n\nAVAILABLE ACTIONS:\n- In the development environment, navigate to Solutions.\n- Create a new managed solution in the production environment.\n- Export the solution as managed and import it in the production environment.\n- In the production environment, add a new business rule.\n- Select the solution that has BusinessRule1 and deactivate the rule.\n- Select the solution that has BusinessRule1, navigate to the appropriate entry, and delete the rule.',
-    type: 'multiple',
+    type: 'sequence',
     choices: [
       'In the development environment, navigate to Solutions.',
       'Select the solution that has BusinessRule1, navigate to the appropriate entry, and delete the rule.',
@@ -349,12 +347,16 @@ var pl400Questions5 = [
     id: 5217,
     text: 'You develop JavaScript for a web resource in a model-driven app.\n\nFor each statement, determine whether it is true.\n\nSTATEMENTS:\n1. The code uses the following exception: Invalid XML in HTTP and HTTPS resources asynchronously (net::ERR_XML).\n2. The code uses the following exception: Use strict equality operators === and !== (eqeqeq).\n3. The code raises the following exception: Avoid including debug script in non-development environments (best-remove-debug-script).',
     type: 'multiple',
+    ordered: true,
     choices: [
-      'Yes',
-      'Yes',
-      'No',
+      '1. Yes',
+      '1. No',
+      '2. Yes',
+      '2. No',
+      '3. Yes',
+      '3. No',
     ],
-    correct: [0, 1, 2],
+    correct: [0, 2, 5],
     explanation: 'Statement 1 (Yes): Invalid XML in async HTTP resources is a common JavaScript exception when parsing fails. Statement 2 (Yes): Using === and !== for strict equality is a best practice enforced by linters like ESLint (eqeqeq rule) to avoid type coercion issues. Statement 3 (No): Debug scripts should be removed from production, but this is a warning/recommendation, not an exception that would be raised during execution. Solution checker flags these but they do not throw runtime exceptions.',
   },
   {
@@ -400,7 +402,7 @@ var pl400Questions5 = [
   {
     id: 5233,
     text: 'You are developing a new Power Apps component framework (PCF) control.\n\nThe control must be deployed to a development environment by using the Power Apps CLI and a new solution.\n\nWhich four actions should you perform in sequence?\n\nACTIONS:\n- Add a solution reference to the project.\n- Build the project and solution.\n- Create a solution.\n- Deploy the solution.',
-    type: 'multiple',
+    type: 'sequence',
     choices: [
       'Create a solution.',
       'Add a solution reference to the project.',
@@ -536,14 +538,13 @@ var pl400Questions5 = [
   {
     id: 5277,
     text: 'A company uses Dynamics 365 Sales.\n\nSales commission must be calculated when an order is placed. You create an Azure Function to perform the calculation. The Azure Function has an HTTP trigger.\n\nYou need to configure the Plug-in Registration Tool to send data to the Azure Function when an order is placed.\n\nWhich three actions should you perform in sequence?\n\nAVAILABLE ACTIONS:\n- Select Register New Web Hook.\n- Select Register New Service Endpoint.\n- Register a New Step for Create of SalesOrder.\n- Enter the endpoint URL.\n- Enter a service endpoint.',
-    type: 'multiple',
+    type: 'sequence',
     choices: [
-      'CORRECT ANSWER (SEQUENCE):',
       'Select Register New Web Hook.',
       'Enter the endpoint URL.',
       'Register a New Step for Create of SalesOrder.',
     ],
-    correct: [0, 1, 2, 3],
+    correct: [0, 1, 2],
     explanation: 'To send data to an Azure Function when orders are created: (1) Use Register New Web Hook in the Plug-in Registration Tool, (2) Enter the Azure Function HTTP trigger endpoint URL, (3) Register a new step for the Create message on SalesOrder entity. Service Endpoints are for Azure Service Bus integration, not direct HTTP calls. Webhooks are the correct mechanism for calling HTTP endpoints like Azure Functions. The step registration triggers the webhook on specific entity operations.',
   },
   {
@@ -646,12 +647,16 @@ var pl400Questions5 = [
     id: 5295,
     text: 'You are developing a Power Platform solution that uses a plug-in. The plug-in includes the following code and a step registered in the PreOperation stage for the Create message on Account:\n- If account name is missing, throw an InvalidPluginExecutionException.\n- Set accountnumber = GenerateAccountNumber().\n\nFor each statement, select Yes if the statement is true. Otherwise, select No.\n\nSTATEMENTS:\n1. The GenerateAccountNumber method runs if the plug-in step registration is changed to the PostOperation stage.\n2. Creating an account in a model-driven app while excluding a name generates the error message "Account name is missing".\n3. The Organization service\'s Update method must run to update the database after setting the accountnumber value.',
     type: 'multiple',
+    ordered: true,
     choices: [
-      'No',
-      'Yes',
-      'No',
+      '1. Yes',
+      '1. No',
+      '2. Yes',
+      '2. No',
+      '3. Yes',
+      '3. No',
     ],
-    correct: [0, 1, 2],
+    correct: [1, 2, 5],
     explanation: 'Statement 1 (No): If changed to PostOperation, the account would already exist, so checking for missing name and throwing an exception would not prevent creation - the validation would be too late. Statement 2 (Yes): In PreOperation, the validation runs before the record is created, so missing name triggers the InvalidPluginExecutionException and displays the error. Statement 3 (No): In PreOperation stage, modifying InputParameters directly updates the record being created without needing a separate Update call.',
   },
   {
@@ -709,7 +714,7 @@ var pl400Questions5 = [
   {
     id: 5320,
     text: 'You are building a webhook-based integration for a Microsoft Azure Function.\n\nEach environment has a separate Azure Function endpoint that must be connected to. You must successfully complete testing in each environment before changes are applied in production. You copy the endpoint details from the Azure portal by using the Get function URL option.\n\nYou need to configure the webhook.\n\nWhich four actions should you perform in sequence?\n\nOPTIONS:\nAvailable actions:\n- Select Register New Web Hook.\n- Configure WebhookKey authentication.\n- Configure the webhook manually in production after testing.\n- Navigate to Power Apps Maker portal solution.\n- Configure a HttpHeader authentication.\n- Deploy the solution to production after testing.\n- Open the Plug-in Registration tool.\n- Create an environment variable for the endpoint URL.',
-    type: 'multiple',
+    type: 'sequence',
     choices: [
       'Create an environment variable for the endpoint URL.',
       'Open the Plug-in Registration tool.',
@@ -853,7 +858,7 @@ var pl400Questions5 = [
   {
     id: 5383,
     text: 'You are developing a Power Platform solution. You are modifying a business process flow.\nYou have created a new radial knob for the Total amount value and have added the radial knob to the form.\n\nThe Total amount value must be entered at initiation before moving to the next step.\n\nYou need to configure the business process flow.\n\nAvailable actions:\nA. Create a new solution and add the business process flow and export the solution. Delete the solution after export.\nB. Open the business process in the Business Process Flow designer and select Activate/Update.\nC. Add another step to the business process flow.\nD. Import the solution into Dataverse.\nE. Delete the business process flow.\nF. Copy custom control configurations to the business process flow FormXML for the related entity form.\n\nArrange the correct four actions in sequence.',
-    type: 'multiple',
+    type: 'sequence',
     choices: [
       'Add another step to the business process flow.',
       'Open the business process in the Business Process Flow designer and select Activate/Update.',
