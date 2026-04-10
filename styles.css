@@ -125,6 +125,10 @@ body {
   background: #7c3aed;
   color: #ede9fe;
 }
+.question-type-badge.sequence {
+  background: #0f766e;
+  color: #ccfbf1;
+}
 
 /* ── Question text ────────────────────────────────────────────────────── */
 .question-text {
@@ -217,6 +221,44 @@ body {
 
 .choice-item.correct  label { color: #86efac; }
 .choice-item.incorrect label { color: #fca5a5; }
+
+/* ── Sequence question badge ──────────────────────────────────────────── */
+.seq-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #0f766e;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-right: 0.5rem;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.choice-item.seq-item {
+  display: flex;
+  align-items: flex-start;
+}
+.choice-item.seq-item .seq-label {
+  flex: 1;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #cbd5e1;
+}
+.choice-item.seq-item.selected .seq-badge {
+  background: #0d9488;
+}
+.choice-item.seq-item.correct .seq-badge {
+  background: #15803d;
+}
+.choice-item.seq-item.incorrect .seq-badge {
+  background: #b91c1c;
+}
+.choice-item.seq-item.correct .seq-label  { color: #86efac; }
+.choice-item.seq-item.incorrect .seq-label { color: #fca5a5; }
 
 /* ── Submit button (multiple choice) ─────────────────────────────────── */
 .submit-btn {
@@ -1793,6 +1835,13 @@ body {
 
 .qp-choice-item.qp-correct  label { color: #86efac; }
 .qp-choice-item.qp-incorrect label { color: #fca5a5; }
+
+/* QP sequence items */
+.qp-choice-item.qp-seq-item { display: flex; align-items: flex-start; }
+.qp-choice-item.qp-seq-item .seq-label { flex: 1; font-size: 0.9rem; line-height: 1.5; color: #cbd5e1; }
+.qp-choice-item.qp-seq-item.qp-correct  .seq-label { color: #86efac; }
+.qp-choice-item.qp-seq-item.qp-incorrect .seq-label { color: #fca5a5; }
+.qp-seq-badge { margin-right: 0.5rem; flex-shrink: 0; }
 
 .qp-btn-row {
   display: flex;

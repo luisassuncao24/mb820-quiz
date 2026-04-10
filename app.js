@@ -896,16 +896,27 @@
     }
 
     var q = qp.pool[qp.poolIdx];
-    var orderedChoices = shuffle(q.choices.map(function (t, i) { return { text: t, idx: i }; }));
+    var orderedChoices = (q.type === "sequence" || q.ordered)
+      ? q.choices.map(function (t, i) { return { text: t, idx: i }; })
+      : shuffle(q.choices.map(function (t, i) { return { text: t, idx: i }; }));
+    var qpSeqOrder = []; // tracks click-order for sequence type
 
     var choicesHtml = "";
     orderedChoices.forEach(function (ch, di) {
-      choicesHtml +=
-        '<div class="qp-choice-item" data-idx="' + ch.idx + '">' +
-          '<input type="' + (q.type === "multiple" ? "checkbox" : "radio") +
-            '" name="qp-choice" id="qp-c' + di + '" value="' + ch.idx + '">' +
-          '<label for="qp-c' + di + '">' + qpEsc(ch.text) + '</label>' +
-        '</div>';
+      if (q.type === "sequence") {
+        choicesHtml +=
+          '<div class="qp-choice-item qp-seq-item" data-idx="' + ch.idx + '">' +
+            '<span class="seq-badge qp-seq-badge"></span>' +
+            '<span class="seq-label">' + qpEsc(ch.text) + '</span>' +
+          '</div>';
+      } else {
+        choicesHtml +=
+          '<div class="qp-choice-item" data-idx="' + ch.idx + '">' +
+            '<input type="' + (q.type === "multiple" ? "checkbox" : "radio") +
+              '" name="qp-choice" id="qp-c' + di + '" value="' + ch.idx + '">' +
+            '<label for="qp-c' + di + '">' + qpEsc(ch.text) + '</label>' +
+          '</div>';
+      }
     });
 
     container.innerHTML =
@@ -917,14 +928,14 @@
             (qp.bestStreak > 0 ? ' &nbsp;&bull;&nbsp; Best: <span class="qp-best-num">' + qp.bestStreak + '</span>' : '') +
           '</span>' +
         '</div>' +
-        '<div class="question-type-badge ' + q.type + '" style="margin-bottom:0.75rem">' +
-          (q.type === "multiple" ? 'Multiple Choice \u2014 select all that apply' : 'Single Choice') +
+        '<div class="question-type-badge ' + (q.type === "sequence" ? "sequence" : q.type) + '" style="margin-bottom:0.75rem">' +
+          (q.type === "sequence" ? 'Sequence \u2014 select in the correct order' : q.type === "multiple" ? 'Multiple Choice \u2014 select all that apply' : 'Single Choice') +
         '</div>' +
         (q.context ? '<div class="question-context">' + q.context + '</div>' : '') +
         '<div class="question-text qp-question-text">' + qpEsc(q.text) + '</div>' +
         '<div class="qp-choices">' + choicesHtml + '</div>' +
         '<div class="qp-btn-row">' +
-          '<button class="qp-submit-btn" id="qp-submit-btn"' + (q.type === "single" ? " disabled" : "") + '>Submit Answer</button>' +
+          '<button class="qp-submit-btn" id="qp-submit-btn"' + (q.type === "sequence" || q.type === "single" ? " disabled" : "") + '>Submit Answer</button>' +
           '<button class="qp-skip-btn" id="qp-skip-btn">Skip \u23ED</button>' +
           '<button class="report-issue-btn qp-report-btn" id="qp-report-btn" title="Copy question details to clipboard to report an issue">\uD83D\uDCCB Copy</button>' +
         '</div>' +
@@ -932,6 +943,35 @@
       '</div>';
 
     // Choice interaction
+    if (q.type === "sequence") {
+      container.querySelectorAll(".qp-seq-item").forEach(function (item) {
+        item.addEventListener("click", function () {
+          if (item.classList.contains("qp-correct") || item.classList.contains("qp-incorrect")) return;
+          var idx = parseInt(item.dataset.idx, 10);
+          var pos = qpSeqOrder.indexOf(idx);
+          var badge = item.querySelector(".qp-seq-badge");
+          if (pos === -1) {
+            qpSeqOrder.push(idx);
+            item.classList.add("qp-selected");
+            if (badge) badge.textContent = qpSeqOrder.length;
+            var sb = document.getElementById("qp-submit-btn");
+            if (sb && qpSeqOrder.length === q.correct.length) sb.disabled = false;
+          } else {
+            qpSeqOrder.splice(pos, 1);
+            item.classList.remove("qp-selected");
+            if (badge) badge.textContent = "";
+            container.querySelectorAll(".qp-seq-item.qp-selected").forEach(function (el) {
+              var elIdx = parseInt(el.dataset.idx, 10);
+              var elPos = qpSeqOrder.indexOf(elIdx);
+              var elBadge = el.querySelector(".qp-seq-badge");
+              if (elBadge) elBadge.textContent = elPos + 1;
+            });
+            var sb = document.getElementById("qp-submit-btn");
+            if (sb) sb.disabled = true;
+          }
+        });
+      });
+    } else {
     container.querySelectorAll(".qp-choice-item").forEach(function (item) {
       var inp = item.querySelector("input");
       item.addEventListener("click", function (e) {
@@ -958,9 +998,10 @@
         }
       });
     });
+    } // end sequence/non-sequence branch
 
     var submitBtn = document.getElementById("qp-submit-btn");
-    if (submitBtn) submitBtn.addEventListener("click", function () { onQpSubmit(container, q); });
+    if (submitBtn) submitBtn.addEventListener("click", function () { onQpSubmit(container, q, qpSeqOrder); });
     var skipBtn = document.getElementById("qp-skip-btn");
     if (skipBtn) skipBtn.addEventListener("click", function () { qp.poolIdx++; renderQuickPractice(); });
     var qpReportBtn = document.getElementById("qp-report-btn");
@@ -970,9 +1011,12 @@
     }
   }
 
-  function onQpSubmit(container, q) {
+  function onQpSubmit(container, q, qpSeqOrder) {
     var selected;
-    if (q.type === "single") {
+    if (q.type === "sequence") {
+      if (!qpSeqOrder || qpSeqOrder.length !== q.correct.length) return;
+      selected = qpSeqOrder.slice();
+    } else if (q.type === "single") {
       var chk = container.querySelector("input[type=radio]:checked");
       if (!chk) return;
       selected = [parseInt(chk.value, 10)];
@@ -982,15 +1026,29 @@
       if (!selected.length) return;
     }
 
-    var sortedSel = selected.slice().sort(function (a, b) { return a - b; });
-    var sortedCor = q.correct.slice().sort(function (a, b) { return a - b; });
-    var isCorrect = arraysEqual(sortedSel, sortedCor);
+    var isCorrect;
+    if (q.type === "sequence") {
+      isCorrect = arraysEqual(selected, q.correct);
+    } else {
+      var sortedSel = selected.slice().sort(function (a, b) { return a - b; });
+      var sortedCor = q.correct.slice().sort(function (a, b) { return a - b; });
+      isCorrect = arraysEqual(sortedSel, sortedCor);
+    }
 
     container.querySelectorAll(".qp-choice-item").forEach(function (item) {
       var idx = parseInt(item.dataset.idx, 10);
-      item.querySelector("input").disabled = true;
-      if (q.correct.includes(idx))  item.classList.add("qp-correct");
-      else if (selected.includes(idx)) item.classList.add("qp-incorrect");
+      var inp = item.querySelector("input");
+      if (inp) inp.disabled = true;
+      item.style.cursor = "default";
+      if (q.correct.includes(idx)) {
+        item.classList.add("qp-correct");
+        if (q.type === "sequence") {
+          var badge = item.querySelector(".qp-seq-badge");
+          if (badge) badge.textContent = q.correct.indexOf(idx) + 1;
+        }
+      } else if (selected.includes(idx)) {
+        item.classList.add("qp-incorrect");
+      }
     });
 
     if (isCorrect) {
@@ -2041,8 +2099,8 @@
             '<button class="peek-btn" id="peek-btn" title="Peek at your current score">\uD83D\uDC41\uFE0F Peek</button>') +
         quizNameBadge +
       '</div>' +
-      '<div class="question-type-badge ' + (q.type === "multiple" ? "multiple" : "single") + '">' +
-        (q.type === "multiple" ? "Multiple Choice \u2014 select all that apply" : "Single Choice") +
+      '<div class="question-type-badge ' + (q.type === "sequence" ? "sequence" : q.type === "multiple" ? "multiple" : "single") + '">' +
+        (q.type === "sequence" ? "Sequence \u2014 select in the correct order" : q.type === "multiple" ? "Multiple Choice \u2014 select all that apply" : "Single Choice") +
       '</div>' +
       (q.context ? '<div class="question-context">' + q.context + '</div>' : '') +
       '<div class="question-text">' + q.text + '</div>' +
@@ -2068,52 +2126,95 @@
     // Test-case questions intentionally group choices by type (e.g. all
     // "HTTP call:" options together), so preserve their original order.
     const indexedChoices = q.choices.map(function (text, idx) { return { text: text, originalIdx: idx }; });
-    const choiceOrder = caseStudyMode !== null ? indexedChoices : shuffle(indexedChoices);
+    const choiceOrder = (caseStudyMode !== null || q.type === "sequence" || q.ordered) ? indexedChoices : shuffle(indexedChoices);
+
+    const sequenceOrder = []; // tracks click-order for type:"sequence" questions
 
     choiceOrder.forEach(function (choiceItem, displayIdx) {
       const item  = document.createElement("div");
-      item.className    = "choice-item";
       item.dataset.idx  = choiceItem.originalIdx;
 
-      const input = document.createElement("input");
-      input.type  = q.type === "multiple" ? "checkbox" : "radio";
-      input.name  = "choice";
-      input.id    = "choice-" + displayIdx;
-      input.value = choiceItem.originalIdx;
+      if (q.type === "sequence") {
+        item.className = "choice-item seq-item";
 
-      const label  = document.createElement("label");
-      label.htmlFor    = "choice-" + displayIdx;
-      label.textContent = choiceItem.text;
+        const badge = document.createElement("span");
+        badge.className = "seq-badge";
 
-      item.appendChild(input);
-      item.appendChild(label);
+        const label = document.createElement("span");
+        label.className = "seq-label";
+        label.textContent = choiceItem.text;
 
-      if (q.type === "single") {
+        item.appendChild(badge);
+        item.appendChild(label);
+
         item.addEventListener("click", function () {
           if (answered) return;
-          choicesEl.querySelectorAll(".choice-item").forEach(function (el) {
-            el.classList.remove("selected");
-            el.querySelector("input").checked = false;
-          });
-          input.checked = true;
-          item.classList.add("selected");
-          // Enable the submit button once an option is selected
-          const submitBtn = choicesEl.querySelector(".submit-btn");
-          if (submitBtn) submitBtn.disabled = false;
+          const idx = choiceItem.originalIdx;
+          const pos = sequenceOrder.indexOf(idx);
+          if (pos === -1) {
+            sequenceOrder.push(idx);
+            item.classList.add("selected");
+            badge.textContent = sequenceOrder.length;
+            const submitBtn = choicesEl.querySelector(".submit-btn");
+            if (submitBtn && sequenceOrder.length === q.correct.length) submitBtn.disabled = false;
+          } else {
+            sequenceOrder.splice(pos, 1);
+            item.classList.remove("selected");
+            badge.textContent = "";
+            // Re-number remaining selected items
+            choicesEl.querySelectorAll(".seq-item.selected").forEach(function (el) {
+              const elIdx = parseInt(el.dataset.idx, 10);
+              const elPos = sequenceOrder.indexOf(elIdx);
+              const elBadge = el.querySelector(".seq-badge");
+              if (elBadge) elBadge.textContent = elPos + 1;
+            });
+            const submitBtn = choicesEl.querySelector(".submit-btn");
+            if (submitBtn) submitBtn.disabled = true;
+          }
         });
       } else {
-        // For multiple choice the browser toggles input.checked on click/change.
-        // Sync the selected class via the change event — do NOT re-toggle input.checked.
-        input.addEventListener("change", function () {
-          if (answered) return;
-          item.classList.toggle("selected", input.checked);
-        });
-        // Handle clicks on the item div itself (not label/input) which don't reach the input.
-        item.addEventListener("click", function (e) {
-          if (answered || e.target === input || e.target === label) return;
-          input.checked = !input.checked;
-          item.classList.toggle("selected", input.checked);
-        });
+        item.className    = "choice-item";
+
+        const input = document.createElement("input");
+        input.type  = q.type === "multiple" ? "checkbox" : "radio";
+        input.name  = "choice";
+        input.id    = "choice-" + displayIdx;
+        input.value = choiceItem.originalIdx;
+
+        const label  = document.createElement("label");
+        label.htmlFor    = "choice-" + displayIdx;
+        label.textContent = choiceItem.text;
+
+        item.appendChild(input);
+        item.appendChild(label);
+
+        if (q.type === "single") {
+          item.addEventListener("click", function () {
+            if (answered) return;
+            choicesEl.querySelectorAll(".choice-item").forEach(function (el) {
+              el.classList.remove("selected");
+              el.querySelector("input").checked = false;
+            });
+            input.checked = true;
+            item.classList.add("selected");
+            // Enable the submit button once an option is selected
+            const submitBtn = choicesEl.querySelector(".submit-btn");
+            if (submitBtn) submitBtn.disabled = false;
+          });
+        } else {
+          // For multiple choice the browser toggles input.checked on click/change.
+          // Sync the selected class via the change event — do NOT re-toggle input.checked.
+          input.addEventListener("change", function () {
+            if (answered) return;
+            item.classList.toggle("selected", input.checked);
+          });
+          // Handle clicks on the item div itself (not label/input) which don't reach the input.
+          item.addEventListener("click", function (e) {
+            if (answered || e.target === input || e.target === label) return;
+            input.checked = !input.checked;
+            item.classList.toggle("selected", input.checked);
+          });
+        }
       }
 
       choicesEl.appendChild(item);
@@ -2123,7 +2224,13 @@
     const submitBtn = document.createElement("button");
     submitBtn.className   = "submit-btn";
     submitBtn.textContent = "Submit Answer";
-    if (q.type === "single") {
+    if (q.type === "sequence") {
+      // Disabled until the user selects all required steps
+      submitBtn.disabled = true;
+      submitBtn.addEventListener("click", function () {
+        onSubmitSequence(q, sequenceOrder);
+      });
+    } else if (q.type === "single") {
       // Disabled until the user selects an option
       submitBtn.disabled = true;
       submitBtn.addEventListener("click", function () {
@@ -2161,12 +2268,28 @@
     submitAnswer(q, selected);
   }
 
+  function onSubmitSequence(q, sequenceOrder) {
+    if (answered) return;
+    if (sequenceOrder.length !== q.correct.length) {
+      showInlineFeedback("Please select all " + q.correct.length + " steps in the correct order.");
+      return;
+    }
+    submitAnswer(q, sequenceOrder);
+  }
+
   function submitAnswer(q, selected) {
     answered = true;
 
-    const sortedSelected = selected.slice().sort(function (a, b) { return a - b; });
-    const sortedCorrect  = q.correct.slice().sort(function (a, b) { return a - b; });
-    const isCorrect = arraysEqual(sortedSelected, sortedCorrect);
+    // For sequence questions, order matters — compare directly without sorting.
+    // For all other types, sort both arrays before comparing.
+    let isCorrect;
+    if (q.type === "sequence") {
+      isCorrect = arraysEqual(selected, q.correct);
+    } else {
+      const sortedSelected = selected.slice().sort(function (a, b) { return a - b; });
+      const sortedCorrect  = q.correct.slice().sort(function (a, b) { return a - b; });
+      isCorrect = arraysEqual(sortedSelected, sortedCorrect);
+    }
 
     // Partial credit for multiple-choice: count how many selected answers are correct
     let questionScore = 0;
@@ -2187,11 +2310,17 @@
     choicesEl.querySelectorAll(".choice-item").forEach(function (item) {
       const idx = parseInt(item.dataset.idx, 10);
       const inp = item.querySelector("input");
-      inp.disabled = true;
+      if (inp) inp.disabled = true;
+      item.style.cursor = "default";
 
       if (practiceMode) {
         if (q.correct.includes(idx)) {
           item.classList.add("correct");
+          // For sequence items show the correct position number
+          if (q.type === "sequence") {
+            const badge = item.querySelector(".seq-badge");
+            if (badge) badge.textContent = q.correct.indexOf(idx) + 1;
+          }
         } else if (selected.includes(idx)) {
           item.classList.add("incorrect");
         }
