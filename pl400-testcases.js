@@ -3,12 +3,12 @@ var PL400_TEST_CASES = [
     key: 'city_power_and_light',
     label: 'City Power & Light',
     description: 'City Power & Light case study',
-    scenario: 'City Power & Light case study.',
+    scenario: 'City Power & Light (CPL) is an energy company replacing its Planning Hub spreadsheet with a Power Platform solution. The Planning Hub manages claim submissions and funding applications. CPL also builds a Suitability Assessment Tool as a PCF component and a Claim Submission Portal with a custom connector secured by a header-based API key. A key challenge is a PCF deployment issue where changes in development do not appear after deployment.',
     questions: [
       {
         id: 9036,
         text: 'You need to design the Planning Hub data model.\n\nWhich four actions should you perform in sequence?\n\nAvailable options:\nA. Select the Contact table\nB. Modify a column\nC. Create a column\nD. Enable auditing\nE. Create a custom table\nF. Enable column security\nG. Create column security profile\nH. Start auditing',
-        type: 'multiple',
+        type: 'sequence',
         choices: [
           'Select the Contact table',
           'Modify a column',
@@ -16,7 +16,7 @@ var PL400_TEST_CASES = [
           'Create column security profile',
         ],
         correct: [0, 1, 2, 3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'The correct sequence is: (1) Select the Contact table — the Planning Hub extends the existing Contact table rather than creating a new one. (2) Modify a column — an existing column on Contact needs to be modified to enable column-level security on it. (3) Enable column security — this activates field-level security on the specific column, restricting who can read or update it. (4) Create column security profile — a profile is then created and users/teams are added to it to grant granular access to the secured column. The other options (Create a custom table, Create a column, Enable auditing, Start auditing) are not part of this specific data-model sequence for the Planning Hub.',
       },
       {
         id: 9037,
@@ -29,7 +29,7 @@ var PL400_TEST_CASES = [
           'form',
         ],
         correct: [2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'A component library is correct because the Suitability Assessment Tool needs to be a reusable, shareable set of components that can be embedded across multiple canvas apps within City Power & Light. Component libraries package custom components so they can be distributed and updated centrally. A PCF control is a single custom control for a field or view, not a multi-component tool. A view displays a list of records. A form is for viewing or editing a single record.',
       },
       {
         id: 9038,
@@ -42,7 +42,7 @@ var PL400_TEST_CASES = [
           'Function',
         ],
         correct: [0],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Azure Logic App is correct because the Planning Hub application needs to orchestrate multi-step automated workflows — retrieving submission data, routing approvals, and recording results. Logic Apps provide a designer-first workflow engine with hundreds of connectors. Azure Service Bus is a message broker for decoupled async messaging, not an orchestration engine. Azure Key Vault stores secrets and certificates. Azure Functions provide event-driven compute but require custom code to orchestrate multi-step logic, unlike Logic Apps which have built-in connectors and flow control.',
       },
       {
         id: 9104,
@@ -54,7 +54,7 @@ var PL400_TEST_CASES = [
           'Remove the column after the deployment -> Upgrade',
         ],
         correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Solution to deploy → Claim submission portal: the Claim Submission Portal solution contains the customizations that need to be deployed (the column that must be removed exists in this solution). How to export → Export the unmanaged solution as managed: deploying to a production-like environment requires a managed solution, which prevents unintended modifications by end users and enforces solution layering. Remove the column after deployment → Upgrade: the Upgrade action applies all pending staged changes AND removes solution components that were deleted in the source (such as the column to be removed). The "Update" action applies changes but does NOT remove deleted components. "Stage for Upgrade" is a preparatory step only.',
       },
       {
         id: 9105,
@@ -67,7 +67,7 @@ var PL400_TEST_CASES = [
           'settings',
         ],
         correct: [2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Environment variables are the correct component because the funding application issue is caused by a configuration value (such as an API endpoint or external service URL) being hardcoded or missing for the current environment. Environment variables store per-environment configuration values that travel with a solution, allowing each environment (dev, test, prod) to hold its own value. Secure config and unsecure config are for Dataverse plug-in step configurations, not environment-wide settings. "Settings" is not a specific Power Platform component for this purpose.',
       },
       {
         id: 9106,
@@ -78,7 +78,7 @@ var PL400_TEST_CASES = [
           'Interface component 2 -> Edit filters in the Filter by area',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'For the missing email address issue: the "Created By" (email) column must be added to the Quick Find view\'s Table columns using the filter icon in the Table columns area — this adds the column so it appears in search results. For the description search issue: the description column must be added to the view\'s search criteria using "Edit filters" in the Filter by area — this registers the column as a Quick Find search column so searches on it return results. Quick Find views have two separate areas: "Table columns" (what is displayed) and "Find columns" (what is searched).',
       },
       {
         id: 9210,
@@ -90,7 +90,7 @@ var PL400_TEST_CASES = [
           'Record the result of the API upload -> Dataverse',
         ],
         correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Retrieve data → Excel Online for Business: the Planning Hub replaces a spreadsheet, so submission data is stored in Excel files and must be read using the Excel Online for Business connector. Approve the submission in Microsoft Teams → Approvals: the Approvals connector (not the Teams connector) is the correct choice for sending and tracking approval requests within Microsoft Teams; the Teams connector only posts messages. Record the result of the API upload → Dataverse: after processing, the result is persisted back to Dataverse (the underlying data store for the Power Platform solution) using the Dataverse connector.',
       },
       {
         id: 9308,
@@ -103,19 +103,19 @@ var PL400_TEST_CASES = [
           'pac pcf version --strategy manifest',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'pac solution version increments the solution version number so the platform recognises that a new version exists and processes the import. pac solution import then imports the updated solution into the environment, making the PCF changes visible. Without a version bump, reimporting the same version may be skipped or treated as already up-to-date. pac pcf push deploys a PCF control directly to a dev environment for quick testing but does not fix a solution-level deployment issue. pac pcf version --strategy manifest only sets the version-bumping strategy for future builds and does not import anything.',
       },
       {
         id: 9309,
         text: 'City Power & Light must configure a custom connector for the Claim Submission Portal API. The API uses a header-based API key. You need the basic connector setup steps only.\n\nWhich three actions should you perform in sequence?\n\nOPTIONS:\nAvailable actions:\n- Certify the connector.\n- Enable basic authentication.\n- Share the connector.\n- Enable API key authentication.\n- Import an OpenAPI definition.\n- Create a connector by using the wizard.\n- Enable OAuth 2.0 authentication.\n- Import a Postman collection.',
-        type: 'multiple',
+        type: 'sequence',
         choices: [
           'Create a connector by using the wizard.',
           'Enable API key authentication.',
           'Share the connector.',
         ],
         correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'The correct sequence for a basic custom connector with header-based API key authentication is: (1) Create a connector by using the wizard — this initiates the connector and sets up the general description and host URL. (2) Enable API key authentication — since the API uses a header-based API key, this security type must be configured before the connector can be used. (3) Share the connector — once the connector is functional, share it with users who need to create connections. Certifying is an optional AppSource publishing step. Importing OpenAPI/Postman collection are alternative creation methods, not needed when using the wizard. Basic authentication and OAuth 2.0 do not match a header-based API key.',
       },
       {
         id: 9354,
@@ -128,12 +128,12 @@ var PL400_TEST_CASES = [
           'pac solution init',
         ],
         correct: [1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'pac pcf init is correct because the eligibility assessment tool is a Power Apps Component Framework (PCF) control. This command scaffolds a new PCF project with the required folder structure, manifest, and TypeScript files needed to build a custom control. pac application install installs an existing managed application from the catalogue. pac plugin init creates a Dataverse plug-in project. pac solution init creates a new solution container but does not generate PCF control scaffolding. The fact that deployed changes did not appear is a separate issue resolved by version-bumping and re-importing the solution.',
       },
       {
         id: 9355,
         text: 'You are the lead Microsoft Power Platform developer for a company. Developers cannot work on the same components at the same time. Requirements include automatic push of individual changes into existing environments for testing, a dedicated development environment, and the ability to run but not create deployments directly from Microsoft Power Platform.\n\nWhich four actions should you perform in sequence?\n\nOPTIONS:\n- Assign developers to the Deployment Pipeline User role.\n- Assign developers to the Release Administrator role.\n- Create a Microsoft Power Platform pipeline.\n- Create developer environments.\n- Create a Microsoft Azure DevOps pipeline.\n- Create production environments.\n- Enable managed environments.',
-        type: 'multiple',
+        type: 'sequence',
         choices: [
           'Enable managed environments.',
           'Create developer environments.',
@@ -141,12 +141,12 @@ var PL400_TEST_CASES = [
           'Assign developers to the Deployment Pipeline User role.',
         ],
         correct: [0, 1, 2, 3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'The correct sequence is: (1) Enable managed environments — Power Platform pipelines require managed environments; this is the prerequisite. (2) Create developer environments — each developer needs an isolated personal environment to work independently without conflicts. (3) Create a Microsoft Power Platform pipeline — this links the developer environments to target (test/prod) environments and enables automated deployments. (4) Assign developers to the Deployment Pipeline User role — this grants developers the ability to run (but not create or manage) pipelines, matching the requirement to "run but not create deployments". Assigning the Release Administrator role would let developers create pipelines, which is not required. Azure DevOps pipelines are a separate tool and not needed here.',
       },
       {
         id: 9356,
         text: 'You are designing a custom connector for an internal API used by Contoso, LLC. Authentication to the API uses an API key stored in Azure Key Vault, and each environment has its own API key. You need to reference the API key from Key Vault in the custom connector.\n\nWhich four actions should you perform in sequence?\n\nOPTIONS:\n- Use the syntax @environmentVariables("contoso.ApiKey")\n- Use the syntax @environmentVariables("APIKey")\n- Add a role assignment to Key Vault\n- Create an environment variable named APIKey (contoso_APIKey)\n- Create a cloud flow\n- Create a connection reference\n- Remove the current value\n- Create a connection',
-        type: 'multiple',
+        type: 'sequence',
         choices: [
           'Create an environment variable named APIKey (contoso_APIKey)',
           'Remove the current value',
@@ -154,7 +154,7 @@ var PL400_TEST_CASES = [
           'Use the syntax @environmentVariables("contoso.ApiKey")',
         ],
         correct: [0, 1, 2, 3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'The correct sequence for referencing an Azure Key Vault secret via an environment variable in a custom connector is: (1) Create an environment variable named APIKey with the schema name contoso_APIKey — this creates the variable that will hold the Key Vault reference. (2) Remove the current value — the environment variable\'s current (plain-text) value must be cleared so that the Key Vault secret reference takes effect instead. (3) Create a connection — establish the Azure Key Vault connection that the environment variable will use to fetch the secret at runtime. (4) Use the syntax @environmentVariables("contoso.ApiKey") — reference the environment variable in the custom connector using the publisher-prefixed syntax (contoso.ApiKey maps to the schema name contoso_APIKey). The syntax @environmentVariables("APIKey") is incorrect because it omits the publisher prefix.',
       },
     ],
   },
@@ -162,7 +162,7 @@ var PL400_TEST_CASES = [
     key: 'contoso_pharmaceuticals',
     label: 'Contoso Pharmaceuticals',
     description: 'Contoso Pharmaceuticals case study',
-    scenario: 'Contoso Pharmaceuticals case study.',
+    scenario: 'Contoso Pharmaceuticals is a pharmaceutical company that has built a customised Microsoft Power Platform application and needs to deploy it to multiple partner pharmacies. The key challenge is packaging and deploying customisations reliably across many target environments while preventing unauthorised modifications and ensuring the solution works correctly in each environment.',
     questions: [
       {
         id: 9025,
@@ -175,7 +175,7 @@ var PL400_TEST_CASES = [
           'Write a Web API to move customizations.',
         ],
         correct: [1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Create packages for Package Deployer is correct. Package Deployer packages can bundle multiple solutions, reference data, and custom post-import configuration scripts into a single deployable unit. This makes it ideal for distributing a full application to many separate pharmacy environments. Simply exporting from Customize the System creates a single solution without automation scripts. Creating customisations via Organisation Service API is manual and error-prone. Writing a custom Web API to move customisations is unnecessary when Package Deployer already provides this capability.',
       },
       {
         id: 9026,
@@ -188,7 +188,7 @@ var PL400_TEST_CASES = [
           'Clone the solution.',
         ],
         correct: [1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Create packages for Package Deployer is the best approach for multi-environment deployment without allowing changes. A Package Deployer package deploys managed solutions, which prevents modifications in the target environment. It also supports scripts for post-import configuration to ensure consistency across different pharmacy environments. Recreating customisations manually is error-prone and does not scale. Cloning a solution only creates a copy in the same environment and does not address managed deployment.',
       },
       {
         id: 9027,
@@ -201,7 +201,7 @@ var PL400_TEST_CASES = [
           'Navigate to Customize the System and export everything to a managed solution.',
         ],
         correct: [3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Navigate to Customize the System and export everything to a managed solution is correct in this variant of the question. Exporting as a managed solution creates a deployable package that locks down customisations in the target environment, preventing modifications by pharmacy users. While Package Deployer (option B) is also a valid deployment approach, this question\'s answer set identifies the direct managed solution export as the correct approach. Cloning the solution creates a copy within the same environment and is not a deployment mechanism. Recreating customisations manually is time-consuming and not repeatable across many pharmacies.',
       },
       {
         id: 9091,
@@ -214,7 +214,7 @@ var PL400_TEST_CASES = [
           'All employees -> Basic User',
         ],
         correct: [0, 1, 2, 3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'UserA → Environment Maker: Environment Maker is the minimum role for a user who needs to create resources such as apps, flows, or connections within an environment, without full admin rights. UserB → System Administrator: System Administrator has full permissions to customise, configure, and manage the environment; this is the minimum role needed for an administrator. UserC → System Customizer: System Customizer can create, modify, and delete custom tables, columns, and other schema components, making it the minimum role for a developer/customiser without full admin rights. All employees → Basic User: Basic User is the minimum role for end users who only need to read and use existing data and apps — it grants access to the environment without any customisation rights.',
       },
     ],
   },
@@ -222,7 +222,7 @@ var PL400_TEST_CASES = [
     key: 'northwind_traders',
     label: 'Northwind Traders',
     description: 'Northwind Traders case study',
-    scenario: 'Northwind Traders case study.',
+    scenario: 'Northwind Traders is a company that exposes a RESTful Web API through an Azure Function. Researchers need to update Dataverse Account records with data returned by the API via Power Automate flows. The company builds a custom connector for low-code integration and uses environment variables to avoid hardcoding values. A known issue is a "remote name could not be resolved" DNS error when testers connect to the production API, and a solution import failure caused by a missing custom connector component.',
     questions: [
       {
         id: 9092,
@@ -235,7 +235,7 @@ var PL400_TEST_CASES = [
           'Account table',
         ],
         correct: [2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Custom connector is the missing component. When a solution containing a cloud flow that references a custom connector is imported into another environment, the custom connector must also be included in the solution. Connections (runtime instances) are environment-specific and cannot be packaged in a solution. Service endpoints are used for Dataverse plug-in integrations with external services like Azure Service Bus, not for REST API custom connectors. The Account table is a standard Dataverse table and would not be missing from an import.',
       },
       {
         id: 9162,
@@ -248,7 +248,7 @@ var PL400_TEST_CASES = [
           'Webhook that contacts the Web API',
         ],
         correct: [2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Power Automate flow that uses the custom connector is correct because all three requirements are met: (1) low-code — Power Automate is a low-code tool with no custom code needed; (2) automatic processing — flows can be triggered automatically by events (e.g., a Dataverse record change); (3) Power Automate use by researchers — flows are designed for citizen developers. A canvas app requires manual user interaction and is not automatic. A plug-in requires C# code development, which is not low-code. A webhook can receive notifications but cannot orchestrate multi-step processing through the custom connector in a low-code manner.',
       },
       {
         id: 9206,
@@ -259,7 +259,7 @@ var PL400_TEST_CASES = [
           'Update a row connection type -> Service principal',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Change Type → Added or Modified: the trigger should fire when account records are either created (Added) OR updated (Modified), so that any new DataId or changes to an existing DataId are processed. Using "Added" alone would miss updates; "Modified" alone would miss new records. Update a row connection type → Service principal: researchers do not have edit privileges on Account records. Using "Service principal" allows the flow to authenticate as an application (app user) with a Dataverse security role that has write permissions, bypassing the individual user\'s permissions. "User account" would use the researcher\'s credentials and fail. "API key" is not a valid Dataverse connection type for row updates.',
       },
       {
         id: 9207,
@@ -272,7 +272,7 @@ var PL400_TEST_CASES = [
           'Unable to create a sandbox environment -> Microsoft Power Platform',
         ],
         correct: [0, 1, 2, 3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Unable to access a single environment → Microsoft Entra ID group: environment access is managed by adding the user\'s Entra ID group to the environment. Unable to update Account rows → Security role: row-level permissions (create, read, write, delete) are controlled by Dataverse security roles; assigning the correct role with write access to Account resolves this. Unable to access rows owned by the human resources team → Team: in Dataverse, records owned by a team are only accessible to members of that team (under the principle of least privilege); adding the user to the HR team grants them access to the team-owned rows. Unable to create a sandbox environment → Microsoft Power Platform: creating environments is an admin-level permission managed in the Power Platform admin centre, not in Dataverse itself.',
       },
       {
         id: 9208,
@@ -283,19 +283,19 @@ var PL400_TEST_CASES = [
           'Return information from related contact records -> Expand query',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Manage a large number of records → Skip token: the Dataverse "List rows" action returns at most 5,000 rows per call. Enabling Skip token activates automatic pagination — the flow iterates through all pages until no more rows remain, handling 15,000+ rows seamlessly. Return information from related contact records → Expand query: the OData $expand clause fetches data from related tables in a single query (similar to a JOIN), returning related Contact columns alongside the Account data without separate requests. Filter rows would narrow the result set. Select columns would limit which columns are returned.',
       },
       {
         id: 9209,
         text: 'Researchers want a reusable solution that encapsulates a set of parameterized Dataverse queries so those steps can be reused across different Power Automate flows.\n\nWhich three actions should you perform in sequence?\n\nAVAILABLE ACTIONS:\n- Create a real-time workflow that uses a custom workflow activity to perform the Dataverse queries.\n- Run the custom process action by using the Dataverse connector.\n- Create a custom process action that uses a custom workflow activity to perform the Dataverse queries.\n- Create a custom process action that uses a plug-in to perform the Dataverse queries.\n- Run the real-time workflow by using the Dataverse connector.\n- Define the input parameters for the Dataverse queries.',
-        type: 'multiple',
+        type: 'sequence',
         choices: [
           'Create a custom process action that uses a custom workflow activity to perform the Dataverse queries.',
           'Define the input parameters for the Dataverse queries.',
           'Run the real-time workflow by using the Dataverse connector.',
         ],
         correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'The correct sequence is: (1) Create a custom process action that uses a custom workflow activity — custom process actions (a type of real-time/synchronous workflow) combined with custom workflow activities provide a reusable, server-side callable operation that encapsulates the Dataverse queries. (2) Define the input parameters for the Dataverse queries — the process action must declare input parameters so that callers (flows) can pass values like filter criteria into the queries. (3) Run the real-time workflow by using the Dataverse connector — once the process action (real-time workflow) is defined, it is invoked from other Power Automate flows using the Dataverse connector\'s "Perform an unbound/bound action" feature. Using a plain real-time workflow (without a custom workflow activity) would not be parameterisable. Using a plug-in instead of a custom workflow activity would work but is not the approach indicated here.',
       },
       {
         id: 9251,
@@ -308,7 +308,7 @@ var PL400_TEST_CASES = [
           'new_dataid ne null',
         ],
         correct: [3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'new_dataid ne null is correct. In OData filter syntax used by the Dataverse Power Automate connector, you must use the column\'s schema name (new_dataid, where "new_" is the publisher prefix for custom columns), not the display name (DataId). The "ne null" operator checks that the column has a value. "not contains(new_dataid, \'\')" is a string function used for empty string checks, not null checks. "new_dataid eq null" would filter in only records WITH a null DataId (the opposite of what is needed). "DataId ne null" uses the display name instead of the schema name and is not valid in OData filter expressions.',
       },
       {
         id: 9252,
@@ -321,12 +321,12 @@ var PL400_TEST_CASES = [
           'environment variables',
         ],
         correct: [3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Environment variables are correct because they store per-environment configuration values (such as the Web API base URL or environment name) that travel with the solution and can be set differently in each environment (dev, test, prod) without any code changes. When the solution is promoted between environments, administrators set the appropriate values. System settings are global Dataverse configuration values and are not designed for custom per-environment config. Plug-in secure configurations are per-plug-in-step and require code to retrieve. Records in a configuration table require custom queries to read and cannot be referenced natively by connectors or flows.',
       },
       {
         id: 9253,
         text: 'You need to configure the custom connector so the Web API URL dynamically includes the environment name and the DataId.\n\nWhich four actions should you perform in sequence?\n\nACTIONS:\n- Set the operation to dataservice.\n- Create a policy template that uses the Route request template.\n- Set the subdomain of the URL template to: dataservice-@connectionParameters(\'EnvironmentName\')\n- Set the path of the URL template path to: enrich/@queryParameters(\'DataId\')\n- Create a policy template that uses the Set host URL template.\n- Set the operation to enrich.',
-        type: 'multiple',
+        type: 'sequence',
         choices: [
           'Create a policy template that uses the Set host URL template.',
           'Set the operation to dataservice.',
@@ -334,7 +334,7 @@ var PL400_TEST_CASES = [
           'Set the path of the URL template path to: enrich/@queryParameters(\'DataId\')',
         ],
         correct: [0, 1, 2, 3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'The correct sequence is: (1) Create a policy template that uses the Set host URL template — this type of policy template is designed to dynamically rewrite the host URL of outgoing requests. (2) Set the operation to dataservice — specify which connector operation this policy applies to. (3) Set the subdomain to dataservice-@connectionParameters(\'EnvironmentName\') — this injects the connection parameter (environment name supplied when connecting) into the subdomain of the request URL. (4) Set the path to enrich/@queryParameters(\'DataId\') — this appends the DataId query parameter as a dynamic path segment. The "Route request" template is for routing to different paths, not for rewriting the host URL. "Set the operation to enrich" is not a step in this flow.',
       },
       {
         id: 9260,
@@ -347,7 +347,7 @@ var PL400_TEST_CASES = [
           'In the custom connector, update the description for the DataId parameter.',
         ],
         correct: [1, 3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Extend the Open API definition of the Web API for the EnvironmentName parameter (B): adding x-ms-summary, x-ms-description, and x-ms-visibility metadata extensions to the OpenAPI spec for the EnvironmentName connection parameter provides friendly labels and tooltips when a user sets up a new connection — this is how you add visual hints for connection-level parameters. In the custom connector, update the description for the DataId parameter (D): updating the parameter description directly in the custom connector definition adds a visible tooltip/hint to the DataId input field when non-developers use the action in a flow. Updating the policy template name (A) is internal housekeeping and not user-facing. Extending the OpenAPI for DataId (C) is redundant with option D — you can set the description directly in the connector rather than going back to the Web API spec.',
       },
       {
         id: 9301,
@@ -358,7 +358,7 @@ var PL400_TEST_CASES = [
           'Custom connector -> OAuth 2.0',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Azure Function → Function key: a function key secures the Azure Function endpoint so only callers who supply the key can invoke it. Anonymous would expose the endpoint with no protection. Azure Active Directory would require additional Entra ID app registration and OAuth flows. Custom connector → OAuth 2.0: the custom connector uses OAuth 2.0 to authenticate Power Platform users, ensuring that only authorised users can create connections to the connector and call the API. The function key is embedded in the connector configuration (not the security type), while OAuth 2.0 handles user identity at the connector level. API Key auth would be correct if the connector used a simple API key for user identity, but OAuth 2.0 is required here for proper user authentication. Basic authentication is username/password, which is not appropriate for an Azure Function.',
       },
       {
         id: 9302,
@@ -369,7 +369,7 @@ var PL400_TEST_CASES = [
           'Create the custom connector -> Import a Postman collection',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Configure the Web API → Add an OpenAPI definition: adding an OpenAPI (Swagger) definition to the Azure Function exposes the API contract (endpoints, parameters, response schemas) in a machine-readable format, which is required before the connector can be created from it. Create the custom connector → Import a Postman collection: the question requires a low-code technology for generating the connector definition. Importing a Postman collection is the low-code/no-code method — Postman collections are easy to create and import without writing YAML/JSON. Importing an OpenAPI file is also valid but less "low-code" as it requires understanding the OpenAPI spec format. Importing a WSDL file is for SOAP services. Importing a solution presupposes an existing connector.',
       },
       {
         id: 9303,
@@ -380,7 +380,7 @@ var PL400_TEST_CASES = [
           'Synchronize quotes with the external ERP system. -> MainOperation',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Display an error and prevent changes → PreValidation (stage 10): PreValidation runs before the main database transaction begins, outside the transaction scope. This is the correct stage for validation that should abort the operation entirely — throwing an InvalidPluginExecutionException here rolls back and prevents the save, displaying the error message to the user. PreOperation (stage 20) runs inside the transaction but after PreValidation. Synchronize with ERP → MainOperation (stage 30): for custom workflow activities, MainOperation executes as part of the core operation and is transactional. If the ERP synchronisation fails here, the entire transaction (including the quote save) rolls back, ensuring data consistency between Dataverse and the ERP. PostOperation runs after the core operation completes and is better for non-critical async tasks.',
       },
       {
         id: 9304,
@@ -393,19 +393,19 @@ var PL400_TEST_CASES = [
           'The hostname in the URL is missing a valid value.',
         ],
         correct: [3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: '"The remote name could not be resolved" is a DNS resolution failure — the .NET HttpClient (or equivalent) cannot resolve the hostname in the URL to an IP address. This means the hostname in the Web API URL is incorrect or missing a valid value for the production environment. The most common cause is that the environment variable holding the production URL was not set, resulting in an empty or invalid hostname. Missing data would produce a 404 Not Found response, not a DNS error. An authentication failure produces a 401/403 HTTP response. A timeout produces a TaskCanceledException or timeout exception, not a DNS error.',
       },
       {
         id: 9346,
         text: 'Northwind Traders uses Microsoft Dynamics 365 Sales and an Azure Function exposed through a custom connector. A tester gets a "remote name could not be resolved" error against production, and a solution import in test is failing because of a missing component. You need to configure a Power Automate flow to update account records by using the response returned from the Web API.\n\nWhich three actions should you perform in sequence?\n\nOPTIONS:\n- Add an initialize variable step and set the value to the response code from the custom connector.\n- Add a condition step to check if the variable value equals 404.\n- Add a condition step to check if the variable value equals 200.\n- Add a terminate step and set the status to failed.\n- Add a Dataverse update record step to update the Dataverse account record.\n- Add initialize variable step and set the value to the DataId from the Dataverse account record.',
-        type: 'multiple',
+        type: 'sequence',
         choices: [
           'Add an initialize variable step and set the value to the response code from the custom connector.',
           'Add a condition step to check if the variable value equals 404.',
           'Add a terminate step and set the status to failed.',
         ],
         correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'The correct sequence for the error-handling branch of the flow is: (1) Add an initialize variable step and set the value to the response code from the custom connector — capture the HTTP status code returned by the Web API so it can be evaluated. (2) Add a condition step to check if the variable value equals 404 — 404 means "Not Found", indicating the record does not exist in the Web API; this condition detects that case. (3) Add a terminate step and set the status to failed — if a 404 is received, the flow should stop and report failure so the problem can be investigated. The success path (check for 200 → update Dataverse record) continues in the "No" branch of the condition and is not part of these three steps. Initialising a variable with the DataId happens before calling the API, not after.',
       },
     ],
   },
@@ -413,7 +413,7 @@ var PL400_TEST_CASES = [
     key: 'proseware',
     label: 'Proseware',
     description: 'Proseware case study',
-    scenario: 'Proseware case study.',
+    scenario: 'Proseware is a company with a model-driven recruiting application built on Microsoft Power Platform. The application manages contacts (applicants), job postings, applications, referrals, and interviews. A scoring process uses a PCF control and a custom command button to identify "persons of interest" based on historical interactions. Known issues include: a command button where the context parameter is null, and a missing plug-in registration on the Interview entity Create event.',
     questions: [
       {
         id: 9088,
@@ -426,7 +426,7 @@ var PL400_TEST_CASES = [
           'Create a new Choices column on the Contact table.',
         ],
         correct: [1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'A new table with an N:N (many-to-many) relationship with the Contact table is correct. Designations and certifications have a many-to-many relationship with contacts — a contact can hold multiple certifications, and each certification type can be held by multiple contacts. An N:N relationship through a junction table is the correct Dataverse modelling approach. A Lookup column on Contact would only allow a single designation per contact. An N:1 relationship would mean many certifications belong to one contact (wrong direction). A Choices column stores a fixed predefined list of values on the record itself, not a relational structure.',
       },
       {
         id: 9089,
@@ -439,7 +439,7 @@ var PL400_TEST_CASES = [
           'Disable existing event handlers on the field.',
         ],
         correct: [1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Make the field read-only (B): a read-only field does not submit its value to the server when the form is saved — the value is ignored in the save payload, preventing the PCF control\'s field from overwriting the record. Call the setSubmitMode(\'never\') function on the field (C): this JavaScript function explicitly tells the form save event to never include this field in the submitted data, even if the value changes. Both are reliable ways to prevent the field value from being saved. Creating a business rule to clear the value would clear it after saving (or would submit an empty value, which is different). Disabling event handlers removes form event responses but does not prevent the field value from being submitted.',
       },
       {
         id: 9090,
@@ -452,7 +452,7 @@ var PL400_TEST_CASES = [
           'Create a new Referral table with required lookup columns to the Contact, SystemUser, and JobPosting tables.',
         ],
         correct: [3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Create a new Referral table with lookup columns to Contact, SystemUser, and JobPosting is correct. A Referral links: the Contact (the applicant being referred), the SystemUser (the recruiter or employee making the referral), and the JobPosting (the job opening they are being referred for). Referrals are tracked against job postings, not against Application records — a referral leads to an application, it is not part of one. Adding a referral source field to Application only supports a single referral per application and cannot track the referring person. Adding a second lookup column to SystemUser does not properly model referrals to specific job postings.',
       },
       {
         id: 9160,
@@ -463,7 +463,7 @@ var PL400_TEST_CASES = [
           'Number of designations and certifications -> Whole number - rollup',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Total Score → Whole number - calculation: a calculation column computes its value from other columns on the same record (e.g., formula-based score combining multiple numeric fields). It is recalculated on demand and does not store data in the traditional sense, making it storage-efficient. Number of designations and certifications → Whole number - rollup: a rollup column aggregates values from related records (e.g., COUNT of related certification records linked via the N:N table). It recalculates automatically when related data changes, satisfying the recalculation requirement. Whole number - code is not a valid Dataverse column configuration option.',
       },
       {
         id: 9161,
@@ -475,7 +475,7 @@ var PL400_TEST_CASES = [
           'No',
         ],
         correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Statement 1 — Yes: the FetchXML query uses a left-outer-join with a link-entity and a filter on the linked recommendation record being null (the standard pattern for counting records with no related records), which correctly retrieves interviews without recommendations. Statement 2 — Yes: the query can be modified to also count interviews WITH recommendations by adding a variant that uses an inner join or by removing the null filter, allowing both counts to be retrieved. Statement 3 — No: the FetchXML query is a read-only data retrieval query; it cannot create, schedule, or allow interviews — it only counts existing interview records.',
       },
       {
         id: 9247,
@@ -486,7 +486,7 @@ var PL400_TEST_CASES = [
           'Type-Group -> <type>Whole.None</type>',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Property → of-type="DateAndTime.DateAndTime": the PCF control\'s bound property must match the type of the Dataverse column it is bound to. Since the control displays a date/time (the candidate\'s local time derived from a datetime field), the property type must be DateAndTime.DateAndTime. of-type="Whole.TimeZone" would bind to a timezone integer field. of-type="Lookup.Simple" is for lookup columns. Type-Group → <type>Whole.None</type>: a type group defines additional compatible column types for a property. Including Whole.None allows the control to also be bound to a whole number column (e.g., a UTC offset integer), giving the control the flexibility to accept both datetime and integer inputs for timezone calculations. SingleLine.Text and DateAndTime.DateAndTime in the type group would not support timezone offset integers.',
       },
       {
         id: 9248,
@@ -499,7 +499,7 @@ var PL400_TEST_CASES = [
           'Pass the value PrimaryControl to the function in the action definition.',
         ],
         correct: [3],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Pass the value PrimaryControl to the function in the action definition is correct. For command bar button actions, "PrimaryControl" is the parameter name that passes a reference to the current form context (Xrm.Page-like object) to the JavaScript function. This gives the function access to form attributes, controls, and the save event. Without it, the context parameter is null. "ExecutionContext" is used to pass the execution context in event handlers (onLoad, onSave), not command buttons. "SelectedControl" is used to pass the subgrid or grid control — relevant only if the button is on a grid. "Pass execution context as first parameter" applies to event handler registration, not command button action definitions.',
       },
       {
         id: 9249,
@@ -510,7 +510,7 @@ var PL400_TEST_CASES = [
           'form mode visibility -> FormStateRule',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Recruiter visibility → CustomRule: a CustomRule invokes a JavaScript function to evaluate visibility dynamically. Since "recruiter" is a security role (not a privilege on the entity), a JavaScript function can check the user\'s roles using Xrm.Utility.getGlobalContext() and return true/false accordingly. EntityPrivilegeRule checks whether the user has a specific Dataverse privilege (create/read/write) on an entity — not for role-based visibility. EntityPropertyRule checks entity property states. Form mode visibility → FormStateRule: FormStateRule evaluates the current state of the form — Create, Update, Read-Only, Disabled, or Bulk Edit. Specifying "Update" makes the button appear only when editing an existing record. FormTypeRule was used in classic interface for form types (Main, Quick Create) and is deprecated. FormEntityContextRule checks entity context, not form mode.',
       },
       {
         id: 9250,
@@ -524,7 +524,7 @@ var PL400_TEST_CASES = [
           'identifier for the job candidate',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Identifier for the hiring manager (A): needed to query the Dataverse hierarchy and retrieve the senior team members who report directly to that specific manager. Time-zone offset for the job candidate (B): needed to calculate the time-zone difference between each team member and the applicant, so the control can sort results by proximity (smallest offset difference = highest on the list). Identifier for the job candidate (E) and time-zone offset for the hiring manager (D) are not needed — the control is looking for team members who match the applicant\'s timezone, not the manager\'s. Identifier for the job posting (C) is not relevant to displaying team members.',
       },
       {
         id: 9298,
@@ -536,7 +536,7 @@ var PL400_TEST_CASES = [
           'The plug-in used to synchronize the Person of Interest field from Contact to Interview was not triggered.',
         ],
         correct: [1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'There is no plug-in registered to run when an interview record is created (B) is the root cause. The Person of Interest field on the Interview table needs to be populated with the value from the related Contact record when an Interview is created. For this synchronisation to happen automatically, a plug-in must be registered on the Interview entity\'s Create message. Since no such plug-in registration exists, the field is never populated. An error in the event pipeline would cause a visible exception and roll back the operation entirely (B would not apply). Option C ("plug-in was not triggered") suggests the plug-in exists but was not triggered — the actual root cause is that no registration exists at all.',
       },
       {
         id: 9299,
@@ -548,7 +548,7 @@ var PL400_TEST_CASES = [
           'No',
         ],
         correct: [0, 1, 2],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Statement 1 — No: when a plug-in is triggered by a Dataverse event, the execution context only contains the fields that are part of the triggering operation (e.g., the updated attributes). The fullname column must be explicitly retrieved using IOrganizationService.Retrieve() because it may not be included in the input target. Statement 2 — Yes: the plug-in logic queries application records and sends emails to assigned team members. By modifying the query to retrieve interviewer assignments instead of recruiter assignments, the same plug-in structure could send notifications to interviewers. Statement 3 — No: if a contact has multiple active application records (each with different recruiter assignments), the plug-in will send separate emails for each application/recruiter combination — not a single email per applicant.',
       },
       {
         id: 9300,
@@ -559,7 +559,7 @@ var PL400_TEST_CASES = [
           'Calculate for a specific individual. -> JavaScript code',
         ],
         correct: [0, 1],
-        explanation: 'Refer to official Microsoft Power Platform documentation for a detailed explanation of this topic.',
+        explanation: 'Initiate process for all individuals → Custom process action and plug-in: running the scoring process across all contacts at once requires server-side execution. A custom process action (callable via the Dataverse connector or programmatically) combined with a plug-in can iterate over all records and apply the scoring logic efficiently on the server, without loading each record individually. Power Automate flow could work for all individuals but is slower and less efficient for bulk processing. Calculate for a specific individual → JavaScript code: when a recruiter scores a single candidate from the form, client-side JavaScript can immediately execute the calculation logic using form context data and update the score field in real time, providing instant feedback without a server round-trip.',
       },
     ],
   },
