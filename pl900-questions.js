@@ -1745,19 +1745,19 @@ var pl900Questions = [
   },
   {
     "id": 9114,
-    "text": "You create a model-driven app. The app is ready to be shared. You need to complete the process required to set the app up to be shared. How should you complete the process for setting up the app to be shared? To answer, drag the appropriate setting to the correct drop targets. Each source may be used once, more than once, or not at all. You may need to drag the split bar between panes or scroll to view content. Processes Answer Area Step Process 1 Select an app from the Power Apps list. 2 | Select Share. 3 [Select the app and select a security role, 4 [Select a user and choose a security role.\n\nSelect the option that correctly matches all requirements in the order listed.",
+    "text": "You have published a model-driven app. The intended users already have the required licenses and exist in the Dataverse environment. You want to share the app by using a security role. Which configuration allows these users to open the app and work with its data? Select one answer.",
     "type": "single",
     "choices": [
-      "1. Select Share | 2. Select app/security role | 3. Select user and assign the role | 4. Open the app list",
-      "1. Open the app list | 2. Select Share | 3. Select app/security role | 4. Select user and assign the role",
-      "1. Open the app list | 2. Select Share | 3. Select user and assign the role | 4. Select app/security role",
-      "1. Open the app list | 2. Select user and assign the role | 3. Select app/security role | 4. Select Share"
+      "Send the app link to the users without assigning any security roles.",
+      "Share the app with a security role that grants the required Dataverse table privileges, and assign that role to the users or a team they belong to.",
+      "Share the app with a security role that grants the required Dataverse table privileges, but do not assign that role to the users or their teams.",
+      "Share the app with a security role and assign it to the users, but leave the role without privileges for the tables used by the app."
     ],
     "correct": [
       1
     ],
-    "ordered": true,
-    "explanation": ""
+    "ordered": false,
+    "explanation": "Sharing a model-driven app by security role requires both app access and the necessary Dataverse data privileges. Share the app with the appropriate role and ensure the intended users have that role, directly or through a team. A link alone does not grant access; a role not assigned to the users does not benefit them; and app access without the required table privileges does not let them work with the data. These requirements do not impose a fixed order for associating the role with the app and assigning it to users. Source: https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/share-model-driven-app"
   },
   {
     "id": 9115,

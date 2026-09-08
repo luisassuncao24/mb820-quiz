@@ -46,7 +46,6 @@ var PL900_QUESTION_CONTEXTS = {
   9108: ["Display the date, time, and location of upcoming internal meetings.", "Create a meeting request from within the app.", "Display a customer's photo when viewing a contact record."],
   9112: ["Start a new Power Apps app.", "Add the required controls and components.", "Save the app.", "Make the app available to users."],
   9113: ["Select the combination containing three valid reasons an editable canvas app might not appear in Power Apps Studio."],
-  9114: ["Open the list of apps.", "Start the sharing action.", "Choose the app and the security role that can use it.", "Choose a user and assign the role."],
   9117: ["Administration navigation element.", "Sales Log navigation element.", "Customers navigation element."],
 
   9123: ["Implement user authentication for the solution.", "Send data to a OneNote notebook in the same tenant."],
