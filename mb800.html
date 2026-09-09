@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="theme.js"></script>
+    <link rel="stylesheet" href="styles.css?v=1.0.16">
+    <link rel="stylesheet" href="theme.css?v=1.0.16">
+    <title>MB-800 Quiz — Beta</title>
+    <style>
+      .beta-label { display: inline-block; font-size: .75rem; padding: .2rem .5rem; border: 1px solid #f59e0b; border-radius: 999px; background: #422006; color: #fde68a; vertical-align: middle; }
+      .beta-notice { margin-bottom: 1.5rem; padding: 1rem; border: 1px solid #475569; border-radius: 10px; background: #0f172a; color: #cbd5e1; line-height: 1.6; font-size: .85rem; }
+      .beta-notice p { margin: .4rem 0; }
+      .beta-notice a, .explanation a, .qp-explanation a, .bd-explanation a { color: #7dd3fc; }
+      html[data-theme="light"] .beta-label { background: #fef3c7; color: #92400e; }
+      html[data-theme="light"] .beta-notice { background: #fffbeb; color: #334155; border-color: #fcd34d; }
+      html[data-theme="light"] .beta-notice a, html[data-theme="light"] .explanation a, html[data-theme="light"] .qp-explanation a, html[data-theme="light"] .bd-explanation a { color: #075985; }
+      html[data-theme="light"] .congrats-screen { background: #fffbeb; border-color: #d97706; }
+      html[data-theme="light"] .congrats-title, html[data-theme="light"] .congrats-msg { color: #92400e; }
+      @media (max-width: 600px) {
+        #quiz-header { flex-wrap: wrap; }
+        #quiz-header h1 { flex-basis: 100%; }
+      }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="quiz-header">
+            <h1>MB-800 Quiz <span class="beta-label">Beta</span></h1>
+            <a id="hub-link" href="index.html">&#127968; Hub</a>
+            <a id="user-guide-link" href="user-guide.html?exam=MB-800" target="_blank">&#128214; User Guide</a>
+            <button id="home-btn" style="display:none;">&#127968; Main Page</button>
+        </div>
+        <aside class="beta-notice" aria-label="About MB-800 Beta">
+            <strong>Business Central Functional Consultant · Beta</strong>
+            <p>125 original practice questions in 4 topic sets, with explanations and Microsoft Learn references. These are not official exam questions.</p>
+            <details>
+                <summary>About this Beta and its coverage</summary>
+                <p>Based on the <a href="https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/mb-800" target="_blank" rel="noopener noreferrer">MB-800 objectives effective June 30, 2026</a>. Reviewed September 9, 2026, with representative scenarios across all 22 skill areas. This does not exhaust every setting or replace hands-on study, and is not a complete exam simulation.</p>
+                <p>Random Practice draws 40–45 questions. The 120-minute timer, 70% practice target, and readiness indicators are study tools, not a prediction of the real exam score or length. No standalone case studies are included in this first Beta.</p>
+                <p>Use Feedback to report ambiguous wording or answers. References are shown with explanations after answering in Practice mode or in the results in Test mode.</p>
+                <p>Earlier saved attempts and scores are preserved. Start a fresh attempt to include the expanded bank; an older score may cover fewer questions.</p>
+            </details>
+        </aside>
+        <div id="set-selection" style="display: none;"></div>
+        <div id="timer-display" style="display: none;"></div>
+        <div id="question"></div>
+        <div id="choices"></div>
+        <button id="next-button" style="display: none;">Next</button>
+        <div id="score-summary" style="display: none;"></div>
+    </div>
+    <div id="confirm-overlay" style="display:none;">
+        <div id="confirm-card">
+            <h2 id="confirm-title"></h2>
+            <p id="confirm-message"></p>
+            <div class="resume-buttons">
+                <button id="confirm-yes-btn" class="resume-btn">Yes</button>
+                <button id="confirm-no-btn" class="new-quiz-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="pause-overlay" style="display:none;">
+        <div id="pause-card">
+            <div class="pause-icon">&#9646;&#9646;</div>
+            <h2>Quiz Paused</h2>
+            <p>You've been inactive for 2 minutes.<br>Your progress has been saved.</p>
+            <div class="resume-buttons">
+                <button id="pause-resume-btn" class="resume-btn">&#9654; Continue Quiz</button>
+                <button id="pause-home-btn" class="new-quiz-btn">&#127968; Main Page</button>
+            </div>
+        </div>
+    </div>
+    <div id="mode-overlay" style="display:none;">
+        <div id="mode-card">
+            <h2>&#127891; Choose Quiz Mode</h2>
+            <p>How would you like to take this quiz?</p>
+            <div class="mode-options">
+                <button class="mode-btn" id="practice-mode-btn">
+                    <div class="mode-icon-lg">&#128214;</div>
+                    <div class="mode-title">Practice Mode</div>
+                    <div class="mode-desc">Correct answers are shown after each question</div>
+                </button>
+                <button class="mode-btn" id="test-mode-btn">
+                    <div class="mode-icon-lg">&#128221;</div>
+                    <div class="mode-title">Test Mode</div>
+                    <div class="mode-desc">Answers revealed only on the evaluation screen</div>
+                </button>
+            </div>
+            <button class="new-quiz-btn" id="mode-cancel-btn">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Test-mode peek score overlay -->
+    <div id="peek-overlay" style="display:none;">
+        <div id="peek-card">
+            <div class="peek-emoji" id="peek-emoji">&#128527;</div>
+            <h2 id="peek-title">Afraid to continue?</h2>
+            <div class="peek-score-display">
+                <span class="peek-pct" id="peek-pct">0%</span>
+                <span class="peek-detail" id="peek-detail">0 of 0 answered</span>
+            </div>
+            <p class="peek-taunt" id="peek-taunt"></p>
+            <div class="resume-buttons">
+                <button id="peek-continue-btn" class="resume-btn">&#128170; Keep Going!</button>
+                <button id="peek-quit-btn" class="new-quiz-btn">&#127987;&#65039; Give Up</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Practice streak milestone overlay -->
+    <div id="streak-overlay" style="display:none;">
+        <div id="streak-card">
+            <div class="streak-icon" id="streak-icon">&#128293;</div>
+            <div class="streak-msg" id="streak-msg">KILLING SPREE!</div>
+            <div class="streak-count" id="streak-count">5 in a row!</div>
+            <button class="streak-dismiss-btn" id="streak-dismiss-btn">&#128293; Keep It Up!</button>
+        </div>
+    </div>
+
+    <script src="mb800-questions.js?v=1.1.1"></script>
+    <script>
+      window.QUIZ_CONFIG = {
+        prefix: "mb800",
+        examName: "MB-800",
+        examTitle: "MB-800 Quiz (Beta)",
+        beta: true,
+        randomQuizMin: 40,
+        randomQuizMax: 45,
+        timerDuration: 120 * 60,
+        questionSets: MB800_QUESTION_SETS,
+        testCases: [],
+        categoryFn: function (id) {
+          var question = mb800Questions.find(function (item) { return item.id === id; });
+          return question ? question.category : "MB-800 Practice";
+        }
+      };
+    </script>
+    <script src="app.js?v=1.1.1"></script>
+</body>
+</html>

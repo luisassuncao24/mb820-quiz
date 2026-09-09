@@ -321,6 +321,21 @@
         </div>
 
         <div class="hub-cards">
+            <!-- Original MB-800 Beta practice bank -->
+            <div class="hub-card">
+                <span class="hub-card-badge badge-bc">&#128218; Business Central · Beta</span>
+                <div>
+                    <div class="hub-card-exam">Exam MB-800 · Beta</div>
+                    <div class="hub-card-title">Microsoft Dynamics 365 Business Central Functional Consultant</div>
+                </div>
+                <p class="hub-card-desc">Original practice questions on company setup, financials, sales, purchasing, and daily operations. Explanations include Microsoft Learn references. Not official exam questions.</p>
+                <div class="hub-card-meta">
+                    <span class="hub-meta-item">&#128202; 4 quiz sets · 125 questions</span>
+                    <span class="hub-meta-item">&#127922; 40–45 random questions</span>
+                    <span class="hub-meta-item">&#8987; 120 min practice timer</span>
+                </div>
+                <a href="mb800.html" class="hub-start-btn btn-bc">Start MB-800 Beta &#8594;</a>
+            </div>
             <!-- MB-820 Card -->
             <div class="hub-card">
                 <span class="hub-card-badge badge-bc">&#128218; Business Central</span>
@@ -398,8 +413,10 @@
         "use strict";
 
         // Release policy: increment this version and add a CHANGE_LOG entry for every deployed change.
-        var APP_VERSION = "1.0.21";
+        var APP_VERSION = "1.1.1";
         var CHANGE_LOG = [
+          { version: "1.1.1", text: "Reviewed the original 50 MB-800 questions, strengthened distractors and source references, and added 75 scenarios. The Beta now has 125 questions mapped across 22 skill areas, with updated guide, counts, and regression checks." },
+          { version: "1.1.0", text: "Added MB-800 Beta with 50 original, source-referenced questions across four topic sets, shared practice features, separate progress, and an exam-specific guide." },
           { version: "1.0.21", text: "Rewrote PL-900 question 9114 to assess model-driven app sharing permissions, removing an ambiguous step order and adding a Microsoft-backed explanation." },
           { version: "1.0.20", text: "Updated Random Practice for PL-900, PL-400, and MB-820: every new attempt now draws a fresh 40–45 questions instead of using a fixed 67-question length." },
           { version: "1.0.19", text: "Restored guide visuals with new, separate current dashboard screenshots for PL-900, PL-400, and MB-820." },

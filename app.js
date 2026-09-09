@@ -1657,7 +1657,7 @@
         '<div class="prep-progress-fill ' + fillCls + '" style="width:' + pct + '%"></div>' +
       '</div>' +
       '<div class="prep-progress-footer">' +
-        '<p class="prep-progress-sub">Complete every quiz and case study with \u2265' + PASS_PCT + '% to reach 100% preparation.</p>' +
+        '<p class="prep-progress-sub">' + (_cfg.beta ? 'Reach ' + PASS_PCT + '% in every Beta set to complete this practice bank.' : 'Complete every quiz and case study with \u2265' + PASS_PCT + '% to reach 100% preparation.') + '</p>' +
         (studyTimeSeconds > 0 ? '<span class="prep-study-time">\u23F1 ' + formatTime(studyTimeSeconds) + ' studied</span>' : '') +
       '</div>' +
     '</div>';
@@ -1745,12 +1745,12 @@
   function buildCongratulationsScreen() {
     return '<div class="congrats-screen">' +
       '<div class="congrats-trophy">\uD83C\uDFC6</div>' +
-      '<h2 class="congrats-title">You\u2019re Ready for ' + _examName + '!</h2>' +
-      '<p class="congrats-msg">Outstanding achievement! You\u2019ve passed all quizzes and case studies with a passing score. You are fully prepared to ace the ' + _examName + ' certification exam. Go get that certification!</p>' +
+      '<h2 class="congrats-title">' + (_cfg.beta ? _examName + ' Beta practice complete!' : 'You\u2019re Ready for ' + _examName + '!') + '</h2>' +
+      '<p class="congrats-msg">' + (_cfg.beta ? 'You reached the practice target in every available Beta set. Keep studying the Microsoft Learn objectives and practising in Business Central; this result does not predict your certification exam score.' : 'Outstanding achievement! You\u2019ve passed all quizzes and case studies with a passing score. You are fully prepared to ace the ' + _examName + ' certification exam. Go get that certification!') + '</p>' +
       '<div class="congrats-badges">' +
         '<span class="congrats-badge">\u2705 All Quizzes Passed</span>' +
-        '<span class="congrats-badge">\u2705 All Case Studies Passed</span>' +
-        '<span class="congrats-badge">\uD83C\uDFC5 100% Ready</span>' +
+        (_testCases.length ? '<span class="congrats-badge">\u2705 All Case Studies Passed</span>' : '') +
+        '<span class="congrats-badge">\uD83C\uDFC5 ' + (_cfg.beta ? 'Beta study milestone' : '100% Ready') + '</span>' +
       '</div>' +
     '</div>';
   }
@@ -1898,7 +1898,7 @@
     // ── Section 1: Practice Quizzes ──────────────────────────────────────
     html += '<div class="section-divider"></div>' +
       '<h2 class="set-selection-title" id="practice-quizzes-heading">Practice Quizzes</h2>' +
-      '<p class="set-selection-sub">Each quiz has a 120-minute countdown timer. Optionally attach a case study for a combined score.</p>' +
+      '<p class="set-selection-sub">Each quiz has a 120-minute countdown timer.' + (_testCases.length ? ' Optionally attach a case study for a combined score.' : '') + '</p>' +
       '<div class="set-cards">';
 
     QUESTION_SETS.forEach(function (set) {
@@ -1973,12 +1973,12 @@
             ? '<p class="set-card-resume">\u23F8 Saved: question ' + (saved.results.length + 1) + ' of ' + saved.shuffled.length +
               (savedTimer !== null ? ' \u2014 \u23F1 ' + formatTime(savedTimer) + ' left' : '') + '</p>'
             : combinedResumeInfo) +
-          '<div class="case-selector">' +
+          (_testCases.length ? '<div class="case-selector">' +
             '<label class="case-selector-label">\uD83D\uDCCB Case Study (optional):</label>' +
             '<select class="case-select" data-quiz-key="' + set.key + '">' +
               caseOptions +
             '</select>' +
-          '</div>' +
+          '</div>' : '') +
           '<div class="set-card-actions">' +
             (completed
               ? '<button class="set-btn review-btn" data-key="' + set.key + '">\uD83D\uDD0D Review Results</button>'
@@ -3204,6 +3204,7 @@
           '<div class="bd-content">' +
             '<p class="bd-question">Q' + (idx + 1) + '. ' + q.text + '</p>' +
             '<p class="bd-answer">Correct answer: <em>' + correctLabels + '</em></p>' +
+            (q.originalPractice ? '<p class="bd-explanation">' + q.explanation + '</p>' : '') +
           '</div>' +
         '</li>';
     });
@@ -3239,6 +3240,8 @@
       ? (pct >= PASS_PCT
           ? "Well done \u2014 " + pct + "% on the random practice quiz! \uD83C\uDF89"
           : "Keep practising \u2014 " + pct + "% on the random practice quiz. Review the explanations below.")
+      : _cfg.beta
+      ? 'Beta practice score: ' + pct + '%. Study target: ' + PASS_PCT + '%. Review the explanations and Microsoft Learn references below.'
       : (pct >= PASS_PCT
           ? "Great work \u2014 you scored " + examPoints + "/1000 and passed the " + _examName + " threshold! \uD83C\uDF89"
           : pct >= MARGINAL_PCT
@@ -3275,14 +3278,14 @@
 
     summaryEl.innerHTML =
       '<div class="summary-card ' + badge + '">' +
-        (pct >= PASS_PCT && !reviewMode && !isWeak ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">You cleared the ' + _examName + ' passing threshold!</span></div>' : '') +
+        (pct >= PASS_PCT && !reviewMode && !isWeak ? '<div class="celebration-banner"><span class="celebration-text">\uD83C\uDF89 Congratulations!</span><span class="celebration-sub">' + (_cfg.beta ? 'You reached the Beta practice target!' : 'You cleared the ' + _examName + ' passing threshold!') + '</span></div>' : '') +
         '<h2>' + (isWeak ? "Weak Topics Challenge Complete!" : isRandom ? "Random Practice Complete!" : "Quiz Complete!") + '</h2>' +
         '<p class="summary-set-label">' +
           dmeta.icon + ' ' + activeSet.label + ' &nbsp;&middot;&nbsp; ' + perfLabel +
         '</p>' +
         '<div class="score-circle">' +
           '<span class="score-number">' + pct + '%</span>' +
-          '<span class="score-label">' + ((isRandom || isWeak) ? fullyCorrect + " / " + total + " correct" : examPoints + ' / 1000 ' + _examName + ' pts') + '</span>' +
+          '<span class="score-label">' + ((isRandom || isWeak || _cfg.beta) ? fullyCorrect + " / " + total + " correct" : examPoints + ' / 1000 ' + _examName + ' pts') + '</span>' +
         '</div>' +
         '<p class="score-verdict">' + verdict + '</p>' +
         comparison +

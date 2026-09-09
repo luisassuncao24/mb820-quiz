@@ -1,0 +1,37 @@
+{
+  "studyGuide": "https://learn.microsoft.com/en-us/credentials/certifications/resources/study-guides/mb-800",
+  "blueprintEffective": "2026-06-30",
+  "reviewedOn": "2026-09-09",
+  "questionCount": 125,
+  "scope": "Representative scenario coverage of all 22 published skill areas, not exhaustive coverage of every setting, localization, or exam scenario.",
+  "domains": [
+    {"key":"setup","count":28,"weightMin":20,"weightMax":25},
+    {"key":"financials","count":40,"weightMin":30,"weightMax":35},
+    {"key":"sales_purchasing","count":14,"weightMin":10,"weightMax":15},
+    {"key":"operations","count":43,"weightMin":30,"weightMax":35}
+  ],
+  "areas": [
+    {"domain":"setup","area":"Company implementation","ids":[800001,800051,800052,800053,800054]},
+    {"domain":"setup","area":"Access and audit","ids":[800002,800003,800004,800055,800056,800057,800058]},
+    {"domain":"setup","area":"Shared application setup","ids":[800005,800006,800011,800012,800066]},
+    {"domain":"setup","area":"Analytical dimensions","ids":[800007,800008,800009,800059,800060,800061,800062]},
+    {"domain":"setup","area":"Workflow approvals","ids":[800010,800063,800064,800065]},
+    {"domain":"financials","area":"Accounting configuration","ids":[800016,800017,800018,800019,800020,800021,800085,800086,800089,800090]},
+    {"domain":"financials","area":"Accounts, reporting and allocation","ids":[800022,800023,800067,800068,800069,800087,800088]},
+    {"domain":"financials","area":"Posting mappings","ids":[800013,800014,800015,800070]},
+    {"domain":"financials","area":"Journals and banking setup","ids":[800024,800025,800026,800071]},
+    {"domain":"financials","area":"Payables configuration","ids":[800072,800073,800074,800075]},
+    {"domain":"financials","area":"Receivables configuration","ids":[800076,800077,800078,800079,800080,800084]},
+    {"domain":"financials","area":"Asset register configuration","ids":[800027,800028,800081,800082,800083]},
+    {"domain":"sales_purchasing","area":"Stock master data","ids":[800029,800030,800031,800091,800092,800093,800094]},
+    {"domain":"sales_purchasing","area":"Trading partner defaults","ids":[800034,800097,800098]},
+    {"domain":"sales_purchasing","area":"Commercial agreements","ids":[800032,800033,800095,800096]},
+    {"domain":"operations","area":"Daily user tools","ids":[800049,800050,800099,800100,800101,800102]},
+    {"domain":"operations","area":"Procurement workflow","ids":[800035,800036,800037,800103,800104,800105]},
+    {"domain":"operations","area":"Order fulfilment","ids":[800038,800108,800109,800110,800111,800112]},
+    {"domain":"operations","area":"Billing and corrections","ids":[800039,800040,800041,800106,800107,800113,800114,800115,800125]},
+    {"domain":"operations","area":"Settlement and adjustments","ids":[800042,800043,800044,800045,800116,800117,800118,800124]},
+    {"domain":"operations","area":"Asset lifecycle","ids":[800046,800119,800120]},
+    {"domain":"operations","area":"Stock movements and valuation","ids":[800047,800048,800121,800122,800123]}
+  ]
+}

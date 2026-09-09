@@ -711,7 +711,7 @@
     </div>
   </div>
 
-  <div class="info-box tip"><strong>Current interface reference:</strong> This guide selects the matching PL-900, PL-400, or MB-820 dashboard capture, so it describes the selected exam rather than showing an older MB-820 layout.</div>
+  <div class="info-box tip"><strong>Current interface reference:</strong> This guide selects the matching dashboard capture for the exam you opened, including MB-800 Beta.</div>
 
   <div class="guide-dashboard-shot no-break">
     <div class="screenshot-label" id="dashboard-screenshot-label">Current dashboard — PL-900</div>
@@ -1372,6 +1372,11 @@
   (function () {
     var exam = new URLSearchParams(window.location.search).get("exam");
     var guideConfig = {
+      "MB-800": {
+        label: "MB-800 Beta",
+        context: "4 topic sets with 125 original practice questions: setup (28), financials (40), sales and purchasing (14), and operations (43). Reviewed September 9, 2026, with representative coverage across 22 skill areas. Single-answer questions use radio buttons; multiple-answer questions explicitly request TWO or THREE selections. Sources appear after answering in Practice or in Test results. Random Practice draws 40–45 questions. No standalone case studies; coverage and readiness scores remain study aids, not a complete exam simulation.",
+        screenshot: "guide-assets/mb800-dashboard.png?v=1.1.1"
+      },
       "MB-820": {
         label: "MB-820",
         context: "This dashboard currently provides 4 quiz sets covering Business Central development, AL, extensions, and integration.",

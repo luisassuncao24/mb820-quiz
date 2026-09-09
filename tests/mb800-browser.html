@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><title>MB-800 browser smoke checks</title>
+<p>Run only in an isolated browser profile with ?run=mb800-smoke. This test creates MB-800 practice progress.</p>
+<pre id="result">NOT RUN</pre><iframe id="app" title="Test application" style="width:1200px;height:900px"></iframe>
+<script>
+if (new URLSearchParams(location.search).get('run') === 'mb800-smoke') {
+  const frame = document.getElementById('app');
+  frame.onload = function () {
+    const log = [];
+    const w = frame.contentWindow;
+    const d = frame.contentDocument;
+    function check(ok, message) { if (!ok) throw Error(message); }
+    function click(selector) {
+      const el = d.querySelector(selector);
+      check(el && !el.disabled, 'Missing or disabled control: ' + selector);
+      el.click();
+    }
+    function answerCurrent(miss) {
+      const text = d.querySelector('#question').textContent;
+      const q = w.mb800Questions.find(item => text.includes(item.text));
+      check(q, 'Rendered question must match the MB-800 bank');
+      const inputs = Array.from(d.querySelectorAll('#choices input'));
+      check(inputs.length === q.choices.length, 'Rendered answer count');
+      check(inputs.every(el => el.type === (q.type === 'single' ? 'radio' : 'checkbox')), 'Selection type for ' + q.id);
+      if (q.type === 'single') {
+        click('#choices .choice-item[data-idx="0"]');
+        click('#choices .choice-item[data-idx="1"]');
+        check(d.querySelectorAll('#choices input:checked').length === 1, 'Single choice exclusivity');
+      }
+      inputs.forEach(el => { el.checked = false; });
+      const indices = miss ? [q.choices.findIndex((_, i) => !q.correct.includes(i))] : q.correct;
+      indices.forEach(i => click('#choices .choice-item[data-idx="' + i + '"]'));
+      click('#choices .submit-btn');
+      return q;
+    }
+    function finish(count, practice, missFirst) {
+      for (let i = 0; i < count; i++) {
+        answerCurrent(missFirst && i === 0);
+        const reference = d.querySelector('#choices .explanation a');
+        check(practice ? !!reference : !reference, 'Reference visibility respects quiz mode');
+        click('#next-button');
+      }
+      if (d.querySelector('#review-later-results-btn')) click('#review-later-results-btn');
+      check(d.querySelector('#score-summary').style.display === 'block', 'Results displayed');
+      check(d.querySelector('#score-summary a[href^="https://learn.microsoft.com/"]'), 'Results include source references');
+      check(d.querySelector('#score-summary').textContent.includes((count - (missFirst ? 1 : 0)) + ' / ' + count), 'Expected score, including multiple-answer grading');
+    }
+    try {
+      check(w.QUIZ_CONFIG.prefix === 'mb800' && w.QUIZ_CONFIG.beta, 'Independent Beta configuration');
+      check(d.querySelectorAll('.set-card[data-key]').length === 4, 'Four topic sets');
+      check(!d.querySelector('.case-select'), 'No empty case-study selector');
+      check(w.mb800Questions.length === 125, '125 original questions');
+      check(new Set(w.mb800Questions.map(q => q.id)).size === 125, 'Unique IDs');
+      w.mb800Questions.forEach(q => {
+        check(q.explanation && q.sources.length && q.originalPractice, 'Source metadata: ' + q.id);
+        check(q.type === 'single' ? q.correct.length === 1 : q.correct.length >= 2, 'Answer count: ' + q.id);
+        check(new Set(q.choices).size === q.choices.length, 'Distinct choices: ' + q.id);
+      });
+      const otherProgress = {};
+      Object.keys(w.localStorage).filter(k => /^(mb820|pl400|pl900)_/.test(k)).forEach(k => { otherProgress[k] = w.localStorage.getItem(k); });
+      // Deterministic question order for the structural runs; runtime still uses its real rendering/scoring.
+      w.Math.random = () => 0.99;
+      click('.start-set-btn[data-key="setup"]'); click('#practice-mode-btn');
+      click('#review-later-btn');
+      click('#question-feedback-btn');
+      d.querySelector('.question-feedback-comment').value = 'Browser smoke check';
+      click('.question-feedback-save-btn');
+      finish(28, true, true);
+      check(w.localStorage.getItem('mb800_review_later'), 'Bookmark persisted');
+      check(w.localStorage.getItem('mb800_question_feedback'), 'Feedback persisted');
+      check(w.localStorage.getItem('mb800_weak_topic_reviews'), 'Weak-topic review created');
+      log.push('PASS: Practice scoring, sources, bookmarks, feedback, weak-topic review');
+      click('#change-set-btn-summary');
+      for (const [key, count, practice] of [['financials',40,false],['sales_purchasing',14,true],['operations',43,false]]) {
+        click('.start-set-btn[data-key="' + key + '"]');
+        click(practice ? '#practice-mode-btn' : '#test-mode-btn');
+        finish(count, practice, false);
+        click('#change-set-btn-summary');
+      }
+      check(d.body.textContent.includes('Beta practice complete'), 'Beta milestone wording');
+      log.push('PASS: All 125 questions render and finish in Practice/Test with mode-appropriate sources');
+      click('.start-set-btn[data-key="setup"]'); click('#practice-mode-btn');
+      finish(28, true, false);
+      check(d.querySelector('#score-summary .attempt-comparison'), 'Attempt comparison');
+      click('#change-set-btn-summary');
+      click('#random-start-btn'); click('#test-mode-btn');
+      finish(45, false, false);
+      check(d.querySelector('#score-summary').textContent.includes('45 / 45'), 'Random draw upper bound');
+      click('#change-set-btn-summary');
+      w.Math.random = () => 0;
+      click('#random-start-btn'); click('#practice-mode-btn');
+      finish(40, true, false);
+      check(d.querySelector('#score-summary').textContent.includes('40 / 40'), 'Random draw lower bound');
+      click('#change-set-btn-summary');
+      click('#theme-toggle');
+      check(d.documentElement.dataset.theme === 'light', 'Light mode');
+      check(d.documentElement.scrollWidth <= w.innerWidth, 'No horizontal overflow');
+      Object.keys(otherProgress).forEach(k => check(w.localStorage.getItem(k) === otherProgress[k], 'Other exam progress preserved'));
+      log.push('PASS: Attempt comparison, Random Practice 40/45 boundaries, light mode, storage isolation');
+      frame.style.width = '375px';
+      check(d.documentElement.scrollWidth <= w.innerWidth, 'No horizontal overflow at mobile width');
+      log.push('PASS: Mobile-width layout');
+      document.getElementById('result').textContent = 'ALL CHECKS PASSED\n' + log.join('\n');
+    } catch (error) {
+      document.getElementById('result').textContent = 'FAILED: ' + error.stack + '\n' + log.join('\n');
+    }
+  };
+  frame.src = '../mb800.html';
+}
+</script></html>
